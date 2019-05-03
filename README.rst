@@ -14,9 +14,7 @@ Contents:
 Introduction:
 -------------
 
-This tool was developed to made differential analysis on large cohort, from `Kallisto`_ quantification.
-
-.. _Kallisto: https://pachterlab.github.io/kallisto/
+This tool was developed to Evaluate Predictive CapabilitY of each feature to become a biomarker candidates.
 
 -------------
 Requirements:
@@ -31,7 +29,7 @@ Install:
 .. code:: shell
 
   $ python3 setup.py install
-  $ epsy -h
+  $ epcy -h
 
 ------
 Usage:
@@ -46,14 +44,14 @@ From source:
 .. code:: shell
 
   $ cd [your_kt_folder]
-  $ python3 -m epsy -h
+  $ python3 -m epcy -h
 
 After setup install:
 ********************
 
 .. code:: shell
 
-  $ epsy -h
+  $ epcy -h
 
 Small example:
 --------------
