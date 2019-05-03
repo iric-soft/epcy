@@ -43,7 +43,7 @@ From source:
 
 .. code:: shell
 
-  $ cd [your_kt_folder]
+  $ cd [your_epcy_folder]
   $ python3 -m epcy -h
 
 After setup install:
