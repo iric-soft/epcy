@@ -1,0 +1,5 @@
+sample	subgroup	subgroup2
+sample_1	Query	Query
+sample_2	Query	Ref
+sample_3	Ref	Ref
+sample_4	Ref	Query
