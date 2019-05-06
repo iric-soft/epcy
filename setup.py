@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
-import kt
+import epcy
 
 here = path.abspath(path.dirname(__file__))
 
@@ -116,7 +116,7 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
-            'kt=kt.kt:main',
+            'epcy=epcy.epcy:main',
         ],
     },
 )
