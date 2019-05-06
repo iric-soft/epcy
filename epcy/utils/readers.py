@@ -158,5 +158,5 @@ def get_design(args):
     design = pd.read_csv(args.DESIGN, sep="\t")
     design[args.SUBGROUP] = [1 if condition == args.QUERY else 0 for condition in design[args.SUBGROUP]]
     design = design.sort_values(by=[args.SUBGROUP, 'sample'], ascending=[False, True])
-
+    
     return(design)
