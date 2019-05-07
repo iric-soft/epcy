@@ -132,11 +132,11 @@ class Classifier:
                 (ct, pred_by_sample) = self.pred_fill_cont_table_normal(row_data, self.num_query)
                 self.normal_mcc[cpt_id] = self.get_mcc(ct)
                 self.normal_pred[cpt_id, :] = pred_by_sample
-            #else:
-            #    print(select_id)
-            #    print(row_data)
-            #    print(sum_row)
-            #    print(abs(self.l2fc[cpt_id]))
+            else:
+                print(select_id)
+                print(row_data)
+                print(sum_row)
+                print(abs(self.l2fc[cpt_id]))
 
             cpt_id += 1
 

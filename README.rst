@@ -1,6 +1,6 @@
 
 =============================================================================
-EPSY :  Evaluation of Predictive CapabilitY for ranking biomarker candidates
+EPCY :  Evaluation of Predictive CapabilitY for ranking biomarker candidates
 =============================================================================
 
 .. image:: https://travis-ci.org/ericloud/epsy.svg?branch=master
