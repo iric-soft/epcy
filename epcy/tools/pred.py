@@ -37,7 +37,7 @@ def main_pred(args, argparser):
     design = ur.get_design(args)
 
     num_pred = sum(1 for line in open(args.MATRIX, 'r')) - 1
-    print(num_pred)
+    # print(num_pred)
 
     sys.stderr.write(time.strftime('%X') + ": Start epcy analysis\n")
     if args.BY == -1:

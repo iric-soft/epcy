@@ -31,7 +31,7 @@ class Classifier:
         if self.done:
             cpt_id = 0
             for select_id in self.list_ids:
-                line = self.list_ids[cpt_id] + "\t"
+                line = str(self.list_ids[cpt_id]) + "\t"
                 line = line + str(self.l2fc[cpt_id]) + "\t"
                 line = line + str(abs(self.kernel_mcc[cpt_id])) + "\t"
                 line = line + str(abs(self.normal_mcc[cpt_id])) + "\t"
@@ -60,7 +60,7 @@ class Classifier:
         if self.done:
             cpt_id = 0
             for select_id in self.list_ids:
-                line = self.list_ids[cpt_id] + "\t"
+                line = str(self.list_ids[cpt_id]) + "\t"
                 line = line + '\t'.join([str(x) for x in mat_pred[cpt_id, :]])
                 line = line + "\n"
 
@@ -69,7 +69,8 @@ class Classifier:
 
 
     def __load_data(self):
-        self.data = pd.io.parsers.read_csv(self.args.MATRIX, sep="\t", index_col=0, skiprows=self.start, nrows=self.args.BY)
+        self.data = pd.io.parsers.read_csv(self.args.MATRIX, sep="\t", index_col=0)
+        self.data = self.data[self.start:(self.start+self.args.BY)]
         self.data = self.data.reindex(self.design["sample"], axis=1)
         self.list_ids = list(self.data.index)
 
@@ -115,13 +116,14 @@ class Classifier:
 
             if sum_row >= self.args.EXP and abs(self.l2fc[cpt_id]) >= self.args.L2FC:
                 res = self.auc_u_test(row_data, self.num_query, self.num_ref)
-                #TODO move if in print_res
                 self.auc[cpt_id] = res[0]
                 self.utest_pv[cpt_id] = res[1]
 
                 self.ttest_pv[cpt_id] = self.t_test_welch(row_data, self.num_query)
                 #########
-                #TODO same than above
+                #TODO (linked with bw_nrd0 function)
+                #This version compute one bw (using all samples) which will be use for all leave-one-out.
+                #It's fastest but not clean.
                 #(ct_kernel, pred_by_sample) = pred_fill_cont_table_kernel(scores_tpm, num_query, bw_nrd0(scores_tpm))
                 (ct, pred_by_sample) = self.pred_fill_cont_table_kernel(row_data, self.num_query)
                 self.kernel_mcc[cpt_id] = self.get_mcc(ct)
@@ -130,6 +132,11 @@ class Classifier:
                 (ct, pred_by_sample) = self.pred_fill_cont_table_normal(row_data, self.num_query)
                 self.normal_mcc[cpt_id] = self.get_mcc(ct)
                 self.normal_pred[cpt_id, :] = pred_by_sample
+            #else:
+            #    print(select_id)
+            #    print(row_data)
+            #    print(sum_row)
+            #    print(abs(self.l2fc[cpt_id]))
 
             cpt_id += 1
 
