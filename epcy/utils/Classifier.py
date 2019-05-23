@@ -114,24 +114,25 @@ class Classifier:
             self.mean_query[cpt_id] = res[1]
             self.mean_ref[cpt_id] = res[2]
 
-            if sum_row >= self.args.EXP and abs(self.l2fc[cpt_id]) >= self.args.L2FC:
-                res = self.auc_u_test(row_data, self.num_query, self.num_ref)
-                self.auc[cpt_id] = res[0]
-                self.utest_pv[cpt_id] = res[1]
+            if np.unique(row_data).size != 1:
+                if sum_row >= self.args.EXP and abs(self.l2fc[cpt_id]) >= self.args.L2FC:
+                    res = self.auc_u_test(row_data, self.num_query, self.num_ref)
+                    self.auc[cpt_id] = res[0]
+                    self.utest_pv[cpt_id] = res[1]
 
-                self.ttest_pv[cpt_id] = self.t_test_welch(row_data, self.num_query)
-                #########
-                #TODO (linked with bw_nrd0 function)
-                #This version compute one bw (using all samples) which will be use for all leave-one-out.
-                #It's fastest but not clean.
-                #(ct_kernel, pred_by_sample) = pred_fill_cont_table_kernel(scores_tpm, num_query, bw_nrd0(scores_tpm))
-                (ct, pred_by_sample) = self.pred_fill_cont_table_kernel(row_data, self.num_query)
-                self.kernel_mcc[cpt_id] = self.get_mcc(ct)
-                self.kernel_pred[cpt_id, :] = pred_by_sample
-                #########
-                (ct, pred_by_sample) = self.pred_fill_cont_table_normal(row_data, self.num_query)
-                self.normal_mcc[cpt_id] = self.get_mcc(ct)
-                self.normal_pred[cpt_id, :] = pred_by_sample
+                    self.ttest_pv[cpt_id] = self.t_test_welch(row_data, self.num_query)
+                    #########
+                    #TODO (linked with bw_nrd0 function)
+                    #This version compute one bw (using all samples) which will be use for all leave-one-out.
+                    #It's fastest but not clean.
+                    #(ct_kernel, pred_by_sample) = pred_fill_cont_table_kernel(scores_tpm, num_query, bw_nrd0(scores_tpm))
+                    (ct, pred_by_sample) = self.pred_fill_cont_table_kernel(row_data, self.num_query)
+                    self.kernel_mcc[cpt_id] = self.get_mcc(ct)
+                    self.kernel_pred[cpt_id, :] = pred_by_sample
+                    #########
+                    (ct, pred_by_sample) = self.pred_fill_cont_table_normal(row_data, self.num_query)
+                    self.normal_mcc[cpt_id] = self.get_mcc(ct)
+                    self.normal_pred[cpt_id, :] = pred_by_sample
             #else:
             #    print(select_id)
             #    print(row_data)
@@ -153,6 +154,7 @@ class Classifier:
 
     @staticmethod
     def auc_u_test(row_data, num_query, num_ref):
+        #print(row_data)
         (u_value, p_value) = mannwhitneyu(row_data[:num_query], row_data[num_query:], alternative="two-sided")
         auc = u_value / (num_query * num_ref)
 
@@ -234,7 +236,7 @@ class Classifier:
         if (lo == 0):
             lo = hi
             if (lo == 0):
-                lo = math.abs(x[1])
+                lo = abs(x[1])
                 if (lo == 0):
                     lo = 1
 
