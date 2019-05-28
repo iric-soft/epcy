@@ -51,6 +51,11 @@ def get_argparser_diff(parser):
                         help="Query value specify in the subgroup column for samples queried (Default: Query).",
                         type=str,
                         default="Query")
+    parser.add_argument("--min_bw",
+                        dest="MIN_BW",
+                        help="To compute KDE MCC a bandwidth need to estimate from data using bw_nrd0. To avoid very small bw you can use this parameter to set a minimum (Default:0.0).",
+                        type=float,
+                        default=0.0)
     parser.add_argument("--subgroup",
                         dest="SUBGROUP",
                         help="Header name of the subgroup column in your design file (Default: subgroup).",

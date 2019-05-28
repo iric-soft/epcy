@@ -33,8 +33,8 @@ class Classifier:
             for select_id in self.list_ids:
                 line = str(self.list_ids[cpt_id]) + "\t"
                 line = line + str(self.l2fc[cpt_id]) + "\t"
-                line = line + str(abs(self.kernel_mcc[cpt_id])) + "\t"
-                line = line + str(abs(self.normal_mcc[cpt_id])) + "\t"
+                line = line + str(self.kernel_mcc[cpt_id]) + "\t"
+                line = line + str(self.normal_mcc[cpt_id]) + "\t"
                 auc = self.auc[cpt_id] if self.auc[cpt_id] >= 0.5 else 1 - self.auc[cpt_id]
                 line = line + str(auc) + "\t"
                 line = line + str(self.mean_query[cpt_id]) + "\t"
@@ -72,6 +72,9 @@ class Classifier:
         self.data = pd.io.parsers.read_csv(self.args.MATRIX, sep="\t", index_col=0)
         self.data = self.data[self.start:(self.start+self.args.BY)]
         self.data = self.data.reindex(self.design["sample"], axis=1)
+
+        self.data = self.data[(self.data.T != 0).any()]
+
         self.list_ids = list(self.data.index)
 
         self.data = self.data.values
@@ -108,11 +111,19 @@ class Classifier:
         cpt_id = 0
         for select_id in self.list_ids:
             row_data = self.data[cpt_id,:]
+
             sum_row = sum(row_data)
             res = self.get_foldchange(row_data, self.num_query)
             self.l2fc[cpt_id] = res[0]
             self.mean_query[cpt_id] = res[1]
             self.mean_ref[cpt_id] = res[2]
+
+            #if select_id == "ENSG00000261541.1":
+            #    print(select_id)
+            #    print(row_data)
+            #    print(self.l2fc[cpt_id])
+            #    print(self.mean_query[cpt_id])
+            #    print(self.mean_ref[cpt_id])
 
             if np.unique(row_data).size != 1:
                 if sum_row >= self.args.EXP and abs(self.l2fc[cpt_id]) >= self.args.L2FC:
@@ -126,13 +137,23 @@ class Classifier:
                     #This version compute one bw (using all samples) which will be use for all leave-one-out.
                     #It's fastest but not clean.
                     #(ct_kernel, pred_by_sample) = pred_fill_cont_table_kernel(scores_tpm, num_query, bw_nrd0(scores_tpm))
-                    (ct, pred_by_sample) = self.pred_fill_cont_table_kernel(row_data, self.num_query)
+
+
+                    (ct, pred_by_sample) = self.pred_fill_cont_table_kernel(row_data, self.num_query, self.args.MIN_BW)
+
                     self.kernel_mcc[cpt_id] = self.get_mcc(ct)
                     self.kernel_pred[cpt_id, :] = pred_by_sample
+                    #if self.kernel_mcc[cpt_id] < 0:
+                    #    print(select_id)
+                    #    print(self.l2fc[cpt_id])
+                    #    # print(row_data)
+                    #    print(ct)
+                    #    print(self.kernel_mcc[cpt_id])
                     #########
                     (ct, pred_by_sample) = self.pred_fill_cont_table_normal(row_data, self.num_query)
                     self.normal_mcc[cpt_id] = self.get_mcc(ct)
                     self.normal_pred[cpt_id, :] = pred_by_sample
+
             #else:
             #    print(select_id)
             #    print(row_data)
@@ -167,12 +188,14 @@ class Classifier:
         return(p_value)
 
     @staticmethod
-    def pred_fill_cont_table_kernel(row_data, num_query, bw=None):
+    def pred_fill_cont_table_kernel(row_data, num_query, min_bw, bw=None, bprint=False):
         # Compute sample assignation using kernel
         N = len(row_data)
-        fx_by_sample = Classifier.get_fx_kernel(row_data, num_query, N, bw)
+        fx_by_sample = Classifier.get_fx_kernel(row_data, num_query, N, min_bw, bw)
+        if (bprint):
+            print(fx_by_sample)
 
-        return(Classifier.fx_to_tables(fx_by_sample, num_query, N))
+        return(Classifier.fx_to_tables(fx_by_sample, num_query, N, bprint=bprint))
 
     @staticmethod
     def pred_fill_cont_table_normal(row_data, num_query):
@@ -183,19 +206,28 @@ class Classifier:
         return(Classifier.fx_to_tables(fx_by_sample, num_query, N))
 
     @staticmethod
-    def get_fx_kernel(row_data, num_query, N, bw = None):
+    def get_fx_kernel(row_data, num_query, N, min_bw, bw = None, bprint=False):
         # Create leave one out index
         idx = np.arange(1, N) - np.tri(N, N-1, k=-1, dtype=bool)
-        # Compute k((x-xi) / h) for each leave one out
-        k_bw = [Classifier.k_gausian_kernel(row_data[i], row_data[idx[i]], bw)
+        # Compute k((x-xi) / bw) for each leave one out
+        k_bw = [Classifier.k_gausian_kernel(row_data[i], row_data[idx[i]], min_bw, bw)
                     for i in range(N)]
+        if bprint:
+            print(k_bw)
 
-        # (1/(n*bw)) * sum k((x-xi) / h)
-        sum_k = [np.add.reduceat(sample_out,[0,num_query])
-                            for sample_out, bw in k_bw]
-        fx_by_sample = [sum_k[i] / (np.array([num_query,N-num_query]) * k_bw[i][1])
+        # sum k((x-xi) / bw)
+        sum_k = [np.add.reduceat(k_bw[i][0],[0,num_query-1]) if i < num_query else np.add.reduceat(k_bw[i][0],[0,num_query])
                             for i in range(N)]
+        if bprint:
+            print(sum_k)
 
+        # (1/(n*bw)) * sum k((x-xi) / bw)
+        n_query = np.array([num_query-1, N-num_query])
+        n_ref = np.array([num_query, (N-1)-num_query])
+        fx_by_sample = [sum_k[i] / (n_query * k_bw[i][1]) if i < num_query else sum_k[i] / (n_ref * k_bw[i][1])
+                            for i in range(N)]
+        if bprint:
+            print(fx_by_sample)
         return(fx_by_sample)
 
     @staticmethod
@@ -208,12 +240,16 @@ class Classifier:
         return(fx_by_sample)
 
     @staticmethod
-    def fx_to_tables(fx_by_sample, num_query, N):
+    def fx_to_tables(fx_by_sample, num_query, N, bprint=False):
         # return:
         #  cont_table[tp, fp, fn, tn]
         #  pred_by_sample: 1=tp, 2=fn, 3=fp, tn=4
         pred_by_sample = [True if fx[0] > fx[1] else False for fx in fx_by_sample]
         tp_fn = np.add.reduceat(pred_by_sample,[0,num_query])
+        if bprint:
+            print(pred_by_sample)
+            print(tp_fn)
+
         cont_table = [tp_fn[0], num_query-tp_fn[0], tp_fn[1], N-num_query-tp_fn[1]]
 
         pred_by_sample = np.fromiter((1 if pred else 2 for pred in pred_by_sample), np.int32, len(pred_by_sample))
@@ -244,22 +280,20 @@ class Classifier:
         return(0.9 * lo * len(x)**(-0.2))
 
     @staticmethod
-    def k_gausian_kernel(x, other, bw = None):
+    def k_gausian_kernel(x, other, min_bw, bw = None):
         if bw is None:
             bw = Classifier.bw_nrd0(other)
-        pi = np.pi
-        return(ne.evaluate('(1/sqrt(2 * pi)) * exp(-1/2*(((x - other) / bw)**2))'), bw)
-
-    @staticmethod
-    def gausian_kernel(u, pi):
-        pi = np.pi
-        return(ne.evaluate('(1/sqrt(2 * pi)) * exp(-1/2*(u**2))'))
+            if bw < min_bw:
+                bw = min_bw
+        #pi = np.pi
+        #return(ne.evaluate('(1/sqrt(2 * pi)) * exp(-1/2*(((x - other) / bw)**2))'), bw)
+        return(ne.evaluate('0.3989423 * exp(-1/2*(((x - other) / bw)**2))'), bw)
 
     @staticmethod
     def exp_normal(x, other, i, num_query, epsilon=0.0000000000001):
         id_split = num_query
         if i < num_query:
-            sep = num_query-1
+            id_split = num_query-1
 
         mu = np.mean(other[:id_split])
         var = np.var(other[:id_split]) + epsilon
