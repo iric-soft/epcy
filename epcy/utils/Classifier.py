@@ -137,8 +137,6 @@ class Classifier:
                     #This version compute one bw (using all samples) which will be use for all leave-one-out.
                     #It's fastest but not clean.
                     #(ct_kernel, pred_by_sample) = pred_fill_cont_table_kernel(scores_tpm, num_query, bw_nrd0(scores_tpm))
-
-
                     (ct, pred_by_sample) = self.pred_fill_cont_table_kernel(row_data, self.num_query, self.args.MIN_BW)
 
                     self.kernel_mcc[cpt_id] = self.get_mcc(ct)
@@ -188,14 +186,12 @@ class Classifier:
         return(p_value)
 
     @staticmethod
-    def pred_fill_cont_table_kernel(row_data, num_query, min_bw, bw=None, bprint=False):
+    def pred_fill_cont_table_kernel(row_data, num_query, min_bw, bw=None):
         # Compute sample assignation using kernel
         N = len(row_data)
         fx_by_sample = Classifier.get_fx_kernel(row_data, num_query, N, min_bw, bw)
-        if (bprint):
-            print(fx_by_sample)
 
-        return(Classifier.fx_to_tables(fx_by_sample, num_query, N, bprint=bprint))
+        return(Classifier.fx_to_tables(fx_by_sample, num_query, N))
 
     @staticmethod
     def pred_fill_cont_table_normal(row_data, num_query):
@@ -206,28 +202,23 @@ class Classifier:
         return(Classifier.fx_to_tables(fx_by_sample, num_query, N))
 
     @staticmethod
-    def get_fx_kernel(row_data, num_query, N, min_bw, bw = None, bprint=False):
+    def get_fx_kernel(row_data, num_query, N, min_bw, bw = None):
         # Create leave one out index
         idx = np.arange(1, N) - np.tri(N, N-1, k=-1, dtype=bool)
         # Compute k((x-xi) / bw) for each leave one out
         k_bw = [Classifier.k_gausian_kernel(row_data[i], row_data[idx[i]], min_bw, bw)
                     for i in range(N)]
-        if bprint:
-            print(k_bw)
 
         # sum k((x-xi) / bw)
         sum_k = [np.add.reduceat(k_bw[i][0],[0,num_query-1]) if i < num_query else np.add.reduceat(k_bw[i][0],[0,num_query])
                             for i in range(N)]
-        if bprint:
-            print(sum_k)
 
         # (1/(n*bw)) * sum k((x-xi) / bw)
         n_query = np.array([num_query-1, N-num_query])
         n_ref = np.array([num_query, (N-1)-num_query])
         fx_by_sample = [sum_k[i] / (n_query * k_bw[i][1]) if i < num_query else sum_k[i] / (n_ref * k_bw[i][1])
                             for i in range(N)]
-        if bprint:
-            print(fx_by_sample)
+
         return(fx_by_sample)
 
     @staticmethod
@@ -240,15 +231,12 @@ class Classifier:
         return(fx_by_sample)
 
     @staticmethod
-    def fx_to_tables(fx_by_sample, num_query, N, bprint=False):
+    def fx_to_tables(fx_by_sample, num_query, N):
         # return:
         #  cont_table[tp, fp, fn, tn]
         #  pred_by_sample: 1=tp, 2=fn, 3=fp, tn=4
         pred_by_sample = [True if fx[0] > fx[1] else False for fx in fx_by_sample]
         tp_fn = np.add.reduceat(pred_by_sample,[0,num_query])
-        if bprint:
-            print(pred_by_sample)
-            print(tp_fn)
 
         cont_table = [tp_fn[0], num_query-tp_fn[0], tp_fn[1], N-num_query-tp_fn[1]]
 
