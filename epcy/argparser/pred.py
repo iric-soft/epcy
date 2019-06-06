@@ -56,6 +56,10 @@ def get_argparser_diff(parser):
                         help="To compute KDE MCC a bandwidth need to estimate from data using bw_nrd0. To avoid very small bw you can use this parameter to set a minimum (Default:0.0).",
                         type=float,
                         default=0.0)
+    parser.add_argument("--cpm",
+                        dest="CPM",
+                        help="Normalize expression data like Count Par Million",
+                        action='store_true')
     parser.add_argument("--subgroup",
                         dest="SUBGROUP",
                         help="Header name of the subgroup column in your design file (Default: subgroup).",
@@ -63,3 +67,4 @@ def get_argparser_diff(parser):
                         default="subgroup")
 
     parser.set_defaults(LOG=False)
+    parser.set_defaults(CPM=False)
