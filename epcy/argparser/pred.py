@@ -58,7 +58,7 @@ def get_argparser_diff(parser):
                         default=0.0)
     parser.add_argument("--cpm",
                         dest="CPM",
-                        help="Normalize expression data like Count Par Million",
+                        help="To normalize the matrix, as Count Par Million (CPM)",
                         action='store_true')
     parser.add_argument("--subgroup",
                         dest="SUBGROUP",
