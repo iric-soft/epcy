@@ -73,13 +73,13 @@ class Classifier:
         self.data = self.data.reindex(self.design["sample"], axis=1)
 
         if self.args.CPM:
-            f_norm = 1e6 /  data.iloc[:,1:].sum()
+            f_norm = 1e6 /  self.data.iloc[:,1:].sum()
 
         self.data = self.data[self.start:(self.start+self.args.BY)]
         self.data = self.data[(self.data.T != 0).any()]
 
         if self.args.CPM:
-            data.iloc[:,1:] = data.iloc[:,1:] * f_norm
+            self.data.iloc[:,1:] = self.data.iloc[:,1:] * f_norm
 
         self.list_ids = list(self.data.index)
 
