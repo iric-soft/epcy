@@ -1,4 +1,3 @@
-
 =============================================================================
 EPCY :  Evaluation of Predictive CapabilitY for ranking biomarker candidates
 =============================================================================
@@ -30,6 +29,7 @@ Install:
 
   $ virtualenv $HOME/.virtualenvs/epcy
   $ source $HOME/.virtualenvs/epcy/bin/activate
+  $ cd [your_epcy_folder]
   $ python3 setup.py install
   $ epcy -h
 
