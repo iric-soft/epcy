@@ -19,7 +19,8 @@ This tool was developed to Evaluate Predictive CapabilitY of each feature to bec
 Requirements:
 -------------
 
-python3
+* python3
+* (Optional) virtualenv
 
 --------
 Install:
