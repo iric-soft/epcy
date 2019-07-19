@@ -27,11 +27,11 @@ Install:
 
 .. code:: shell
 
-  $ virtualenv $HOME/.virtualenvs/epcy
-  $ source $HOME/.virtualenvs/epcy/bin/activate
-  $ cd [your_epcy_folder]
-  $ python3 setup.py install
-  $ epcy -h
+  virtualenv -p python3 $HOME/.virtualenvs/epcy
+  source $HOME/.virtualenvs/epcy/bin/activate
+  cd [your_epcy_folder]
+  python3 setup.py install
+  epcy -h
 
 ------
 Usage:
@@ -45,28 +45,28 @@ From source:
 
 .. code:: shell
 
-  $ cd [your_epcy_folder]
-  $ python3 -m epcy -h
+  cd [your_epcy_folder]
+  python3 -m epcy -h
 
 After setup install:
 ********************
 
 .. code:: shell
 
-  $ epcy -h
+  epcy -h
 
 Small example:
 --------------
 
 .. code:: shell
 
-  $ cd [your_epcy_folder]
+  cd [your_epcy_folder]
   # Run epcy using default parameter
-  $ epcy pred -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
+  epcy pred -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
   # Run epcy without filter, this time you will have predictive analysis for all features (no NA in the output)
-  $ epcy pred -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/no_filter_subgroup -l 0
+  epcy pred -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/no_filter_subgroup -l 0
   # Run epcy on the second design (column subgroup2) describe in ./data/small_for_test/design.tsv
-  $ epcy pred -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/subgroup2 --subgroup subgroup2
+  epcy pred -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/subgroup2 --subgroup subgroup2
 
 Output:
 -------
