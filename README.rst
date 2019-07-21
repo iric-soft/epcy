@@ -77,7 +77,7 @@ EPCY's output have 2 files :
  
    - ID: the ID of each feature.
    - L2FC: log2 Fold change.
-   - KENEL\_MCC: Matthews Correlation Coefficient (`MCC`_) compute by a predictorusing `KDE`_. 
+   - KERNEL\_MCC: Matthews Correlation Coefficient (`MCC`_) compute by a predictorusing `KDE`_. 
    - NORMAL\_MCC: `MCC`_ compute a predictor using 2 `normal`_ distributions.
    - AUC: Area Under the Curve
    - MEAN\_QUERY: mean(values) of samples specify as Query in design.tsv
