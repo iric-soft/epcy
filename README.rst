@@ -28,7 +28,8 @@ Install:
 
 .. code:: shell
 
-  virtualenv -p python3 $HOME/.virtualenvs/epcy
+  #virtualenv -p python3 $HOME/.virtualenvs/epcy
+  python3 -m venv $HOME/.virtualenvs/epcy
   source $HOME/.virtualenvs/epcy/bin/activate
   cd [your_epcy_folder]
   python3 setup.py install
