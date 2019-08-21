@@ -5,9 +5,11 @@ EPCY :  Evaluation of Predictive CapabilitY for ranking biomarker candidates
 .. image:: https://travis-ci.org/ericloud/epsy.svg?branch=master
   :target: https://travis-ci.org/ericloud/epsy
 
----------
-Contents:
----------
+
+-------
+Citing:
+-------
+* EPCY: Evaluation of Predictive CapabilitY for ranking biomarker gene candidates. Poster at ISMB ECCB 2019: https://f1000research.com/posters/8-1349
 
 -------------
 Introduction:
