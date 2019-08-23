@@ -23,7 +23,7 @@ def get_argparser_diff(parser):
                         default=0.3)
     parser.add_argument("-m",
                         dest="MATRIX",
-                        help="tsv file of the annotation used.",
+                        help="tsv file of features matrix quantification.",
                         type=lambda x: is_valid_file(parser, x))
     parser.add_argument("-o",
                         dest="PATH_OUT",
@@ -35,7 +35,7 @@ def get_argparser_diff(parser):
                         default=1)
     parser.add_argument("--anno",
                         dest="ANNO",
-                        help="(Optional) gff3 file of the annotation used.",
+                        help="(Optional) gff3 file of the feautres annotation.",
                         type=lambda x: is_valid_file(parser, x))
     parser.add_argument("--by",
                         dest="BY",
