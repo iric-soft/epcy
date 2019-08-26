@@ -44,9 +44,9 @@ def read_design_matrix(args):
     if not args.LOG:
         data = np.log2(data + args.C)
 
-    return(design, data)
+    return(design, data, list_ids)
 
-def main_pred(args, argparser, list_ids):
+def main_pred(args, argparser):
 
     if args.ANNO is not None:
         sys.stderr.write(time.strftime('%X') + ": Read annotation\n")
