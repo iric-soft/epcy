@@ -1,3 +1,4 @@
+import sys
 import math
 
 import numpy as np
@@ -9,10 +10,12 @@ ne.set_num_threads(1)
 from scipy.stats import mannwhitneyu, ttest_ind
 
 class Classifier:
-    def __init__(self, args, design, start):
+    def __init__(self, args, design, data, list_ids, start):
         self.args = args
         self.start = start
         self.design = design
+        self.data = data
+        self.list_ids = list_ids
 
         self.num_query = len(np.where(design[self.args.SUBGROUP] == 1)[0])
         self.num_ref = len(np.where(design[self.args.SUBGROUP] == 0)[0])
@@ -20,7 +23,7 @@ class Classifier:
         self.done = False
 
     def run(self):
-        self.__load_data()
+        #self.__load_data()
         self.__pred()
 
     @staticmethod
@@ -69,13 +72,19 @@ class Classifier:
 
 
     def __load_data(self):
-        self.data = pd.io.parsers.read_csv(self.args.MATRIX, sep="\t", index_col=0)
+        #self.data = pd.io.parsers.read_csv(self.args.MATRIX, sep="\t", index_col=0)
+        if sum(~self.design["sample"].isin(self.data.columns)) > 0:
+            sys.stderr.write("WARNING: Some samples are present in the design, but not in the quantification matrix\n")
+            sys.stderr.write("\t the analysis will be done without these samples:\n")
+            sys.stderr.write(str(self.design[~self.design["sample"].isin(self.data.columns)]) + "\n")
+            self.design = self.design[self.design["sample"].isin(self.data.columns)]
+
         self.data = self.data.reindex(self.design["sample"], axis=1)
 
         if self.args.CPM:
             f_norm = 1e6 /  self.data.iloc[:,1:].sum()
 
-        self.data = self.data[self.start:(self.start+self.args.BY)]
+        #self.data = self.data[self.start:(self.start+self.args.BY)]
         self.data = self.data[(self.data.T != 0).any()]
 
         if self.args.CPM:
