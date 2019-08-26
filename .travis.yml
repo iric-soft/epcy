@@ -14,10 +14,9 @@ before_install:
     - export PATH="$HOME/miniconda/bin:$PATH"
     - conda update --yes conda
     - conda update --yes pip
-    - pip install coverage
 
 install:
-    - conda install --yes python=$TRAVIS_PYTHON_VERSION python-dateutil numpy scipy matplotlib pandas statsmodels
+    - conda install --yes python=$TRAVIS_PYTHON_VERSION coverage python-dateutil numpy scipy matplotlib pandas statsmodels
     - python setup.py install
 
 script: coverage run -m unittest discover epcy/tests/
