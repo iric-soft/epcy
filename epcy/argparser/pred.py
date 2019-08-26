@@ -27,7 +27,9 @@ def get_argparser_diff(parser):
                         type=lambda x: is_valid_file(parser, x))
     parser.add_argument("-o",
                         dest="PATH_OUT",
-                        help="Path to the directory output.")
+                        help="Path to the directory output.",
+                        type=str,
+                        default=None)
     parser.add_argument("-t",
                         dest="THREAD",
                         help="Number of thread.",

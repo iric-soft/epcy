@@ -17,12 +17,6 @@ def run_classifier(args, design, start):
 
 def main_pred(args, argparser):
 
-    if not os.path.exists(args.PATH_OUT):
-        os.makedirs(args.PATH_OUT)
-
-    file_out = args.PATH_OUT + "/prediction_capability.xls"
-    file_pred_out = args.PATH_OUT + "/subgroup_predicted.xls"
-
     if args.ANNO is not None:
         sys.stderr.write(time.strftime('%X') + ": Read annotation\n")
         df_anno = ur.gff_2_df(args.ANNO)
@@ -58,15 +52,27 @@ def main_pred(args, argparser):
             p.close()
             p.join()
 
-    sys.stderr.write(time.strftime('%X') + ": Save epcy results\n")
-    with open(file_out, 'w') as w_csv:
-        all_classifier[0].print_feature_header(w_csv)
-        for classifier in all_classifier:
-            classifier.print_feature_pred(w_csv)
 
-    with open(file_pred_out, 'w') as w_csv:
-        all_classifier[0].print_subgroup_header(w_csv)
+    sys.stderr.write(time.strftime('%X') + ": Save epcy results\n")
+    if args.PATH_OUT is not None:
+        if not os.path.exists(args.PATH_OUT):
+            os.makedirs(args.PATH_OUT)
+
+        file_out = args.PATH_OUT + "/prediction_capability.xls"
+        file_pred_out = args.PATH_OUT + "/subgroup_predicted.xls"
+
+        with open(file_out, 'w') as w_csv:
+            all_classifier[0].print_feature_header(w_csv)
+            for classifier in all_classifier:
+                classifier.print_feature_pred(w_csv)
+
+        with open(file_pred_out, 'w') as w_csv:
+            all_classifier[0].print_subgroup_header(w_csv)
+            for classifier in all_classifier:
+                classifier.print_subgroup_predicted(w_csv, "kernel")
+    else:
+        all_classifier[0].print_feature_header(sys.stdout)
         for classifier in all_classifier:
-            classifier.print_subgroup_predicted(w_csv, "kernel")
+            classifier.print_feature_pred(sys.stdout)
 
     sys.stderr.write(time.strftime('%X') + ": End\n")

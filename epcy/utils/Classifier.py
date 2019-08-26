@@ -72,7 +72,7 @@ class Classifier:
     def __load_data(self):
         self.data = pd.io.parsers.read_csv(self.args.MATRIX, sep="\t", index_col=0)
         if sum(~self.design["sample"].isin(self.data.columns)) > 0:
-            sys.stderr.write("WARNING: Some samples are present in the design, but not in the quantification matrix\n")            sys.stderr.write("\t the analysis will be done without these samples:\n")
+            sys.stderr.write("WARNING: Some samples are present in the design, but not in the quantification matrix\n")
             sys.stderr.write("\t the analysis will be done without these samples:\n")
             sys.stderr.write(str(self.design[~self.design["sample"].isin(self.data.columns)]) + "\n")
             self.design = self.design[self.design["sample"].isin(self.data.columns)]
