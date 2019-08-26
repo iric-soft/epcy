@@ -32,7 +32,6 @@ def read_design_matrix(args):
     if args.CPM:
         f_norm = 1e6 /  data.iloc[:,1:].sum()
 
-    #data = data[start:(start+args.BY)]
     data = data[(data.T != 0).any()]
 
     if args.CPM:
