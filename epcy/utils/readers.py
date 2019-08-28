@@ -111,52 +111,50 @@ def trans_to_gene(values, ids_genes):
 
     return(counts)
 
+def counts2tpm(counts, args):
+    """ Transform counts into tpm.
+    """
+    total_mass = np.sum(counts)
+    tpm_value = (counts / total_mass) * 1e6
 
-def read_kall_project(file_h5, num_kal_bs, transcripts_len, args,
-                      ids_genes, start=-1, end=-1):
+    return(np.log2(tpm_value + args.C))
+
+def read_kall_project(file_h5, num_features, transcripts_len, args,
+                      ids_genes):
     """ Open an kallisto h5 file and return tpm as a dict.
     """
     f = h5py.File(file_h5, 'r', libver='latest')
 
-    all_tpm = np.zeros([num_kal_bs, args.BY], dtype=np.float32)
-    total_mass = 0.0
-
-    if args.KAL and args.BS > 0:
-        for cpt_bs in range(0, num_kal_bs):
+    if args.BS != 0:
+        sample_data = np.zeros([num_features, args.BS], dtype=np.float32)
+        for cpt_bs in range(0, args.BS):
             counts = f["bootstrap/bs" + str(cpt_bs)][:] / transcripts_len
             if args.GENE:
                 counts = trans_to_gene(counts, ids_genes)
 
-            total_mass = np.sum(counts)
-            if start != -1 and end != -1:
-                counts = counts[start:end:1]
-
-            for cpt_elt in range(0, counts.size):
-                epsilon = abs(gauss(0, 0.0000000000001))
-                tpm_value = (counts[cpt_elt] / total_mass) * 1e6
-                all_tpm[cpt_bs][cpt_elt] = np.log2(tpm_value + args.C) + epsilon
+            if args.CPM:
+                sample_data[:, cpt_bs] = counts
+            else:
+                sample_data[:, cpt_bs] = counts2tpm(counts, args)
     else:
+        sample_data = np.zeros([num_features, 1], dtype=np.float32)
         counts = f["est_counts"][:] / transcripts_len
         if args.GENE:
             counts = trans_to_gene(counts, ids_genes)
-        total_mass = np.sum(counts)
-        if start != -1 and end != -1:
-            counts = counts[start:end:1]
 
-        for cpt_elt in range(0, counts.size):
-            epsilon = abs(gauss(0, 0.0000000000001))
-            tpm_value = (counts[cpt_elt] / total_mass) * 1e6
-            all_tpm[0][cpt_elt] = np.log2(tpm_value + args.C) + epsilon
-
+        if args.CPM:
+            sample_data[:, 0] = counts
+        else:
+            sample_data[:, 0] = counts2tpm(counts, args)
 
     f.close()
 
-    return(all_tpm)
+    return(sample_data)
 
 
 def get_design(args):
     design = pd.read_csv(args.DESIGN, sep="\t")
     design[args.SUBGROUP] = [1 if condition == args.QUERY else 0 for condition in design[args.SUBGROUP]]
     design = design.sort_values(by=[args.SUBGROUP, 'sample'], ascending=[False, True])
-    
+
     return(design)

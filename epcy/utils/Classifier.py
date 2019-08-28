@@ -26,8 +26,15 @@ class Classifier:
         self.__pred()
 
     @staticmethod
-    def print_feature_header(w_csv):
-        w_csv.write("ID\tL2FC\tKERNEL_MCC\tNORMAL_MCC\tAUC\tMEAN_QUERY\tMEAN_REF\tU_PV\tT_PV\n")
+    def print_feature_header(w_csv, args):
+        header = "ID\tL2FC\tKERNEL_MCC\tNORMAL_MCC\tAUC\tMEAN_QUERY\tMEAN_REF"
+        if args.UTEST:
+            header = header + "\tU_PV"
+        if args.TTEST:
+            header = header + "\tT_PV"
+        header = header + "\n"
+
+        w_csv.write(header)
 
     def print_feature_pred(self, w_csv):
         if self.done:
@@ -40,9 +47,12 @@ class Classifier:
                 auc = self.auc[cpt_id] if self.auc[cpt_id] >= 0.5 else 1 - self.auc[cpt_id]
                 line = line + str(auc) + "\t"
                 line = line + str(self.mean_query[cpt_id]) + "\t"
-                line = line + str(self.mean_ref[cpt_id]) + "\t"
-                line = line + str(self.utest_pv[cpt_id]) + "\t"
-                line = line + str(self.ttest_pv[cpt_id]) + "\n"
+                line = line + str(self.mean_ref[cpt_id])
+                if self.args.UTEST:
+                    line = line + "\t" + str(self.utest_pv[cpt_id])
+                if self.args.TTEST:
+                    line = line + "\t" + str(self.ttest_pv[cpt_id])
+                line = line + "\n"
 
                 w_csv.write(line)
                 cpt_id += 1
@@ -79,10 +89,12 @@ class Classifier:
 
         self.auc = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
         self.auc.fill(np.nan)
-        self.utest_pv = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
-        self.utest_pv.fill(np.nan)
-        self.ttest_pv = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
-        self.ttest_pv.fill(np.nan)
+        if self.args.UTEST:
+            self.utest_pv = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
+            self.utest_pv.fill(np.nan)
+        if self.args.TTEST:
+            self.ttest_pv = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
+            self.ttest_pv.fill(np.nan)
         self.normal_mcc = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
         self.normal_mcc.fill(np.nan)
         self.kernel_mcc = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
@@ -117,9 +129,13 @@ class Classifier:
                 if sum_row >= self.args.EXP and abs(self.l2fc[cpt_id]) >= self.args.L2FC:
                     res = self.auc_u_test(row_data, self.num_query, self.num_ref)
                     self.auc[cpt_id] = res[0]
-                    self.utest_pv[cpt_id] = res[1]
 
-                    self.ttest_pv[cpt_id] = self.t_test_welch(row_data, self.num_query)
+                    if self.args.UTEST:
+                        self.utest_pv[cpt_id] = res[1]
+
+                    if self.args.TTEST:
+                        self.ttest_pv[cpt_id] = self.t_test_welch(row_data, self.num_query)
+
                     #########
                     #TODO (linked with bw_nrd0 function)
                     #This version compute one bw (using all samples) which will be use for all leave-one-out.
