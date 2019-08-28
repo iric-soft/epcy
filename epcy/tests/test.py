@@ -44,7 +44,9 @@ class epcyTest(unittest.TestCase):
             CPM=False,
             ANNO=None,
             PATH_OUT=None,
-            SUBGROUP="subgroup"
+            SUBGROUP="subgroup",
+            UTEST=False,
+            TTEST=False
         )
 
         with captured_output() as (out, err):
@@ -72,6 +74,79 @@ class epcyTest(unittest.TestCase):
         self.assertEqual(selected_line[2],
                          "nan",
                          "Test fail: test_pred -> NaN")
+
+    def test_pred_pvalue(self):
+
+        design = "./data/small_for_test/design.tsv"
+        mat = "./data/small_for_test/exp_matrix.tsv"
+
+        args = Namespace(
+            C=1,
+            DESIGN=design,
+            EXP=0,
+            L2FC=0.3,
+            MATRIX=mat,
+            THREAD=1,
+            BY=-1,
+            LOG=False,
+            QUERY="Query",
+            MIN_BW=0.0,
+            CPM=False,
+            ANNO=None,
+            PATH_OUT=None,
+            SUBGROUP="subgroup",
+            UTEST=True,
+            TTEST=True
+        )
+
+        with captured_output() as (out, err):
+            tp.main_pred(args, None)
+
+        output = out.getvalue()
+        all_lines = output.split("\n")
+
+        selected_line = all_lines[0].split("\t")
+        self.assertEqual(selected_line[7],
+                         "U_PV",
+                         "Test fail: test_pred_pvalue -> UTEST")
+        self.assertEqual(selected_line[8],
+                         "T_PV",
+                         "Test fail: test_pred_pvalue -> TTEST")
+
+    def test_pred_thread(self):
+        design = "./data/small_for_test/design.tsv"
+        mat = "./data/small_for_test/exp_matrix.tsv"
+
+        args = Namespace(
+            C=1,
+            DESIGN=design,
+            EXP=0,
+            L2FC=0.3,
+            MATRIX=mat,
+            THREAD=2,
+            BY=-1,
+            LOG=False,
+            QUERY="Query",
+            MIN_BW=0.0,
+            CPM=False,
+            ANNO=None,
+            PATH_OUT=None,
+            SUBGROUP="subgroup",
+            UTEST=False,
+            TTEST=False
+        )
+
+        with captured_output() as (out, err):
+            tp.main_pred(args, None)
+
+        output = out.getvalue()
+        all_lines = output.split("\n")
+
+        selected_line = all_lines[0].split("\t")
+        self.assertEqual(selected_line[3],
+                         "NORMAL_MCC",
+                         "Test fail: test_pred_thread -> header")
+
 def runTests():
     unittest.main()
 

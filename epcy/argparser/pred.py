@@ -1,7 +1,7 @@
 from .common import *
 
 
-def get_argparser_diff(parser):
+def get_argparser_pred(parser):
     parser.add_argument("-c",
                         dest="C",
                         help="Constant value used during log transformation, log2(x+C) (Default: C=1).",
@@ -35,13 +35,9 @@ def get_argparser_diff(parser):
                         help="Number of thread.",
                         type=int,
                         default=1)
-    parser.add_argument("--anno",
-                        dest="ANNO",
-                        help="(Optional) gff3 file of the feautres annotation.",
-                        type=lambda x: is_valid_file(parser, x))
     parser.add_argument("--by",
                         dest="BY",
-                        help="Number of feature by thread. By default this number automaticaly compute in function of number of thread to optimise execution time, but you can specify a specific value if you encounter memory issue.",
+                        help="Number of feature by thread. By default this number is automaticaly set (#features/#thread). If you encounter memory issues, you can try using lower values.",
                         type=int,
                         default=-1)
     parser.add_argument("--log",
@@ -58,15 +54,20 @@ def get_argparser_diff(parser):
                         help="To compute KDE MCC a bandwidth need to estimate from data using bw_nrd0. To avoid very small bw you can use this parameter to set a minimum (Default:0.0).",
                         type=float,
                         default=0.0)
-    parser.add_argument("--cpm",
-                        dest="CPM",
-                        help="To normalize the matrix, as Count Par Million (CPM)",
-                        action='store_true')
     parser.add_argument("--subgroup",
                         dest="SUBGROUP",
                         help="Header name of the subgroup column in your design file (Default: subgroup).",
                         type=str,
                         default="subgroup")
+    parser.add_argument("--ttest",
+                        dest="TTEST",
+                        help="Compute a p-value using ttest_ind from scipy.stats.",
+                        action='store_true')
+    parser.add_argument("--utest",
+                        dest="UTEST",
+                        help="Compute a p-value using Mann-Whitney from scipy.stats.",
+                        action='store_true')
 
     parser.set_defaults(LOG=False)
-    parser.set_defaults(CPM=False)
+    parser.set_defaults(UTEST=False)
+    parser.set_defaults(TTEST=False)

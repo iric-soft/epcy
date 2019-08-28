@@ -23,12 +23,18 @@ class Classifier:
         self.done = False
 
     def run(self):
-        #self.__load_data()
         self.__pred()
 
     @staticmethod
-    def print_feature_header(w_csv):
-        w_csv.write("ID\tL2FC\tKERNEL_MCC\tNORMAL_MCC\tAUC\tMEAN_QUERY\tMEAN_REF\tU_PV\tT_PV\n")
+    def print_feature_header(w_csv, args):
+        header = "ID\tL2FC\tKERNEL_MCC\tNORMAL_MCC\tAUC\tMEAN_QUERY\tMEAN_REF"
+        if args.UTEST:
+            header = header + "\tU_PV"
+        if args.TTEST:
+            header = header + "\tT_PV"
+        header = header + "\n"
+
+        w_csv.write(header)
 
     def print_feature_pred(self, w_csv):
         if self.done:
@@ -41,9 +47,12 @@ class Classifier:
                 auc = self.auc[cpt_id] if self.auc[cpt_id] >= 0.5 else 1 - self.auc[cpt_id]
                 line = line + str(auc) + "\t"
                 line = line + str(self.mean_query[cpt_id]) + "\t"
-                line = line + str(self.mean_ref[cpt_id]) + "\t"
-                line = line + str(self.utest_pv[cpt_id]) + "\t"
-                line = line + str(self.ttest_pv[cpt_id]) + "\n"
+                line = line + str(self.mean_ref[cpt_id])
+                if self.args.UTEST:
+                    line = line + "\t" + str(self.utest_pv[cpt_id])
+                if self.args.TTEST:
+                    line = line + "\t" + str(self.ttest_pv[cpt_id])
+                line = line + "\n"
 
                 w_csv.write(line)
                 cpt_id += 1
@@ -70,32 +79,6 @@ class Classifier:
                 w_csv.write(line)
                 cpt_id += 1
 
-
-    def __load_data(self):
-        #self.data = pd.io.parsers.read_csv(self.args.MATRIX, sep="\t", index_col=0)
-        if sum(~self.design["sample"].isin(self.data.columns)) > 0:
-            sys.stderr.write("WARNING: Some samples are present in the design, but not in the quantification matrix\n")
-            sys.stderr.write("\t the analysis will be done without these samples:\n")
-            sys.stderr.write(str(self.design[~self.design["sample"].isin(self.data.columns)]) + "\n")
-            self.design = self.design[self.design["sample"].isin(self.data.columns)]
-
-        self.data = self.data.reindex(self.design["sample"], axis=1)
-
-        if self.args.CPM:
-            f_norm = 1e6 /  self.data.iloc[:,1:].sum()
-
-        #self.data = self.data[self.start:(self.start+self.args.BY)]
-        self.data = self.data[(self.data.T != 0).any()]
-
-        if self.args.CPM:
-            self.data.iloc[:,1:] = self.data.iloc[:,1:] * f_norm
-
-        self.list_ids = list(self.data.index)
-
-        self.data = self.data.values
-        if not self.args.LOG:
-            self.data = np.log2(self.data + self.args.C)
-
     def __create_empty_res(self):
         self.l2fc = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
         self.l2fc.fill(np.nan)
@@ -106,10 +89,12 @@ class Classifier:
 
         self.auc = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
         self.auc.fill(np.nan)
-        self.utest_pv = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
-        self.utest_pv.fill(np.nan)
-        self.ttest_pv = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
-        self.ttest_pv.fill(np.nan)
+        if self.args.UTEST:
+            self.utest_pv = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
+            self.utest_pv.fill(np.nan)
+        if self.args.TTEST:
+            self.ttest_pv = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
+            self.ttest_pv.fill(np.nan)
         self.normal_mcc = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
         self.normal_mcc.fill(np.nan)
         self.kernel_mcc = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
@@ -144,9 +129,13 @@ class Classifier:
                 if sum_row >= self.args.EXP and abs(self.l2fc[cpt_id]) >= self.args.L2FC:
                     res = self.auc_u_test(row_data, self.num_query, self.num_ref)
                     self.auc[cpt_id] = res[0]
-                    self.utest_pv[cpt_id] = res[1]
 
-                    self.ttest_pv[cpt_id] = self.t_test_welch(row_data, self.num_query)
+                    if self.args.UTEST:
+                        self.utest_pv[cpt_id] = res[1]
+
+                    if self.args.TTEST:
+                        self.ttest_pv[cpt_id] = self.t_test_welch(row_data, self.num_query)
+
                     #########
                     #TODO (linked with bw_nrd0 function)
                     #This version compute one bw (using all samples) which will be use for all leave-one-out.
@@ -322,41 +311,3 @@ class Classifier:
         n2 = ct[1] * ct[2]
 
         return((n1 - n2) / math.sqrt(d1 * d2 * d3 * d4) if d1!=0 and d2!=0 and d3!=0 and d4!=0 else 0)
-
-
-
-class Classifier_rsem(Classifier):
-    def __load_data():
-        self.data = np.zeros((self.design.shape[0], self.args.BY), dtype=np.float32)
-        cpt = 0
-        for index, row in self.design.iterrows():
-            sample = row['sample']
-            file_name = str(row['rsem'])
-
-
-class Classifier_kallisto(Classifier):
-    def __init__(self, args, design, start):
-        Classifier.__init__(self, args, design, start)
-
-    def __load_data():
-        self.data = np.zeros((self.design.shape[0],
-                              self.args.SAMPLE_BS,
-                              self.args.BY
-                             ),
-                             dtype=np.float32
-                            )
-
-        cpt = 0
-        for index, row in self.design.iterrows():
-            sample = row['sample']
-            file_name = os.path.join(str(row['kallisto']), "abundance.h5")
-            tmp = add_kall_sample(file_name, kallisto, sample, num_kal_bs,
-                                  transcripts, transcripts_len, args,
-                                  ids_genes, uniq_genes, start)
-            #!!! Don't use index (which is the num of sample line in project file) !!!
-            self.data[cpt,:,:] = tmp[0]
-            trans_used = tmp[1]
-            genes_used = tmp[2]
-            ids_genes_used = tmp[3]
-
-            cpt += 1
