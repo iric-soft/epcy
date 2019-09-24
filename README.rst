@@ -32,10 +32,10 @@ Install:
 
 .. code:: shell
 
-  #virtualenv -p python3 $HOME/.virtualenvs/epcy
   python3 -m venv $HOME/.virtualenvs/epcy
   source $HOME/.virtualenvs/epcy/bin/activate
   cd [your_epcy_folder]
+  CFLAGS=-std=c99 pip3 install numpy==1.17.0
   python3 setup.py install
   epcy -h
 
@@ -79,29 +79,28 @@ Output:
 
 EPCY's output have 2 files :
  * prediction\_capability.xls: the main output which contain the evaluation of each features (genes, proteins, ...). It's a tabulated files 9 columns:
- 
+
    - ID: the ID of each feature.
    - L2FC: log2 Fold change.
-   - KERNEL\_MCC: Matthews Correlation Coefficient (`MCC`_) compute by a predictorusing `KDE`_. 
+   - KERNEL\_MCC: Matthews Correlation Coefficient (`MCC`_) compute by a predictorusing `KDE`_.
    - NORMAL\_MCC: `MCC`_ compute a predictor using 2 `normal`_ distributions.
    - AUC: Area Under the Curve
    - MEAN\_QUERY: mean(values) of samples specify as Query in design.tsv
    - MEAN\_REF: mean(values) of samples specify as Ref in design.ts
    - U\_PV: pvalue compute by a `MannWhitney`_ rank test
    - T\_PV: pvalue compute by `ttest\_ind`_
-   
+
 
  * subgroup\_predicted.xls: This secondary output specify for each features if the sample as been correctly predict to feed the `contingency`_ table use to compute KERNEL\_MCC. Build an heatmap with this output could help you to explore your data.
- 
+
    - 1: true positive
    - 2: false negative
    - 3: false positive
    - 4: true negative
-   
+
    .. _MCC: https://en.wikipedia.org/wiki/Matthews_correlation_coefficient
    .. _KDE: https://en.wikipedia.org/wiki/Kernel_density_estimation
    .. _normal: https://en.wikipedia.org/wiki/Normal_distribution
    .. _MannWhitney: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.mannwhitneyu.html
    .. _ttest\_ind: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html
    .. _contingency: https://en.wikipedia.org/wiki/Confusion_matrix
- 
