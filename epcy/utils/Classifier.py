@@ -27,11 +27,11 @@ class Classifier:
 
     @staticmethod
     def print_feature_header(w_csv, args):
-        header = "ID\tL2FC\tKERNEL_MCC\tNORMAL_MCC\tAUC\tMEAN_QUERY\tMEAN_REF"
+        header = "id\tl2fc\tkernel_mcc\tnormal_mcc\tauc\tmean_query\tmean_ref"
         if args.UTEST:
-            header = header + "\tU_PV"
+            header = header + "\tu_pv"
         if args.TTEST:
-            header = header + "\tT_PV"
+            header = header + "\tt_pv"
         header = header + "\n"
 
         w_csv.write(header)
