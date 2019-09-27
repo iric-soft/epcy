@@ -58,7 +58,7 @@ class Classifier:
                 cpt_id += 1
 
     def print_subgroup_header(self, w_csv):
-        line = "ID" + '\t'
+        line = "id" + '\t'
         line = line + '\t'.join(self.design['sample'])
         line = line + "\n"
         w_csv.write(line)

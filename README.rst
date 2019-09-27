@@ -80,15 +80,16 @@ Output:
 EPCY's output have 2 files :
  * prediction\_capability.xls: the main output which contain the evaluation of each features (genes, proteins, ...). It's a tabulated files 9 columns:
 
-   - ID: the ID of each feature.
-   - L2FC: log2 Fold change.
-   - KERNEL\_MCC: Matthews Correlation Coefficient (`MCC`_) compute by a predictorusing `KDE`_.
-   - NORMAL\_MCC: `MCC`_ compute a predictor using 2 `normal`_ distributions.
-   - AUC: Area Under the Curve
-   - MEAN\_QUERY: mean(values) of samples specify as Query in design.tsv
-   - MEAN\_REF: mean(values) of samples specify as Ref in design.ts
-   - U\_PV: pvalue compute by a `MannWhitney`_ rank test
-   - T\_PV: pvalue compute by `ttest\_ind`_
+   - id: the id of each feature.
+   - l2fc: log2 Fold change.
+   - kernel\_mcc: Matthews Correlation Coefficient (`MCC`_) compute by a predictor using `KDE`_.
+   - normal\_mcc: `MCC`_ compute a predictor using `normal`_ distributions.
+   - auc: Area Under the Curve
+   - mean\_query: mean(values) of samples specify as Query in design.tsv
+   - mean\_ref: mean(values) of samples specify as Ref in design.ts
+ *
+   - u\_pv: pvalue compute by a `MannWhitney`_ rank test
+   - t\_pv: pvalue compute by `ttest\_ind`_
 
 
  * subgroup\_predicted.xls: This secondary output specify for each features if the sample as been correctly predict to feed the `contingency`_ table use to compute KERNEL\_MCC. Build an heatmap with this output could help you to explore your data.
