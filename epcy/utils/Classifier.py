@@ -9,6 +9,15 @@ ne.set_num_threads(1)
 
 from scipy.stats import mannwhitneyu, ttest_ind
 
+def print_memory(fn):
+    def wrapper(*args, **kwargs):
+        print(psutil.virtual_memory())
+        try:
+            return fn(*args, **kwargs)
+        finally:
+            print(psutil.virtual_memory())
+    return wrapper
+
 class Classifier:
     def __init__(self, args, design, data, list_ids, start):
         self.args = args
@@ -80,30 +89,31 @@ class Classifier:
                 cpt_id += 1
 
     def __create_empty_res(self):
-        self.l2fc = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
+        self.l2fc = np.empty(shape=(len(self.list_ids)), dtype=np.float32)
         self.l2fc.fill(np.nan)
-        self.mean_query = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
+        self.mean_query = np.empty(shape=(len(self.list_ids)), dtype=np.float32)
         self.mean_query.fill(np.nan)
-        self.mean_ref = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
+        self.mean_ref = np.empty(shape=(len(self.list_ids)), dtype=np.float32)
         self.mean_ref.fill(np.nan)
 
-        self.auc = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
+        self.auc = np.empty(shape=(len(self.list_ids)), dtype=np.float32)
         self.auc.fill(np.nan)
         if self.args.UTEST:
-            self.utest_pv = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
+            self.utest_pv = np.empty(shape=(len(self.list_ids)), dtype=np.float32)
             self.utest_pv.fill(np.nan)
         if self.args.TTEST:
-            self.ttest_pv = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
+            self.ttest_pv = np.empty(shape=(len(self.list_ids)), dtype=np.float32)
             self.ttest_pv.fill(np.nan)
-        self.normal_mcc = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
+        self.normal_mcc = np.empty(shape=(len(self.list_ids)), dtype=np.float32)
         self.normal_mcc.fill(np.nan)
-        self.kernel_mcc = np.empty(shape=(len(self.list_ids)), dtype=np.float64)
+        self.kernel_mcc = np.empty(shape=(len(self.list_ids)), dtype=np.float32)
         self.kernel_mcc.fill(np.nan)
 
-        self.normal_pred = np.empty(shape=(len(self.list_ids), len(self.design["sample"])), dtype=np.float64)
-        self.normal_pred.fill(np.nan)
-        self.kernel_pred = np.empty(shape=(len(self.list_ids), len(self.design["sample"])), dtype=np.float64)
-        self.kernel_pred.fill(np.nan)
+        if self.args.FULL:
+            self.normal_pred = np.empty(shape=(len(self.list_ids), len(self.design["sample"])), dtype=np.int8)
+            self.normal_pred.fill(np.nan)
+            self.kernel_pred = np.empty(shape=(len(self.list_ids), len(self.design["sample"])), dtype=np.int8)
+            self.kernel_pred.fill(np.nan)
 
     def __pred(self):
         self.__create_empty_res()
@@ -144,7 +154,9 @@ class Classifier:
                     (ct, pred_by_sample) = self.pred_fill_cont_table_kernel(row_data, self.num_query, self.args.MIN_BW)
 
                     self.kernel_mcc[cpt_id] = self.get_mcc(ct)
-                    self.kernel_pred[cpt_id, :] = pred_by_sample
+
+                    if self.args.FULL:
+                        self.kernel_pred[cpt_id, :] = pred_by_sample
                     #if self.kernel_mcc[cpt_id] < 0:
                     #    print(select_id)
                     #    print(self.l2fc[cpt_id])
@@ -154,7 +166,8 @@ class Classifier:
                     #########
                     (ct, pred_by_sample) = self.pred_fill_cont_table_normal(row_data, self.num_query)
                     self.normal_mcc[cpt_id] = self.get_mcc(ct)
-                    self.normal_pred[cpt_id, :] = pred_by_sample
+                    if self.args.FULL:
+                        self.normal_pred[cpt_id, :] = pred_by_sample
 
             #else:
             #    print(select_id)
@@ -164,8 +177,11 @@ class Classifier:
 
             cpt_id += 1
 
-        self.done = True
+        del self.data
+        if not self.args.FULL:
+            del self.design
 
+        self.done = True
 
     @staticmethod
     def get_foldchange(row_data, num_query):
@@ -208,29 +224,28 @@ class Classifier:
     @staticmethod
     def get_fx_kernel(row_data, num_query, N, min_bw, bw = None):
         # Create leave one out index
-        idx = np.arange(1, N) - np.tri(N, N-1, k=-1, dtype=bool)
-        # Compute k((x-xi) / bw) for each leave one out
-        k_bw = [Classifier.k_gausian_kernel(row_data[i], row_data[idx[i]], min_bw, bw)
-                    for i in range(N)]
+        idx_gen = (np.arange(1, N) - ([1]*i + [0]*(N-i-1)) for i in range(N))
 
-        # sum k((x-xi) / bw)
-        sum_k = [np.add.reduceat(k_bw[i][0],[0,num_query-1]) if i < num_query else np.add.reduceat(k_bw[i][0],[0,num_query])
-                            for i in range(N)]
+        # Compute k((x-xi) / bw) for each leave one out
+        k_bw_gen = (Classifier.k_gausian_kernel(row_data[i], row_data[idx], min_bw, bw)
+                    for i, idx in enumerate(idx_gen))
 
         # (1/(n*bw)) * sum k((x-xi) / bw)
         n_query = np.array([num_query-1, N-num_query])
         n_ref = np.array([num_query, (N-1)-num_query])
-        fx_by_sample = [sum_k[i] / (n_query * k_bw[i][1]) if i < num_query else sum_k[i] / (n_ref * k_bw[i][1])
-                            for i in range(N)]
+
+        fx_by_sample = (np.add.reduceat(k_bw[0],[0,num_query-1]) / (n_query * k_bw[1]) if i < num_query else np.add.reduceat(k_bw[0],[0,num_query]) / (n_ref * k_bw[1])
+                            for i, k_bw in enumerate(k_bw_gen))
 
         return(fx_by_sample)
 
     @staticmethod
     def get_fx_normal(row_data, num_query, N):
         # Create leave one out index
-        idx = np.arange(1, N) - np.tri(N, N-1, k=-1, dtype=bool)
-        fx_by_sample = [Classifier.exp_normal(row_data[i], row_data[idx[i]], i, num_query)
-                            for i in range(N)]
+        idx_gen = (np.arange(1, N) - ([1]*i + [0]*(N-i-1)) for i in range(N))
+
+        fx_by_sample = (Classifier.exp_normal(row_data[i], row_data[idx], i, num_query)
+                            for i, idx in enumerate(idx_gen))
 
         return(fx_by_sample)
 
@@ -244,7 +259,7 @@ class Classifier:
 
         cont_table = [tp_fn[0], num_query-tp_fn[0], tp_fn[1], N-num_query-tp_fn[1]]
 
-        pred_by_sample = np.fromiter((1 if pred else 2 for pred in pred_by_sample), np.int32, len(pred_by_sample))
+        pred_by_sample = np.fromiter((1 if pred else 2 for pred in pred_by_sample), np.int8, len(pred_by_sample))
         pred_by_sample[num_query:] += 2
 
         # switch 2 and 3 for dendrogram distance
