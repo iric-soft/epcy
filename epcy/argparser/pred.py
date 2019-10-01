@@ -40,6 +40,10 @@ def get_argparser_pred(parser):
                         help="Number of feature by thread. By default this number is automaticaly set (#features/#thread). If you encounter memory issues, you can try using lower values.",
                         type=int,
                         default=-1)
+    parser.add_argument("--full",
+                        dest="FULL",
+                        help="enable full output files.",
+                        action='store_true')
     parser.add_argument("--log",
                         dest="LOG",
                         help="Add this parameter, if your data are already log transformed.",
@@ -71,3 +75,4 @@ def get_argparser_pred(parser):
     parser.set_defaults(LOG=False)
     parser.set_defaults(UTEST=False)
     parser.set_defaults(TTEST=False)
+    parser.set_defaults(FULL=False)
