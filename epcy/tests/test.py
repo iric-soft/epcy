@@ -63,7 +63,7 @@ class epcyTest(unittest.TestCase):
 
         selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[1],
-                         "-1.9372345589580706",
+                         "-1.9372345",
                          "Test fail: test_pred -> L2FC")
 
         selected_line = all_lines[1].split("\t")
