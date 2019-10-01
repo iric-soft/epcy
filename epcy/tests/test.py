@@ -46,7 +46,8 @@ class epcyTest(unittest.TestCase):
             PATH_OUT=None,
             SUBGROUP="subgroup",
             UTEST=False,
-            TTEST=False
+            TTEST=False,
+            FULL=False
         )
 
         with captured_output() as (out, err):
@@ -57,12 +58,12 @@ class epcyTest(unittest.TestCase):
 
         selected_line = all_lines[0].split("\t")
         self.assertEqual(selected_line[2],
-                         "KERNEL_MCC",
+                         "kernel_mcc",
                          "Test fail: test_pred -> header")
 
         selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[1],
-                         "-1.9372345589580706",
+                         "-1.9372345",
                          "Test fail: test_pred -> L2FC")
 
         selected_line = all_lines[1].split("\t")
@@ -96,7 +97,8 @@ class epcyTest(unittest.TestCase):
             PATH_OUT=None,
             SUBGROUP="subgroup",
             UTEST=True,
-            TTEST=True
+            TTEST=True,
+            FULL=True
         )
 
         with captured_output() as (out, err):
@@ -107,10 +109,10 @@ class epcyTest(unittest.TestCase):
 
         selected_line = all_lines[0].split("\t")
         self.assertEqual(selected_line[7],
-                         "U_PV",
+                         "u_pv",
                          "Test fail: test_pred_pvalue -> UTEST")
         self.assertEqual(selected_line[8],
-                         "T_PV",
+                         "t_pv",
                          "Test fail: test_pred_pvalue -> TTEST")
 
     def test_pred_thread(self):
@@ -133,7 +135,8 @@ class epcyTest(unittest.TestCase):
             PATH_OUT=None,
             SUBGROUP="subgroup",
             UTEST=False,
-            TTEST=False
+            TTEST=False,
+            FULL=False
         )
 
         with captured_output() as (out, err):
@@ -144,7 +147,7 @@ class epcyTest(unittest.TestCase):
 
         selected_line = all_lines[0].split("\t")
         self.assertEqual(selected_line[3],
-                         "NORMAL_MCC",
+                         "normal_mcc",
                          "Test fail: test_pred_thread -> header")
 
 def runTests():

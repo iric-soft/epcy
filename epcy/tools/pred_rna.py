@@ -79,6 +79,8 @@ def create_kal_mat(args, design, df_anno):
         design['sample'] = header
 
     data = pd.DataFrame(data=kallisto, index=rows_id, columns=header)
+    data = data.loc[(data.sum(axis=1) != 0), :]
+    data.is_copy = None
 
     return(data, design)
 

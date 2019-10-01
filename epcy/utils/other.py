@@ -33,10 +33,11 @@ def save_pred_res(args, all_classifier):
             for classifier in all_classifier:
                 classifier.print_feature_pred(w_csv)
 
-        with open(file_pred_out, 'w') as w_csv:
-            all_classifier[0].print_subgroup_header(w_csv)
-            for classifier in all_classifier:
-                classifier.print_subgroup_predicted(w_csv, "kernel")
+        if args.FULL:
+            with open(file_pred_out, 'w') as w_csv:
+                all_classifier[0].print_subgroup_header(w_csv)
+                for classifier in all_classifier:
+                    classifier.print_subgroup_predicted(w_csv, "kernel")
     else:
         all_classifier[0].print_feature_header(sys.stdout, args)
         for classifier in all_classifier:
