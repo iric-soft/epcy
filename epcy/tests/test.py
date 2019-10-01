@@ -46,7 +46,8 @@ class epcyTest(unittest.TestCase):
             PATH_OUT=None,
             SUBGROUP="subgroup",
             UTEST=False,
-            TTEST=False
+            TTEST=False,
+            FULL=False
         )
 
         with captured_output() as (out, err):
@@ -96,7 +97,8 @@ class epcyTest(unittest.TestCase):
             PATH_OUT=None,
             SUBGROUP="subgroup",
             UTEST=True,
-            TTEST=True
+            TTEST=True,
+            FULL=True
         )
 
         with captured_output() as (out, err):
@@ -133,7 +135,8 @@ class epcyTest(unittest.TestCase):
             PATH_OUT=None,
             SUBGROUP="subgroup",
             UTEST=False,
-            TTEST=False
+            TTEST=False,
+            FULL=False
         )
 
         with captured_output() as (out, err):
