@@ -2,6 +2,11 @@ from .common import *
 
 
 def get_argparser_pred(parser):
+    parser.add_argument("-b",
+                        dest="N_BAGGING",
+                        help="Number of bagging performed for each prediction (Default: 1 = no bagging).",
+                        type=int,
+                        default=1)
     parser.add_argument("-c",
                         dest="C",
                         help="Constant value used during log transformation, log2(x+C) (Default: C=1).",
@@ -35,6 +40,10 @@ def get_argparser_pred(parser):
                         help="Number of thread.",
                         type=int,
                         default=1)
+    parser.add_argument("--auc",
+                        dest="AUC",
+                        help="Compute sample assignation using normal dist.",
+                        action='store_true')
     parser.add_argument("--by",
                         dest="BY",
                         help="Number of feature by thread. By default this number is automaticaly set (#features/#thread). If you encounter memory issues, you can try using lower values.",
@@ -58,6 +67,10 @@ def get_argparser_pred(parser):
                         help="To compute KDE MCC a bandwidth need to estimate from data using bw_nrd0. To avoid very small bw you can use this parameter to set a minimum (Default:0.0).",
                         type=float,
                         default=0.0)
+    parser.add_argument("--normal",
+                        dest="NORMAL",
+                        help="Compute sample assignation using normal dist.",
+                        action='store_true')
     parser.add_argument("--subgroup",
                         dest="SUBGROUP",
                         help="Header name of the subgroup column in your design file (Default: subgroup).",
@@ -69,10 +82,12 @@ def get_argparser_pred(parser):
                         action='store_true')
     parser.add_argument("--utest",
                         dest="UTEST",
-                        help="Compute a p-value using Mann-Whitney from scipy.stats.",
+                        help="Compute a p-value using Mann-Whitney from scipy.stats. (NEED --auc)",
                         action='store_true')
 
     parser.set_defaults(LOG=False)
+    parser.set_defaults(AUC=False)
     parser.set_defaults(UTEST=False)
     parser.set_defaults(TTEST=False)
     parser.set_defaults(FULL=False)
+    parser.set_defaults(NORMAL=False)

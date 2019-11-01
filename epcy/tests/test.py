@@ -37,6 +37,7 @@ class epcyTest(unittest.TestCase):
             L2FC=0.3,
             MATRIX=mat,
             THREAD=1,
+            N_BAGGING=1,
             BY=-1,
             LOG=False,
             QUERY="Query",
@@ -47,7 +48,9 @@ class epcyTest(unittest.TestCase):
             SUBGROUP="subgroup",
             UTEST=False,
             TTEST=False,
-            FULL=False
+            FULL=False,
+            AUC=False,
+            NORMAL=False
         )
 
         with captured_output() as (out, err):
@@ -57,13 +60,14 @@ class epcyTest(unittest.TestCase):
         all_lines = output.split("\n")
 
         selected_line = all_lines[0].split("\t")
+        print(selected_line)
         self.assertEqual(selected_line[2],
                          "kernel_mcc",
                          "Test fail: test_pred -> header")
 
         selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[1],
-                         "-1.9372345",
+                         "-2.095566",
                          "Test fail: test_pred -> L2FC")
 
         selected_line = all_lines[1].split("\t")
@@ -88,6 +92,7 @@ class epcyTest(unittest.TestCase):
             L2FC=0.3,
             MATRIX=mat,
             THREAD=1,
+            N_BAGGING=1,
             BY=-1,
             LOG=False,
             QUERY="Query",
@@ -98,7 +103,9 @@ class epcyTest(unittest.TestCase):
             SUBGROUP="subgroup",
             UTEST=True,
             TTEST=True,
-            FULL=True
+            FULL=True,
+            AUC=True,
+            NORMAL=False
         )
 
         with captured_output() as (out, err):
@@ -108,10 +115,13 @@ class epcyTest(unittest.TestCase):
         all_lines = output.split("\n")
 
         selected_line = all_lines[0].split("\t")
-        self.assertEqual(selected_line[7],
+        self.assertEqual(selected_line[5],
+                         "auc",
+                         "Test fail: test_pred_pvalue -> AUC")
+        self.assertEqual(selected_line[6],
                          "u_pv",
                          "Test fail: test_pred_pvalue -> UTEST")
-        self.assertEqual(selected_line[8],
+        self.assertEqual(selected_line[7],
                          "t_pv",
                          "Test fail: test_pred_pvalue -> TTEST")
 
@@ -126,6 +136,7 @@ class epcyTest(unittest.TestCase):
             L2FC=0.3,
             MATRIX=mat,
             THREAD=2,
+            N_BAGGING=1,
             BY=-1,
             LOG=False,
             QUERY="Query",
@@ -136,7 +147,9 @@ class epcyTest(unittest.TestCase):
             SUBGROUP="subgroup",
             UTEST=False,
             TTEST=False,
-            FULL=False
+            FULL=False,
+            AUC=True,
+            NORMAL=True
         )
 
         with captured_output() as (out, err):
@@ -146,9 +159,12 @@ class epcyTest(unittest.TestCase):
         all_lines = output.split("\n")
 
         selected_line = all_lines[0].split("\t")
-        self.assertEqual(selected_line[3],
+        self.assertEqual(selected_line[5],
                          "normal_mcc",
-                         "Test fail: test_pred_thread -> header")
+                         "Test fail: test_pred_thread normal -> header")
+        self.assertEqual(selected_line[6],
+                         "auc",
+                         "Test fail: test_pred_thread auc -> header")
 
 def runTests():
     unittest.main()

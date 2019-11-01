@@ -154,6 +154,8 @@ def read_kall_project(file_h5, num_features, transcripts_len, args,
 
 def get_design(args):
     design = pd.read_csv(args.DESIGN, sep="\t")
+    drop_ids = design[ design[args.SUBGROUP] == 'None' ].index
+    design.drop(drop_ids , inplace=True)
     design[args.SUBGROUP] = [1 if condition == args.QUERY else 0 for condition in design[args.SUBGROUP]]
     design = design.sort_values(by=[args.SUBGROUP, 'sample'], ascending=[False, True])
 
