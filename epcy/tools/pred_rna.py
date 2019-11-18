@@ -130,6 +130,7 @@ def main_pred_rna(args, argparser):
         df_anno["Parent"] = df_anno["Parent"].str.replace("gene:", "")
         df_anno["Parent"] = df_anno["Parent"].str.replace("transcript:", "")
         df_anno.set_index("ID", inplace=True)
+        #print(df_anno)
 
     sys.stderr.write(time.strftime('%X') + ": Read design and matrix features\n")
     (design, data, list_ids) = read_design_matrix(args, df_anno)
