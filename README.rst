@@ -82,8 +82,9 @@ Small example:
 Output:
 -------
 
-EPCY's output have 2 files :
- * prediction\_capability.xls: the main output which contain the evaluation of each features (genes, proteins, ...). It's a tabulated files 9 columns:
+Prediction\_capability.xls: the main output which contain the evaluation of each features (genes, proteins, ...). It's a tabulated files 9 columns:
+
+ * Default columns:
 
    - id: the id of each feature.
    - l2fc: log2 Fold change.
@@ -91,20 +92,23 @@ EPCY's output have 2 files :
    - mean\_query: mean(values) of samples specify as Query in design.tsv
    - mean\_ref: mean(values) of samples specify as Ref in design.ts
 
- * Using --normal
+ * Using --normal:
 
    - normal\_mcc: `MCC`_ compute a predictor using `normal`_ distributions.
 
- * Using --auc and --utest
+ * Using --auc --utest:
 
    - auc: Area Under the Curve
    - u\_pv: pvalue compute by a `MannWhitney`_ rank test
 
- * Using --ttest
+ * Using --ttest:
 
    - t\_pv: pvalue compute by `ttest\_ind`_
 
- * subgroup\_predicted.xls: using --full a secondary output file specify for each features if the sample as been correctly predict to feed the `contingency`_ table use to compute KERNEL\_MCC. Build an heatmap with this output could help you to explore your data.
+
+Using --full a secondary output file (subgroup\_predicted.xls) specify for each features if the sample as been correctly predict. Build an heatmap with this output could help you to explore your data.
+
+ * Legend:
 
    - 1: true positive
    - 2: false negative

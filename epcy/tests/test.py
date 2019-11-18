@@ -75,7 +75,7 @@ class epcyTest(unittest.TestCase):
                          "1.0",
                          "Test fail: test_pred -> KERNEL_MCC")
 
-        selected_line = all_lines[2].split("\t")
+        selected_line = all_lines[3].split("\t")
         self.assertEqual(selected_line[2],
                          "nan",
                          "Test fail: test_pred -> NaN")

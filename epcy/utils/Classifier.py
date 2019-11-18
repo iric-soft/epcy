@@ -244,44 +244,20 @@ class Classifier:
     @staticmethod
     def compute_kernel_fx(k_query, k_ref):
         ''' return (1/(n*bw)) * sum k((x-xi) / bw) '''
-        #print("compute_kernel_fx")
-        #print(k_query)
-        #print(k_ref)
         sum_llh = k_query.sum() + k_ref.sum()
         if sum_llh == 0:
             res = 0.5
         else:
             res = k_query.sum() / sum_llh
 
-        #k_query[::-1].sort()
-        #k_ref[::-1].sort()
-        #print(k_query)
-        #print(k_ref)
-
-        #min_len = min(k_query.shape[0], k_ref.shape[0])
-
-        #res = np.sum(k_query[:min_len] - k_ref[:min_len])
-        #print(res)
-
-        #if k_query.shape[0] - k_ref.shape[0] > 0:
-        #    res = res + k_query[k_ref.shape[0]:].sum()
-
-        #if k_query.shape[0] - k_ref.shape[0] < 0:
-        #    res = res - k_ref[k_query.shape[0]:].sum()
-
-        #res = np.add.reduceat(k,[0,num_query-1], dtype=np.float64) / (n_query * bw) if i < num_query else np.add.reduceat(k,[0,num_query], dtype=np.float64) / (n_ref * bw)
-        #print("# res #")
-        #print(res)
-
         return(res)
-        #return(np.add.reduceat(k,[0,num_query-1]) / (n_query * bw)
-        #        if i < num_query else np.add.reduceat(k,[0,num_query]) / (n_ref * bw))
 
     @staticmethod
     def compute_kernel_fx_and_ct(k_bw_nq_gen, num_query, N):
         #print("compute_kernel_fx_and_ct")
         fx_by_sample = [Classifier.compute_kernel_fx(k_bw_nq[0], k_bw_nq[1]) for k_bw_nq in k_bw_nq_gen]
-
+        #print("#1")
+        #print(fx_by_sample)
         #print("compute_kernel_fx end")
         return(Classifier.fx_to_tables(fx_by_sample, num_query, N))
 
@@ -293,9 +269,9 @@ class Classifier:
         # Compute k((x-xi) / bw) for each leave one out
         k_bw_gen_by_fold = [Classifier.get_k_gausian_kernel(row_data, i, idx, num_query, min_bw, bw=bw, n_bagging=n_bagging)
                             for i, idx in enumerate(idx_gen)]
-
+        #print(k_bw_gen_by_fold)
         k_bw_gen_by_bag = np.transpose(np.asarray(k_bw_gen_by_fold),(1, 0, 2))
-
+        #print("BAG")
         #print(k_bw_gen_by_bag)
 
         # (1/(n*bw)) * sum k((x-xi) / bw)
@@ -311,8 +287,9 @@ class Classifier:
 
         fx_by_fold = [Classifier.compute_normal_fx(row_data, i, idx, num_query, n_bagging=n_bagging)
                             for i, idx in enumerate(idx_gen)]
-        fx_by_bag = np.transpose(np.asarray(fx_by_fold),(1, 0, 2))
+        fx_by_bag = np.transpose(np.asarray(fx_by_fold),(1, 0))
 
+        #print("####################################### normal")
         ct_by_bag = (Classifier.fx_to_tables(fx_by_sample, num_query, N)
                         for fx_by_sample in fx_by_bag)
 
@@ -320,15 +297,10 @@ class Classifier:
 
     @staticmethod
     def fx_to_tables(fx_by_sample, num_query, N):
-        #print("fx_to_tables")
+        # print(fx_by_sample)
         # return:
         #  cont_table[tp, fp, fn, tn]
         #  pred_by_sample: 1=tp, 2=fn, 3=fp, tn=4
-        #print(fx_by_sample)
-        #cpt_equal = 0
-        #for fx in fx_by_sample:
-        #    if fx == 0:
-        #        cpt_equal = cpt_equal + 1
 
         cont_tables = []
         for i in range(5):
@@ -338,12 +310,6 @@ class Classifier:
 
             cont_table = [tp_fn[0], num_query-tp_fn[0], tp_fn[1], N - num_query - tp_fn[1]]
             cont_tables.append(cont_table)
-
-        #print(cont_table)
-        #print(tp_fn)
-        #print(num_query)
-        #if (cpt_equal > 0):
-        #    print("#####################")
 
         pred_by_sample = np.fromiter((1 if pred else 2 for pred in pred_by_sample), np.int8, len(pred_by_sample))
         pred_by_sample[num_query:] += 2
@@ -376,8 +342,8 @@ class Classifier:
     def get_bagging_other(other, num_query):
         while True:
             ids = np.sort(np.random.choice(len(other), len(other)))
-            bag_num_query = np.where(ids<num_query)[0].shape[0]
-            if bag_num_query != 0 and bag_num_query != len(other):
+            bag_num_query = np.where(ids<=num_query)[0].shape[0]
+            if bag_num_query >= 2 and bag_num_query <= len(other) - 2:
                 break
 
         return(other[ids], bag_num_query)
@@ -447,7 +413,10 @@ class Classifier:
         first_part = 1 / math.sqrt(2 * np.pi * var)
         fx_ref = first_part * np.exp(-((x-mu)**2)/(2*var))
 
-        return(fx_query - fx_ref)
+        if fx_query + fx_ref == 0:
+            return(0.5)
+
+        return(fx_query /(fx_query + fx_ref))
 
     @staticmethod
     def get_mcc_ped_by_bagging(ct_by_bagging):
