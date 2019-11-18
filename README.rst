@@ -67,12 +67,17 @@ Small example:
 .. code:: shell
 
   cd [your_epcy_folder]
-  # Run epcy using default parameter
-  epcy pred -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
+  # Run epcy using default parameter on normalized expression matrix (like TPM, FPKM or RPKM)
+  epcy pred_rna -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
+  # Run epcy using default parameter on readcount not normalized add --cpm
+  epcy pred_rna -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup --cpm
   # Run epcy without filter, this time you will have predictive analysis for all features (no NA in the output)
-  epcy pred -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/no_filter_subgroup -l 0
+  epcy pred_rna -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/no_filter_subgroup -l 0
   # Run epcy on the second design (column subgroup2) describe in ./data/small_for_test/design.tsv
-  epcy pred -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/subgroup2 --subgroup subgroup2
+  epcy pred_rna -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/subgroup2 --subgroup subgroup2
+
+  # Run epcy on any normalized quantification data
+  epcy pred -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
 
 Output:
 -------
@@ -83,16 +88,23 @@ EPCY's output have 2 files :
    - id: the id of each feature.
    - l2fc: log2 Fold change.
    - kernel\_mcc: Matthews Correlation Coefficient (`MCC`_) compute by a predictor using `KDE`_.
-   - normal\_mcc: `MCC`_ compute a predictor using `normal`_ distributions.
-   - auc: Area Under the Curve
    - mean\_query: mean(values) of samples specify as Query in design.tsv
    - mean\_ref: mean(values) of samples specify as Ref in design.ts
- *
+
+ * Using --normal
+
+   - normal\_mcc: `MCC`_ compute a predictor using `normal`_ distributions.
+
+ * Using --auc and --utest
+
+   - auc: Area Under the Curve
    - u\_pv: pvalue compute by a `MannWhitney`_ rank test
+
+ * Using --ttest
+
    - t\_pv: pvalue compute by `ttest\_ind`_
 
-
- * subgroup\_predicted.xls: This secondary output specify for each features if the sample as been correctly predict to feed the `contingency`_ table use to compute KERNEL\_MCC. Build an heatmap with this output could help you to explore your data.
+ * subgroup\_predicted.xls: using --full a secondary output file specify for each features if the sample as been correctly predict to feed the `contingency`_ table use to compute KERNEL\_MCC. Build an heatmap with this output could help you to explore your data.
 
    - 1: true positive
    - 2: false negative
