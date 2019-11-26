@@ -3,8 +3,12 @@ sample_1	Query	Query
 sample_2	Query	Ref
 sample_3	Query	Ref
 sample_4	Query	Query
-sample_5	Ref	Ref
-sample_6	Ref	Query
-sample_7	Ref	Ref
+sample_5	Query	Ref
+sample_6	Query	Ref
+sample_7	Ref	Query
 sample_8	Ref	Query
-Sample_9	None	None
+sample_9	Ref	Ref
+sample_10	Ref	Query
+sample_11	Ref	Ref
+sample_12	Ref	Query
+sample_13	None	None

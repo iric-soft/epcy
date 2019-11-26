@@ -38,12 +38,16 @@ class Classifier:
 
     @staticmethod
     def print_feature_header(w_csv, args):
-        header = "id\tl2fc\tkernel_mcc\tmean_query\tmean_ref"
+        header = "id\tl2fc\tkernel_mcc"
         if args.N_BAGGING > 1:
             header = header + "\tkernel_mcc_low"
             header = header + "\tkernel_mcc_high"
+        header = header + "\tmean_query\tmean_ref"
         if args.NORMAL:
             header = header + "\tnormal_mcc"
+            if args.N_BAGGING > 1:
+                header = header + "\tnormal_mcc_low"
+                header = header + "\tnormal_mcc_high"
         if args.AUC:
             header = header + "\tauc"
             if args.UTEST:
@@ -61,13 +65,17 @@ class Classifier:
                 line = str(self.list_ids[cpt_id]) + "\t"
                 line = line + str(self.l2fc[cpt_id]) + "\t"
                 line = line + str(self.kernel_mcc[cpt_id][1]) + "\t"
+                if self.args.N_BAGGING > 1:
+                    line = line + str(self.kernel_mcc[cpt_id][0]) + "\t"
+                    line = line + str(self.kernel_mcc[cpt_id][2]) + "\t"
                 line = line + str(self.mean_query[cpt_id]) + "\t"
                 line = line + str(self.mean_ref[cpt_id])
-                if self.args.N_BAGGING > 1:
-                    line = line + "\t" + str(self.kernel_mcc[cpt_id][0])
-                    line = line + "\t" + str(self.kernel_mcc[cpt_id][2])
                 if self.args.NORMAL:
                     line = line + "\t" + str(self.normal_mcc[cpt_id][1])
+                    if self.args.N_BAGGING > 1:
+                        line = line + "\t" + str(self.normal_mcc[cpt_id][0])
+                        line = line + "\t" + str(self.normal_mcc[cpt_id][2])
+
                 if self.args.AUC:
                     auc = self.auc[cpt_id] if self.auc[cpt_id] >= 0.5 else 1 - self.auc[cpt_id]
                     line = line + "\t" + str(auc)
@@ -164,13 +172,6 @@ class Classifier:
                     if self.args.TTEST:
                         self.ttest_pv[cpt_id] = self.t_test_welch(row_data, self.num_query)
 
-                    #########
-                    #TODO (linked with bw_nrd0 function)
-                    #This version compute one bw (using all samples) which will be use for all leave-one-out.
-                    #It's fastest but not clean.
-                    #(ct_kernel, pred_by_sample) = pred_fill_cont_table_kernel(scores_tpm, num_query, bw_nrd0(scores_tpm))
-                    #print(select_id)
-                    #print(row_data)
                     ct_by_bagging_and_pred_by_sample = self.pred_fill_cont_table_kernel(row_data, self.num_query, self.args.MIN_BW, n_bagging=self.args.N_BAGGING)
                     mcc, pred_by_sample = self.get_mcc_ped_by_bagging(ct_by_bagging_and_pred_by_sample)
 
@@ -342,7 +343,7 @@ class Classifier:
     def get_bagging_other(other, num_query):
         while True:
             ids = np.sort(np.random.choice(len(other), len(other)))
-            bag_num_query = np.where(ids<=num_query)[0].shape[0]
+            bag_num_query = np.where(ids<num_query)[0].shape[0]
             if bag_num_query >= 2 and bag_num_query <= len(other) - 2:
                 break
 
@@ -351,58 +352,43 @@ class Classifier:
 
     @staticmethod
     def get_k_gausian_kernel(row_data, i, idx, num_query, min_bw, bw=None, n_bagging=1):
-        if n_bagging > 1:
-            other = row_data[idx]
-            o_num_query = num_query - 1 if i < num_query else num_query
-            bag_others = [Classifier.get_bagging_other(other, o_num_query) for i in range(n_bagging)]
-            return( [Classifier.k_gausian_kernel(row_data, i, idx, min_bw, b_num_query, bw=bw) for other, b_num_query in bag_others] )
-        else:
-            return( [Classifier.k_gausian_kernel(row_data, i, idx, min_bw, num_query, bw=bw) for ids in range(1)] )
-
-    def k_gausian_kernel(row_data, i, idx, min_bw, num_query, bw=None):
         x = row_data[i]
         other = row_data[idx]
-
-        if i < num_query:
-            other_query = other[:(num_query-1)]
-            other_ref = other[(num_query-1):]
+        o_num_query = num_query - 1 if i < num_query else num_query
+        if n_bagging > 1:
+            bag_others = [Classifier.get_bagging_other(other, o_num_query) for j in range(n_bagging)]
+            return( [Classifier.k_gausian_kernel(x, other, i, min_bw, b_num_query, bw=bw) for other, b_num_query in bag_others] )
         else:
-            other_query = other[:num_query]
-            other_ref = other[num_query:]
+            return( [Classifier.k_gausian_kernel(x, other, i, min_bw, o_num_query, bw=bw) for j in range(1)] )
 
+    def k_gausian_kernel(x, other, i, min_bw, ids_split, bw=None):
+        other_query = other[:ids_split]
+        other_ref = other[ids_split:]
+        
         if bw is None:
-            bw_query = Classifier.bw_nrd0(other_query)
-            bw_ref = Classifier.bw_nrd0(other_ref)
-            if bw_query < min_bw:
-                bw_query = min_bw
-            if bw_ref < min_bw:
-                bw_ref = min_bw
-        else:
-            bw_query = bw
-            bw_ref = bw
+            bw = Classifier.bw_nrd0(other)
+            if bw < min_bw:
+                bw = min_bw
 
-        norm_query = other_query.shape[0] * bw_query
-        norm_ref = other_ref.shape[0] * bw_ref
+        norm_query = other_query.shape[0] * bw
+        norm_ref = other_ref.shape[0] * bw
 
-        #pi = np.pi
-        #return(ne.evaluate('(1/sqrt(2 * pi)) * exp(-1/2*(((x - other) / bw)**2))'), bw)
         return([
-            ne.evaluate('(0.3989423 * exp(-1/2*(((x - other_query) / bw_query)**2)))/norm_query'),
-            ne.evaluate('(0.3989423 * exp(-1/2*(((x - other_ref) / bw_ref)**2)))/norm_ref'),
+            ne.evaluate('(0.3989423 * exp(-1/2*(((x - other_query) / bw)**2)))/norm_query'),
+            ne.evaluate('(0.3989423 * exp(-1/2*(((x - other_ref) / bw)**2)))/norm_ref'),
         ])
 
     @staticmethod
-    def compute_normal_fx(row_data, i, idx, num_query, epsilon=0.0000000000001, n_bagging=1):
+    def compute_normal_fx(row_data, i, idx, num_query, epsilon=0.001, n_bagging=1):
         o_num_query = num_query - 1 if i < num_query else num_query
         if n_bagging > 1:
             other = row_data[idx]
-            #o_num_query = num_query - 1 if i < num_query else num_query
-            bag_others = (Classifier.get_bagging_other(other, o_num_query) for i in range(n_bagging))
+            bag_others = (Classifier.get_bagging_other(other, o_num_query) for j in range(n_bagging))
             return( [Classifier.fx_normal(row_data[i], other, i, b_num_query, epsilon=epsilon) for other, b_num_query in bag_others] )
         else:
-            return( [Classifier.fx_normal(row_data[i], row_data[idx], i, o_num_query, epsilon=epsilon) for i in range(1)] )
+            return( [Classifier.fx_normal(row_data[i], row_data[idx], i, o_num_query, epsilon=epsilon) for j in range(1)] )
 
-    def fx_normal(x, other, i, id_split, epsilon=0.0000000000001):
+    def fx_normal(x, other, i, id_split, epsilon=0.001):
         mu = np.mean(other[:id_split])
         var = np.var(other[:id_split]) + epsilon
         first_part = 1 / math.sqrt(2 * np.pi * var)
@@ -416,7 +402,7 @@ class Classifier:
         if fx_query + fx_ref == 0:
             return(0.5)
 
-        return(fx_query /(fx_query + fx_ref))
+        return(fx_query / (fx_query + fx_ref))
 
     @staticmethod
     def get_mcc_ped_by_bagging(ct_by_bagging):
@@ -428,7 +414,6 @@ class Classifier:
                 mccs.append(Classifier.get_mcc(ct))
             all_mcc.append(median(mccs))
             all_pred.append(pred)
-
         pred_by_sample = np.median(np.asarray(all_pred),axis=0)
 
         return(np.quantile(all_mcc, [0.05, 0.5, 0.95]), pred_by_sample)
