@@ -1,8 +1,8 @@
 from .common import *
-from .profile import *
+from .pred import *
 
-def get_argparser_profile_rna(parser):
-    get_argparser_profile(parser)
+def get_argparser_pred_rna(parser):
+    get_argparser_pred(parser)
 
     parser.add_argument("--anno",
         dest="ANNO",

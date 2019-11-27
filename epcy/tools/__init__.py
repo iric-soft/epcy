@@ -1,3 +1,6 @@
 __all__ = [
-    'pred'
+    'pred',
+    'pred_rna',
+    'profile',
+    'profile_rna'
 ]
