@@ -75,7 +75,16 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    setup_requires=['numpy', 'pandas', 'h5py', 'scipy', 'scikit-learn', 'numexpr', 'matplotlib', 'seaborn'],
+    setup_requires=[
+        'numpy==1.17.0',
+        'pandas==0.24.2',
+        'h5py==2.9.0',
+        'scipy==1.2.1',
+        'scikit-learn==0.20.3',
+        'matplotlib==3.0.3',
+        'numexpr==2.6.1',
+        'seaborn==0.9.0'
+    ],
     install_requires=[
         'numpy==1.17.0',
         'pandas==0.24.2',

@@ -2,9 +2,13 @@ import argparse
 
 from .argparser.pred import *
 from .argparser.pred_rna import *
+from .argparser.profile import *
+from .argparser.profile_rna import *
 
 from .tools.pred import main_pred
 from .tools.pred_rna import main_pred_rna
+from .tools.profile import main_profile
+from .tools.profile_rna import main_profile_rna
 
 
 # ###########################################################################
@@ -25,10 +29,26 @@ def main():
     # create the argparser for the "pred_rna" command
     pred_rna = subparsers.add_parser(
         'pred_rna',
-        help='Compute predictive capability of each genes/transcripts.'
+        help='Compute predictive capability of each genes/transcripts expression.'
     )
     pred_rna.set_defaults(func=main_pred_rna)
     get_argparser_pred_rna(pred_rna)
+
+    # create the argparser for the "profile" command
+    profile = subparsers.add_parser(
+        'profile',
+        help='Plot profile of a list of features.'
+    )
+    profile.set_defaults(func=main_profile)
+    get_argparser_profile(profile)
+
+    # create the argparser for the "profile" command
+    profile_rna = subparsers.add_parser(
+        'profile_rna',
+        help='Plot profile of a list of genes/transcipts.'
+    )
+    profile_rna.set_defaults(func=main_profile_rna)
+    get_argparser_profile_rna(profile_rna)
 
 
     # recover arguments

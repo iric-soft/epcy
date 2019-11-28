@@ -67,14 +67,17 @@ Small example:
 .. code:: shell
 
   cd [your_epcy_folder]
-  # Run epcy using default parameter on normalized expression matrix (like TPM, FPKM or RPKM)
+  # Run epcy using default parameter on normalized expression matrix (like CPM, TPM, FPKM or RPKM)
   epcy pred_rna -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
-  # Run epcy using default parameter on readcount not normalized add --cpm
+  # Run epcy on readcount not normalized, add --cpm
   epcy pred_rna -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup --cpm
   # Run epcy without filter, this time you will have predictive analysis for all features (no NA in the output)
   epcy pred_rna -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/no_filter_subgroup -l 0
   # Run epcy on the second design (column subgroup2) describe in ./data/small_for_test/design.tsv
   epcy pred_rna -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/subgroup2 --subgroup subgroup2
+  # Run epcy with n bagging (-b n). Take care, it's take n time more longer!!!, use multiprocess (-t) seems a good idea :).
+  # bagging? -> check: https://en.wikipedia.org/wiki/Bootstrap_aggregating
+  epcy pred_rna -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/subgroup -b 5 -t 2
 
   # Run epcy on any normalized quantification data
   epcy pred -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
@@ -106,7 +109,7 @@ Prediction\_capability.xls: the main output which contain the evaluation of each
    - t\_pv: pvalue compute by `ttest\_ind`_
 
 
-Using --full a secondary output file (subgroup\_predicted.xls) specify for each features if the sample as been correctly predict. Build an heatmap with this output could help you to explore your data.
+Using --full a secondary output file (subgroup\_predicted.xls) specify for each features if the sample as been correctly predicted. Build an heatmap with this output could help you to explore your data.
 
  * Legend:
 
