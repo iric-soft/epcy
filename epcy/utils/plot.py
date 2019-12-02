@@ -16,6 +16,48 @@ col_pal = [
     mpl.colors.hex2color('#0D6BAC')
 ]
 
+
+def plot_qc_histo(df_pred, quantiles, legend_quantile, mcc_bins, args):
+    if not os.path.exists(args.PATH_OUT):
+        os.makedirs(args.PATH_OUT)
+
+
+    x_var = 'kernel_mcc'
+    groupby_var = 'color_legend'
+    df_pred_agg = df_pred.loc[:, [x_var, groupby_var]].groupby(groupby_var)
+    vals = [df[x_var].values.tolist() for i, df in df_pred_agg]
+
+    # Draw
+    plt.figure(figsize=(16,9), dpi=150)
+    colors = [plt.cm.copper(i/float(len(vals)-1)) for i in range(len(vals))]
+    n, bins, patches = plt.hist(vals, mcc_bins, stacked=True, density=False, color=colors[:len(vals)])
+
+    # Decoration
+    plt.legend({group:col for group, col in zip(legend_quantile, colors[:len(vals)])})
+    if args.L2FC:
+        plt.title("QC histogram of kernel_mcc colored by abs_l2fc", fontsize=22)
+    else:
+        plt.title("QC histogram of kernel_mcc colored by max of mean expression", fontsize=22)
+    plt.xlabel(x_var)
+    plt.ylabel("# features")
+
+    # add xlimit
+    plt.axvline(x=0, color='r', linestyle='--')
+
+    file_out = os.path.join(args.PATH_OUT, "qc_histogram_exp.pdf")
+    if args.YLOG:
+        plt.yscale("log")
+        if args.L2FC:
+            file_out = os.path.join(args.PATH_OUT, "qc_histogram_l2fc_ylog.pdf")
+        else:
+            file_out = os.path.join(args.PATH_OUT, "qc_histogram_exp_ylog.pdf")
+    else:
+        if args.L2FC:
+            file_out = os.path.join(args.PATH_OUT, "qc_histogram_l2fc.pdf")
+
+    plt.savefig(file_out)
+
+
 def plot_profile(id, query_exp, ref_exp, bw, args):
     df_swarn = pd.DataFrame(
         data={
