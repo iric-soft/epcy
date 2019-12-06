@@ -1,5 +1,6 @@
 from .common import *
 
+from .get_output_part import *
 
 def get_argparser_qc(parser):
 
@@ -7,12 +8,6 @@ def get_argparser_qc(parser):
                         dest="PRED",
                         help="EPCY predictive_capability output file.",
                         type=lambda x: is_valid_file(parser, x))
-
-    parser.add_argument("-o",
-                        dest="PATH_OUT",
-                        help="Path to the directory output.",
-                        type=str,
-                        default=None)
 
     parser.add_argument("--l2fc",
                         dest="L2FC",
@@ -26,3 +21,5 @@ def get_argparser_qc(parser):
 
     parser.set_defaults(L2FC=False)
     parser.set_defaults(YLOG=False)
+
+    get_argparser_output_part(parser)
