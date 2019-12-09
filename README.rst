@@ -80,8 +80,13 @@ Generic case:
   # If your data require a log2 transforamtion, add --log
   epcy pred --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
 
-* Result will be saved in prediction\_capability.xls file, which is detail here.
-* It is possible to change `subgroup` column name and the name of each subgroup using `--subgroup` `--query`
+* Result will be saved in prediction\_capability.xls file, which is detail below.
+* You can personalize the design file using `--subgroup` `--query`
+
+.. code:: shell
+
+  epcy pred_rna -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/subgroup2 --subgroup subgroup2 --query A
+
 
 Working on RNA sequencing readcounts:
 -------------------------------------
@@ -104,7 +109,9 @@ Working on kallisto quantification:
   epcy pred_rna --kal --cpm --log -d [design.tsv] -o [output_directory]
   # !!! Take care kallisto quantification is on transcript not on gene
 
-* To run on gene level, a gff3 file of the genome annotation is needed, to have the correspondence between transcript and gene. This file can be download on `ensenbl`_
+* To run on gene level, a gff3 file of the genome annotation is needed, to have the correspondence between transcript and gene. This file can be download on `ensembl`_
+
+.. _ensembl: https://useast.ensembl.org/info/data/ftp/index.html
 
 .. code:: shell
 
@@ -182,4 +189,3 @@ To improve the stability and accuracy of MCC computed, you can add n `bagging`_ 
 
 
 .. _bagging: https://en.wikipedia.org/wiki/Bootstrap_aggregating
-.. _ensembl: https://useast.ensembl.org/info/data/ftp/index.html
