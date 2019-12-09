@@ -119,5 +119,67 @@ Working on kallisto quantification:
   epcy pred_rna --kal --tpm --log --gene --anno [gff.file] -d [design.tsv] -o [output_directory]
 
 
+-------
+Output:
+-------
 
+Prediction\_capability.xls
+---------------------------
+
+This file is the main output which contain the evaluation of each features (genes, proteins, ...). It's a tabulated files 9 columns:
+
+* Default columns:
+
+  - id: the id of each feature.
+  - l2fc: log2 Fold change.
+  - kernel\_mcc: Matthews Correlation Coefficient (`MCC`_) compute by a predictor using `KDE`_.
+  - mean\_query: mean(values) of samples specify as Query in design.tsv
+  - mean\_ref: mean(values) of samples specify as Ref in design.ts
+
+* Using --normal:
+
+  - normal\_mcc: `MCC`_ compute a predictor using `normal`_ distributions.
+
+* Using --auc --utest:
+
+  - auc: Area Under the Curve
+  - u\_pv: pvalue compute by a `MannWhitney`_ rank test
+
+* Using --ttest:
+
+  - t\_pv: pvalue compute by `ttest\_ind`_
+
+
+subgroup\_predicted.xls
+-----------------------
+
+Using --full a secondary output file (subgroup\_predicted.xls) specify for each features if the sample as been correctly predicted. Build an heatmap with this output could help you to explore your data.
+
+* Legend:
+
+  - 1: true positive
+  - 2: false negative
+  - 3: false positive
+  - 4: true negative
+
+  .. _MCC: https://en.wikipedia.org/wiki/Matthews_correlation_coefficient
+  .. _KDE: https://en.wikipedia.org/wiki/Kernel_density_estimation
+  .. _normal: https://en.wikipedia.org/wiki/Normal_distribution
+  .. _MannWhitney: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.mannwhitneyu.html
+  .. _ttest\_ind: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html
+  .. _contingency: https://en.wikipedia.org/wiki/Confusion_matrix
+
+--------
+Bagging:
+--------
+
+To improve the stability and accuracy of MCC computed, you can add n `bagging`_ (using `-b n`)
+
+.. code:: shell
+
+  Take care, it's take n time more longer!!!, use multiprocess (-t) seems a good idea :).
+  epcy pred_rna -b 4 -t 4 --cpm --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
+
+
+.. _bagging: https://en.wikipedia.org/wiki/Bootstrap_aggregating
 .. _ensembl: https://useast.ensembl.org/info/data/ftp/index.html
