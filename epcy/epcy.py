@@ -4,11 +4,15 @@ from .argparser.pred import *
 from .argparser.pred_rna import *
 from .argparser.profile import *
 from .argparser.profile_rna import *
+from .argparser.qc import *
+from .argparser.kal2mat import *
 
 from .tools.pred import main_pred
 from .tools.pred_rna import main_pred_rna
 from .tools.profile import main_profile
 from .tools.profile_rna import main_profile_rna
+from .tools.qc import main_qc
+from .tools.kal2mat import main_kal2mat
 
 
 # ###########################################################################
@@ -49,6 +53,22 @@ def main():
     )
     profile_rna.set_defaults(func=main_profile_rna)
     get_argparser_profile_rna(profile_rna)
+
+    # create the argparser for the "qc" command
+    qc = subparsers.add_parser(
+        'qc',
+        help='Plot quality conrol gaph.'
+    )
+    qc.set_defaults(func=main_qc)
+    get_argparser_qc(qc)
+
+    # create the argparser for the "kal2mat" command
+    kal2mat = subparsers.add_parser(
+        'kal2mat',
+        help='Build and save matrix expression from kallisto quantification h5 files.'
+    )
+    kal2mat.set_defaults(func=main_kal2mat)
+    get_argparser_kal2mat(kal2mat)
 
 
     # recover arguments

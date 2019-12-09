@@ -108,6 +108,8 @@ def get_trans_by_gene(transcripts, ids_genes):
 
 
 def trans_to_gene(values, ids_genes):
+    """ Merge transcript quantification to work on gene level.
+    """
     counts = np.zeros(len(ids_genes))
 
     cpt = 0
@@ -117,13 +119,23 @@ def trans_to_gene(values, ids_genes):
 
     return(counts)
 
-def counts2tpm(counts, args):
-    """ Transform counts into tpm.
+
+def counts2cpm(counts):
+    """ Transform counts matrix into cpm.
     """
+    total_mass = np.sum(counts, axis=0)
+    counts = (counts / total_mass) * 1e6
+
+    return(counts)
+
+def counts2tpm(counts, transcripts_len):
+    """ Transform counts arrays into tpm.
+    """
+    counts = counts / transcripts_len
     total_mass = np.sum(counts)
     tpm_value = (counts / total_mass) * 1e6
 
-    return(np.log2(tpm_value + args.C))
+    return(tpm_value)
 
 def read_kall_project(file_h5, num_features, transcripts_len, args,
                       ids_genes):
@@ -134,24 +146,26 @@ def read_kall_project(file_h5, num_features, transcripts_len, args,
     if args.BS != 0:
         sample_data = np.zeros([num_features, args.BS], dtype=np.float32)
         for cpt_bs in range(0, args.BS):
-            counts = f["bootstrap/bs" + str(cpt_bs)][:] / transcripts_len
+            counts = f["bootstrap/bs" + str(cpt_bs)][:]
+
+            if args.TPM:
+                counts = counts2tpm(counts, transcripts_len)
+
             if args.GENE:
                 counts = trans_to_gene(counts, ids_genes)
 
-            if args.CPM:
-                sample_data[:, cpt_bs] = counts
-            else:
-                sample_data[:, cpt_bs] = counts2tpm(counts, args)
+            sample_data[:, cpt_bs] = counts
     else:
         sample_data = np.zeros([num_features, 1], dtype=np.float32)
-        counts = f["est_counts"][:] / transcripts_len
+        counts = f["est_counts"][:]
+
+        if args.TPM:
+            counts = counts2tpm(counts, args)
+
         if args.GENE:
             counts = trans_to_gene(counts, ids_genes)
 
-        if args.CPM:
-            sample_data[:, 0] = counts
-        else:
-            sample_data[:, 0] = counts2tpm(counts, args)
+        sample_data[:, 0] = counts
 
     f.close()
 
@@ -159,6 +173,8 @@ def read_kall_project(file_h5, num_features, transcripts_len, args,
 
 
 def get_design(args):
+    """ Read and format design.
+    """
     design = pd.read_csv(args.DESIGN, sep="\t")
     drop_ids = design[ design[args.SUBGROUP] == 'None' ].index
     design.drop(drop_ids , inplace=True)
@@ -173,7 +189,7 @@ def read_design_matrix(args):
     data = pd.io.parsers.read_csv(args.MATRIX, sep="\t", index_col=0)
     if sum(~design["sample"].isin(data.columns)) > 0:
         sys.stderr.write("WARNING: Some samples are present in the design, but not in the quantification matrix\n")
-        sys.stderr.write("\t the analysis will be done without these samples:\n")
+        sys.stderr.write("\t the analysis will be made without these samples:\n")
         sys.stderr.write(str(design[~design["sample"].isin(data.columns)]) + "\n")
         design = design[design["sample"].isin(data.columns)]
 
@@ -184,16 +200,17 @@ def read_design_matrix(args):
     list_ids = np.array(data.index)
 
     data = data.values
-    if not args.LOG:
+    if args.LOG:
         data = np.log2(data + args.C)
 
     return(design, data, list_ids)
 
 
-def create_kal_mat_rna(args, design, df_anno):
-    """ Create features matrix from kallisto output using kallisto
-        column in the dsign file.
+def create_kal_mat(args, design, design_bootstrapped, df_anno):
+    """ Create features matrix from kallisto h5 files.
+        This function use kallisto column in the design file.
     """
+
     file_name = os.path.join(str(design["kallisto"][0]), "abundance.h5")
     sys.stderr.write(time.strftime('%X') + ":\tRead kallisto info\n")
     f = h5py.File(file_name, 'r')
@@ -227,12 +244,12 @@ def create_kal_mat_rna(args, design, df_anno):
         rows_id = uniq_genes
         num_features = uniq_genes.size
 
+    sys.stderr.write(time.strftime('%X') + ":\tRead samples kallisto quantification from h5\n")
     if args.BS == 0:
         kallisto = np.zeros((num_features, design.shape[0]), dtype=np.float32)
     else:
         kallisto = np.zeros((num_features, design.shape[0]*args.BS), dtype=np.float32)
 
-    sys.stderr.write(time.strftime('%X') + ":\tRead samples kallisto quantification\n")
     cpt = 0
     for index, row in design.iterrows():
         sample = row['sample']
@@ -248,7 +265,14 @@ def create_kal_mat_rna(args, design, df_anno):
             kallisto[:,cpt : (cpt + 1)] = sample_data
             cpt += 1
 
+    data = pd.DataFrame(data=kallisto, index=rows_id, columns=design_bootstrapped['sample'])
 
+    return(data)
+
+
+def bootstrapped_design(design, args):
+    """ Update generic design to match with the number of botstrap.
+    """
     if args.BS == 0:
         header = design['sample']
     else:
@@ -259,46 +283,53 @@ def create_kal_mat_rna(args, design, df_anno):
         design.is_copy = None
         design['sample'] = header
 
-    data = pd.DataFrame(data=kallisto, index=rows_id, columns=header)
-    data = data.loc[(data.sum(axis=1) != 0), :]
-    data.is_copy = None
-
-    return(data, design)
-
+    return(design)
 
 def read_design_matrix_rna(args, df_anno=None):
     design = get_design(args)
     if args.KAL:
-        data, design = create_kal_mat_rna(args, design, df_anno)
-    else:
+        design_bootstrapped = bootstrapped_design(design, args)
+
+    if hasattr(args, 'MATRIX') and args.MATRIX is not None:
         data = pd.io.parsers.read_csv(args.MATRIX, sep="\t", index_col=0)
         if args.GENE:
             #TODO
-            sys.stderr.write("Not implemented!!! the analysis will be made on transcript.\n")
+            sys.stderr.write("ERROR: Sorry, switch transcript to gene quantification from a matrix file is not implemented!!!\n")
+            return(None, None, None)
+    else:
+        if args.KAL:
+            data = create_kal_mat(args, design, design_bootstrapped, df_anno)
+        else:
+            sys.stderr.write("ERROR: No quantification matrix can be find!\n")
+            return(None, None, None)
+
+    if args.KAL:
+        design = design_bootstrapped
 
     if sum(~design["sample"].isin(data.columns)) > 0:
         sys.stderr.write("WARNING: Some samples are present in the design, but not in the quantification matrix\n")
-        sys.stderr.write("\t the analysis will be done without these samples:\n")
+        sys.stderr.write("\t the analysis will be made without these samples:\n")
         sys.stderr.write(str(design[~design["sample"].isin(data.columns)]) + "\n")
         design = design[design["sample"].isin(data.columns)]
 
+    #Select and order sample column in fonction of design
     data = data.reindex(design["sample"], axis=1)
 
-    if args.CPM:
-        f_norm = 1e6 /  data.iloc[:,1:].sum()
-
+    #delete rows with only 0 into it
     data = data[(data.T != 0).any()]
-
-    if args.CPM:
-        data.iloc[:,1:] = data.iloc[:,1:] * f_norm
 
     list_ids = np.array(data.index)
 
     data = data.values
-    if not args.LOG:
+
+    if not args.TPM and args.CPM:
+        data = counts2cpm(data)
+
+    if args.LOG:
         data = np.log2(data + args.C)
 
     return(design, data, list_ids)
+
 
 def read_anno(args):
     df_anno = None
