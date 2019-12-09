@@ -353,7 +353,7 @@ class Classifier:
     @staticmethod
     def get_k_gausian_kernel(row_data, i, idx, num_query, min_bw, bw=None, n_bagging=1):
         x = row_data[i]
-        other = row_data[idx]
+        other = np.delete(row_data, i)
         o_num_query = num_query - 1 if i < num_query else num_query
         if n_bagging > 1:
             bag_others = [Classifier.get_bagging_other(other, o_num_query) for j in range(n_bagging)]
@@ -364,7 +364,7 @@ class Classifier:
     def k_gausian_kernel(x, other, i, min_bw, ids_split, bw=None):
         other_query = other[:ids_split]
         other_ref = other[ids_split:]
-        
+
         if bw is None:
             bw = Classifier.bw_nrd0(other)
             if bw < min_bw:
@@ -377,6 +377,13 @@ class Classifier:
             ne.evaluate('(0.3989423 * exp(-1/2*(((x - other_query) / bw)**2)))/norm_query'),
             ne.evaluate('(0.3989423 * exp(-1/2*(((x - other_ref) / bw)**2)))/norm_ref'),
         ])
+
+        #TODO check if his solution is fastest
+        #num_query = ids_split
+        #num_ref = other.size - ids_split
+        #norm = np.repeat(num_ref * bw, other.size)
+        #norm[:ids_split] = num_query * bw
+        #return(ne.evaluate('(0.3989423 * exp(-1/2*(((x - other) / bw)**2)))/norm'))
 
     @staticmethod
     def compute_normal_fx(row_data, i, idx, num_query, epsilon=0.001, n_bagging=1):

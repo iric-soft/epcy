@@ -61,66 +61,63 @@ After setup install:
 
   epcy -h
 
-Small example:
+Generic case:
 --------------
+
+* EPCY is design to work on any quantitative data, provided that values of each feature are comparable between each samples (normalized).
+* To run a comparative analysis, `epcy pred` need two tabulated files:
+
+  * A `matrix`_ of quantitative normalized data for each samples (column) with an "ID" column to identify each feature.
+  * A `design`_ table which describe the comparison.
+
+.. _matrix: https://github.com/iric-soft/epcy/blob/master/data/small_for_test/exp_matrix.tsv
+.. _design: https://github.com/iric-soft/epcy/blob/master/data/small_for_test/design.tsv
 
 .. code:: shell
 
-  cd [your_epcy_folder]
-  # Run epcy using default parameter on normalized expression matrix (like CPM, TPM, FPKM or RPKM)
-  epcy pred_rna -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
-  # Run epcy on readcount not normalized, add --cpm
-  epcy pred_rna -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup --cpm
-  # Run epcy without filter, this time you will have predictive analysis for all features (no NA in the output)
-  epcy pred_rna -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/no_filter_subgroup -l 0
-  # Run epcy on the second design (column subgroup2) describe in ./data/small_for_test/design.tsv
-  epcy pred_rna -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/subgroup2 --subgroup subgroup2
-  # Run epcy with n bagging (-b n). Take care, it's take n time more longer!!!, use multiprocess (-t) seems a good idea :).
-  # bagging? -> check: https://en.wikipedia.org/wiki/Bootstrap_aggregating
-  epcy pred_rna -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/subgroup -b 5 -t 2
-
   # Run epcy on any normalized quantification data
   epcy pred -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
+  # If your data require a log2 transforamtion, add --log
+  epcy pred --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
 
-Output:
--------
+* Result will be saved in prediction\_capability.xls file, which is detail here.
+* It is possible to change `subgroup` column name and the name of each subgroup using `--subgroup` `--query`
 
-Prediction\_capability.xls: the main output which contain the evaluation of each features (genes, proteins, ...). It's a tabulated files 9 columns:
+Working on RNA sequencing readcounts:
+-------------------------------------
 
- * Default columns:
+* EPCY allow to work directly on readcounts not mormalized, using `epcy pred_rna` as follow
 
-   - id: the id of each feature.
-   - l2fc: log2 Fold change.
-   - kernel\_mcc: Matthews Correlation Coefficient (`MCC`_) compute by a predictor using `KDE`_.
-   - mean\_query: mean(values) of samples specify as Query in design.tsv
-   - mean\_ref: mean(values) of samples specify as Ref in design.ts
+.. code:: shell
 
- * Using --normal:
+  # To run on read count not normalized, add --cpm --log
+  epcy pred_rna --cpm --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
 
-   - normal\_mcc: `MCC`_ compute a predictor using `normal`_ distributions.
+Working on kallisto quantification:
+-----------------------------------
 
- * Using --auc --utest:
+* EPCY allow to work directly kallisto quantificaion using h5 files, to have access to bootstrapped samples. To do so, a `kallisto` column need to be add to the design file (to specify the directory path where to find `abundant.h5` file for each sample) and `epcy pred_rna` need to run as follow:
 
-   - auc: Area Under the Curve
-   - u\_pv: pvalue compute by a `MannWhitney`_ rank test
+.. code:: shell
 
- * Using --ttest:
+  # To run on kallisto quantification, add --kall (+ --cpm --log)
+  epcy pred_rna --kal --cpm --log -d [design.tsv] -o [output_directory]
+  # !!! Take care kallisto quantification is on transcript not on gene
 
-   - t\_pv: pvalue compute by `ttest\_ind`_
+* To run on gene level, a gff3 file of the genome annotation is needed, to have the correspondence between transcript and gene. This file can be download on `ensenbl`_
+
+.. code:: shell
+
+  # To run on kallisto quantification and gene level, add --gene --anno [file.gff] (+ --kall --cpm --log)
+  epcy pred_rna --kal --cpm --log --gene --anno [gff.file] -d [design.tsv] -o [output_directory]
+
+* kallisto quantification allow to work on TPM:
+
+.. code:: shell
+
+  # work on TPM, replace --cpm by --tpm
+  epcy pred_rna --kal --tpm --log --gene --anno [gff.file] -d [design.tsv] -o [output_directory]
 
 
-Using --full a secondary output file (subgroup\_predicted.xls) specify for each features if the sample as been correctly predicted. Build an heatmap with this output could help you to explore your data.
 
- * Legend:
-
-   - 1: true positive
-   - 2: false negative
-   - 3: false positive
-   - 4: true negative
-
-   .. _MCC: https://en.wikipedia.org/wiki/Matthews_correlation_coefficient
-   .. _KDE: https://en.wikipedia.org/wiki/Kernel_density_estimation
-   .. _normal: https://en.wikipedia.org/wiki/Normal_distribution
-   .. _MannWhitney: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.mannwhitneyu.html
-   .. _ttest\_ind: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html
-   .. _contingency: https://en.wikipedia.org/wiki/Confusion_matrix
+.. _ensembl: https://useast.ensembl.org/info/data/ftp/index.html
