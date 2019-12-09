@@ -177,7 +177,7 @@ To improve the stability and accuracy of MCC computed, you can add n `bagging`_ 
 
 .. code:: shell
 
-  Take care, it's take n time more longer!!!, use multiprocess (-t) seems a good idea :).
+  #Take care, it's take n time more longer!!!, use multiprocess (-t) seems a good idea :).
   epcy pred_rna -b 4 -t 4 --cpm --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
 
 
