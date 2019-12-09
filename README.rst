@@ -81,7 +81,7 @@ Generic case:
   epcy pred --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
 
 * Result will be saved in prediction\_capability.xls file, which is detail below.
-* You can personalize the design file using `--subgroup` `--query`
+* You can personalize the design file using **--subgroup --query**
 
 .. code:: shell
 
@@ -91,7 +91,7 @@ Generic case:
 Working on RNA sequencing readcounts:
 -------------------------------------
 
-* EPCY allow to work directly on readcounts not mormalized, using `epcy pred_rna` as follow
+* To run EPCY on readcounts not mormalized use **epcy pred_rna** as follow
 
 .. code:: shell
 
@@ -101,7 +101,7 @@ Working on RNA sequencing readcounts:
 Working on kallisto quantification:
 -----------------------------------
 
-* EPCY allow to work directly kallisto quantificaion using h5 files, to have access to bootstrapped samples. To do so, a `kallisto` column need to be add to the design file (to specify the directory path where to find `abundant.h5` file for each sample) and `epcy pred_rna` need to run as follow:
+* EPCY allow to work directly on kallisto quantificaion using h5 files, to have access to bootstrapped samples. To do so, a `kallisto` column need to be add to the design file (to specify the directory path where to find *abundant.h5* file for each sample) and **epcy pred_rna** need to run as follow:
 
 .. code:: shell
 
