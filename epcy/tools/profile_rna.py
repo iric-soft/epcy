@@ -16,7 +16,8 @@ def main_profile_rna(args, argparser):
                 sys.stderr.write(time.strftime('%X') + ": Run EPCY on kallisto output on transcript!!!\n")
                 sys.stderr.write(time.strftime('%X') + ":\t add --gene to run on gene level\n")
 
-    if args.gene:
+    df_anno = None
+    if args.GENE:
         if hasattr(args, 'ANNO') and args.ANNO is not None:
             df_anno = ur.read_anno(args)
         else:

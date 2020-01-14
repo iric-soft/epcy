@@ -142,6 +142,10 @@ class Classifier:
             self.kernel_pred.fill(np.nan)
 
     def __pred(self):
+        num_bs = 0
+        if hasattr(self.args, 'BS') and self.args.BS is not None:
+            num_bs = self.args.BS
+
         self.__create_empty_res()
 
         cpt_id = 0
@@ -172,7 +176,7 @@ class Classifier:
                     if self.args.TTEST:
                         self.ttest_pv[cpt_id] = self.t_test_welch(row_data, self.num_query)
 
-                    ct_by_bagging_and_pred_by_sample = self.pred_fill_cont_table_kernel(row_data, self.num_query, self.args.MIN_BW, n_bagging=self.args.N_BAGGING, num_bs=self.args.BS)
+                    ct_by_bagging_and_pred_by_sample = self.pred_fill_cont_table_kernel(row_data, self.num_query, self.args.MIN_BW, n_bagging=self.args.N_BAGGING, num_bs=num_bs)
                     mcc, pred_by_sample = self.get_mcc_ped_by_bagging(ct_by_bagging_and_pred_by_sample)
 
                     self.kernel_mcc[cpt_id] = mcc
