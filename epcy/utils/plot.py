@@ -61,7 +61,7 @@ def plot_qc_histo(df_pred, quantiles, legend_quantile, mcc_bins, args):
 def plot_profile(id, query_exp, ref_exp, bw, args):
     df_swarn = pd.DataFrame(
         data={
-            'log2(x+' + str(args.C) + ')': np.append(query_exp, ref_exp),
+            'x': np.append(query_exp, ref_exp),
             'subgroup': np.append(
                 np.repeat(args.QUERY, len(query_exp)),
                 np.repeat("Other", len(ref_exp))
@@ -102,9 +102,17 @@ def plot_profile(id, query_exp, ref_exp, bw, args):
     sns_plot.set_title(str(id) + " " + args.QUERY + "\nbw=" + str(bw))
 
     sns_plot = sns.swarmplot(
-        x="log2(x+" + str(args.C) + ")", y="subgroup", data=df_swarn, ax=ax_swarm,
+        x="x", y="subgroup", data=df_swarn, ax=ax_swarm,
         palette=sns.color_palette([col_pal[0], col_pal[1]])
     )
+
+    x_label = "x"
+    if hasattr(args, 'CPM') and args.CPM:
+        x_label = "cpm(x)"
+    if hasattr(args, 'LOG') and args.LOG:
+        x_label = 'log2(' + x_label + "+"+ str(args.C) + ')'
+
+    sns_plot.set(xlabel=x_label)
 
     fig_dir = os.path.join(args.PATH_OUT)
     if not os.path.exists(fig_dir):
