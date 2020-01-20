@@ -76,9 +76,9 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     setup_requires=[
-        'numpy==1.17.0',
-        'pandas==0.24.2',
-        'h5py==2.9.0',
+        'numpy==1.18.1',
+        'pandas==0.25.3',
+        'h5py==2.10.0',
         'scipy==1.2.1',
         'scikit-learn==0.20.3',
         'matplotlib==3.0.3',
@@ -86,9 +86,9 @@ setup(
         'seaborn==0.9.0'
     ],
     install_requires=[
-        'numpy==1.17.0',
-        'pandas==0.24.2',
-        'h5py==2.9.0',
+        'numpy==1.18.1',
+        'pandas==0.25.3',
+        'h5py==2.10.0',
         'scipy==1.2.1',
         'scikit-learn==0.20.3',
         'matplotlib==3.0.3',
