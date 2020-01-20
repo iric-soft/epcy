@@ -20,18 +20,24 @@ def run_classifier(args, design, data, list_ids, start):
 def save_pred_res(args, all_classifier):
     """Save results compute by all classifiers.
     """
+    with_na = False
+    for classifier in all_classifier:
+        if classifier.with_na > 0:
+            with_na = True
+            break
+
     sys.stderr.write(time.strftime('%X') + ": Save epcy results\n")
     if args.PATH_OUT is not None:
         if not os.path.exists(args.PATH_OUT):
             os.makedirs(args.PATH_OUT)
 
-        file_out = args.PATH_OUT + "/prediction_capability.xls"
+        file_out = args.PATH_OUT + "/predictive_capability.xls"
         file_pred_out = args.PATH_OUT + "/subgroup_predicted.xls"
 
         with open(file_out, 'w') as w_csv:
-            all_classifier[0].print_feature_header(w_csv, args)
+            all_classifier[0].print_feature_header(w_csv, args, with_na)
             for classifier in all_classifier:
-                classifier.print_feature_pred(w_csv)
+                classifier.print_feature_pred(w_csv, with_na)
 
         if args.FULL:
             with open(file_pred_out, 'w') as w_csv:

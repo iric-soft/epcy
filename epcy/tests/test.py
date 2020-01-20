@@ -37,6 +37,7 @@ class epcyTest(unittest.TestCase):
             L2FC=0.3,
             MATRIX=mat,
             THREAD=1,
+            N_DRAW=100,
             N_BAGGING=1,
             BY=-1,
             BS=0,
@@ -51,7 +52,8 @@ class epcyTest(unittest.TestCase):
             TTEST=False,
             FULL=False,
             AUC=False,
-            NORMAL=False
+            NORMAL=False,
+            RANDOM_SEED = 42
         )
 
         with captured_output() as (out, err):
@@ -73,7 +75,7 @@ class epcyTest(unittest.TestCase):
 
         selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[2],
-                         "1.0",
+                         "0.97591287",
                          "Test fail: test_pred -> KERNEL_MCC")
 
         selected_line = all_lines[3].split("\t")
@@ -137,6 +139,7 @@ class epcyTest(unittest.TestCase):
             L2FC=0.3,
             MATRIX=mat,
             THREAD=2,
+            N_DRAW=100,
             N_BAGGING=1,
             BY=-1,
             BS=0,
@@ -151,7 +154,8 @@ class epcyTest(unittest.TestCase):
             TTEST=False,
             FULL=False,
             AUC=False,
-            NORMAL=False
+            NORMAL=False,
+            RANDOM_SEED = 42
         )
 
         with captured_output() as (out, err):
