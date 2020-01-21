@@ -147,9 +147,9 @@ class Classifier:
 
         if self.args.FULL:
             if self.args.NORMAL:
-                self.normal_pred = np.empty(shape=(len(self.list_ids), len(self.design["sample"])), dtype=np.int8)
+                self.normal_pred = np.empty(shape=(len(self.list_ids), len(self.design["sample"])), dtype=np.float16)
                 self.normal_pred.fill(np.nan)
-            self.kernel_pred = np.empty(shape=(len(self.list_ids), len(self.design["sample"])), dtype=np.int8)
+            self.kernel_pred = np.empty(shape=(len(self.list_ids), len(self.design["sample"])), dtype=np.float16)
             self.kernel_pred.fill(np.nan)
 
     def __pred(self):
@@ -358,24 +358,23 @@ class Classifier:
         #  pred_by_sample: 1=tp, 2=fn, 3=fp, tn=4
 
         cont_tables = []
+        pclass_by_sample = np.zeros(shape=(len(fx_by_sample)), dtype=np.float16)
         for i in range(num_draw):
-            pred_by_sample = [random_state.random() < fx for fx in fx_by_sample]
+            pred_by_sample = np.array([random_state.random() < fx for fx in fx_by_sample])
             #pred_by_sample = [True if fx > 0 else False for fx in fx_by_sample]
             tp_fn = np.add.reduceat(pred_by_sample,[0,num_query])
 
             cont_table = [tp_fn[0], num_query-tp_fn[0], tp_fn[1], N - num_query - tp_fn[1]]
             cont_tables.append(cont_table)
 
-        pred_by_sample = np.fromiter((1 if pred else 2 for pred in pred_by_sample), np.int8, len(pred_by_sample))
-        pred_by_sample[num_query:] += 2
+            pclass_by_sample[np.where(pred_by_sample[:num_query] == 1)] += 1
+            pclass_by_sample[np.array(
+                            np.where(pred_by_sample[num_query:] == 0)
+                         ) + num_query] -= 1
 
-        # switch 2 and 3 for dendrogram distance
-        id2 = np.where(pred_by_sample == 2)
-        id3 = np.where(pred_by_sample == 3)
-        pred_by_sample[id2] = 3
-        pred_by_sample[id3] = 2
-
-        return(cont_tables, pred_by_sample)
+        pclass_by_sample[:num_query] = pclass_by_sample[:num_query] / num_draw
+        pclass_by_sample[num_query:] = pclass_by_sample[num_query:] / num_draw
+        return(cont_tables, pclass_by_sample)
 
     @staticmethod
     def bw_nrd0(x):
@@ -474,7 +473,7 @@ class Classifier:
             for ct in cts:
                 all_mcc.append(Classifier.get_mcc(ct))
             all_pred.append(pred)
-        pred_by_sample = np.median(np.asarray(all_pred),axis=0)
+        pred_by_sample = np.mean(np.asarray(all_pred),axis=0)
 
         all_mcc = np.sort(all_mcc)
         num_value = all_mcc.size
