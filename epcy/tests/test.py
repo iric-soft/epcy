@@ -63,7 +63,6 @@ class epcyTest(unittest.TestCase):
         all_lines = output.split("\n")
 
         selected_line = all_lines[0].split("\t")
-        print(selected_line)
         self.assertEqual(selected_line[2],
                          "kernel_mcc",
                          "Test fail: test_pred -> header")
