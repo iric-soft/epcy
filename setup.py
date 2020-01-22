@@ -76,6 +76,7 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     setup_requires=[
+        'cython==0.29.14',
         'numpy==1.18.1',
         'pandas==0.25.3',
         'h5py==2.10.0',
@@ -86,6 +87,7 @@ setup(
         'seaborn==0.9.0'
     ],
     install_requires=[
+        'cython==0.29.14',
         'numpy==1.18.1',
         'pandas==0.25.3',
         'h5py==2.10.0',

@@ -167,12 +167,12 @@ class Classifier:
             if self.with_na > 0:
                 ids_na = np.isnan(row_data)
                 if sum(ids_na) > 0:
-                    row_data = row_data[~numpy.isnan(row_data)]
+                    row_data = row_data[~np.isnan(row_data)]
                     num_query = num_query - sum(ids_na[:num_query])
                     self.sample_query[cpt_id] = num_query
                     self.sample_ref[cpt_id] = row_data.size - num_query
 
-                    if self.sample_query[cpt_id] == 0 or self.sample_ref[cpt_id] == 0:
+                    if self.sample_query[cpt_id] <= 1 or self.sample_ref[cpt_id] <= 1:
                         cpt_id += 1
                         continue
 
