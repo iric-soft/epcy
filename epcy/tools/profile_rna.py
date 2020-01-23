@@ -37,9 +37,10 @@ def main_profile_rna(args, argparser):
         sys.stderr.write(time.strftime('%X') + ":\t" + id + "\n")
         pos = np.where(list_ids == id)[0]
         if pos.shape[0] == 1:
+            row_data, row_num_query = uc.Classifier.rm_missing(data[pos,:][0], num_query)
             bw = uc.Classifier.bw_nrd0(data[pos,:])
-            query_exp = data[pos,:num_query][0]
-            ref_exp = data[pos,num_query:][0]
+            query_exp = data[pos,:row_num_query][0]
+            ref_exp = data[pos,row_num_query:][0]
             up.plot_profile(id, query_exp, ref_exp, bw, args)
         else:
             if pos.shape[0] == 0:
