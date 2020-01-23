@@ -165,16 +165,14 @@ class Classifier:
 
             num_query = self.num_query
             if self.with_na > 0:
-                ids_na = np.isnan(row_data)
-                if sum(ids_na) > 0:
-                    row_data = row_data[~np.isnan(row_data)]
-                    num_query = num_query - sum(ids_na[:num_query])
-                    self.sample_query[cpt_id] = num_query
-                    self.sample_ref[cpt_id] = row_data.size - num_query
+                row_data, num_query = self.rm_missing(row_data, num_query)
 
-                    if self.sample_query[cpt_id] <= 1 or self.sample_ref[cpt_id] <= 1:
-                        cpt_id += 1
-                        continue
+                self.sample_query[cpt_id] = num_query
+                self.sample_ref[cpt_id] = row_data.size - num_query
+
+                if self.sample_query[cpt_id] <= 1 or self.sample_ref[cpt_id] <= 1:
+                    cpt_id += 1
+                    continue
 
             sum_row = sum(row_data)
             res = self.get_foldchange(row_data, num_query)
@@ -237,6 +235,15 @@ class Classifier:
         self.done = True
 
     @staticmethod
+    def rm_missing(row_data, num_query):
+        ids_na = np.isnan(row_data)
+        if sum(ids_na) > 0:
+            row_data = row_data[~np.isnan(row_data)]
+            num_query = num_query - sum(ids_na[:num_query])
+
+        return(row_data, num_query)
+
+    @staticmethod
     def get_foldchange(row_data, num_query):
         mean_query = np.mean(row_data[:num_query])
         mean_ref = np.mean(row_data[num_query:])
@@ -273,6 +280,9 @@ class Classifier:
     @staticmethod
     def compute_kernel_fx(all_k, i, num_query, num_bs):
         ''' return (1/(n*bw)) * sum k((x-xi) / bw) '''
+        #TODO: clean this
+        all_k, num_query = all_k
+
         if i < num_query:
             if num_bs == 0:
                 num_query = num_query - 1
@@ -311,11 +321,9 @@ class Classifier:
         # Compute k((x-xi) / bw) for each leave one out
         k_bw_gen_by_fold = [Classifier.get_k_gaussian_kernel_for_all_x(row_data, x_ids, num_query, min_bw, bw=bw, n_bagging=n_bagging, random_state=random_state)
                             for x_ids in n_folds]
+
         k_bw_gen_by_bag = np.transpose(np.asarray(k_bw_gen_by_fold), (2, 0, 1, 3))
-        if num_bs == 0:
-            k_bw_gen_by_bag = np.reshape(k_bw_gen_by_bag, (n_bagging, N, N - 1))
-        else:
-            k_bw_gen_by_bag = np.reshape(k_bw_gen_by_bag, (n_bagging, N, N - num_bs))
+        k_bw_gen_by_bag = np.reshape(k_bw_gen_by_bag, (n_bagging, N, 2))
 
         #print("BAG")
         #print(k_bw_gen_by_bag)
@@ -414,6 +422,8 @@ class Classifier:
     def get_k_gaussian_kernel(x, other, num_query, min_bw, bw, n_bagging, random_state):
         if n_bagging > 1:
             bag_others = [Classifier.get_bagging_other(other, num_query, random_state=random_state) for j in range(n_bagging)]
+            #print("bag_others")
+            #print(bag_others)
             return( [Classifier.k_gaussian_kernel(x, other, min_bw, b_num_query, bw) for other, b_num_query in bag_others] )
         else:
             return( [Classifier.k_gaussian_kernel(x, other, min_bw, num_query, bw) for j in range(1)] )
@@ -430,7 +440,7 @@ class Classifier:
         norm = np.repeat(num_ref * bw, other.size)
         norm[:ids_split] = num_query * bw
         res = ne.evaluate('(0.3989423 * exp(-1/2*(((x - other) / bw)**2)))/norm')
-        return(res)
+        return(res, num_query)
 
     @staticmethod
     def compute_normal_fx_for_all_x(row_data, x_ids, num_query, epsilon=0.001, n_bagging=1, random_state=np.random.RandomState()):
