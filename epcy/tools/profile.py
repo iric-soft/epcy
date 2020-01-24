@@ -20,8 +20,8 @@ def main_profile(args, argparser):
         if pos.shape[0] == 1:
             row_data, row_num_query = uc.Classifier.rm_missing(data[pos,:][0], num_query)
             bw = uc.Classifier.bw_nrd0(row_data)
-            query_exp = row_data[:num_query]
-            ref_exp = row_data[num_query:]
+            query_exp = row_data[:row_num_query]
+            ref_exp = row_data[row_num_query:]
             up.plot_profile(id, query_exp, ref_exp, bw, args)
         else:
             if pos.shape[0] == 0:
