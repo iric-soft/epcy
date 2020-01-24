@@ -69,12 +69,12 @@ class epcyTest(unittest.TestCase):
 
         selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[1],
-                         "-2.0025983",
+                         "-3.9925938",
                          "Test fail: test_pred -> L2FC")
 
         selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[2],
-                         "0.97591287",
+                         "0.8535378",
                          "Test fail: test_pred -> KERNEL_MCC")
 
         selected_line = all_lines[3].split("\t")
@@ -170,7 +170,7 @@ class epcyTest(unittest.TestCase):
 
         selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[1],
-                        "-2.0025983",
+                        "-3.9925938",
                         "Test fail: test_pred -> L2FC")
 
 def runTests():
