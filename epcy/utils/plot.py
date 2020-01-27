@@ -58,7 +58,7 @@ def plot_qc_histo(df_pred, quantiles, legend_quantile, mcc_bins, args):
     plt.savefig(file_out)
 
 
-def plot_profile(id, query_exp, ref_exp, bw, args):
+def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
     df_swarn = pd.DataFrame(
         data={
             'x': np.append(query_exp, ref_exp),
@@ -95,11 +95,11 @@ def plot_profile(id, query_exp, ref_exp, bw, args):
     plt.setp(ax_swarm.yaxis.get_minorticklines(), visible=False)
     ax_swarm.yaxis.grid(False)
 
-    sns_plot = sns.kdeplot(query_exp, shade=True, bw=bw, color = col_pal[0], label=args.QUERY, ax=ax_kde)
+    sns_plot = sns.kdeplot(query_exp, shade=True, bw=bw_query, color = col_pal[0], label=args.QUERY, ax=ax_kde)
     #sns_plot = sns.rugplot(query_exp, color = "r")
-    sns_plot = sns.kdeplot(ref_exp, shade=True, bw=bw, color = col_pal[1], label="Other", ax=ax_kde)
+    sns_plot = sns.kdeplot(ref_exp, shade=True, bw=bw_ref, color = col_pal[1], label="Other", ax=ax_kde)
     #sns_plot = sns.rugplot(ref_exp, color = "b")
-    sns_plot.set_title(str(id) + " " + args.QUERY + "\nbw=" + str(bw))
+    sns_plot.set_title(str(id) + " " + args.QUERY + "\nbw_query=" + str(bw_query) + "\nbw_ref=" + str(bw_ref))
 
     sns_plot = sns.swarmplot(
         x="x", y="subgroup", data=df_swarn, ax=ax_swarm,

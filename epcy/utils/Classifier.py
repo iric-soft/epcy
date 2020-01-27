@@ -278,16 +278,10 @@ class Classifier:
         return(Classifier.get_ct_using_fx_normal(row_data, num_query, N, n_bagging=n_bagging, num_draw=num_draw, random_state=random_state))
 
     @staticmethod
-    def compute_kernel_fx(all_k, i, num_query, num_bs):
+    def compute_kernel_fx(all_k, i, num_bs):
         ''' return (1/(n*bw)) * sum k((x-xi) / bw) '''
         #TODO: clean this
         all_k, num_query = all_k
-
-        if i < num_query:
-            if num_bs == 0:
-                num_query = num_query - 1
-            else:
-                num_query = num_query - (1 * num_bs)
 
         k_query = all_k[:num_query]
         k_ref = all_k[num_query:]
@@ -302,10 +296,8 @@ class Classifier:
 
     @staticmethod
     def compute_kernel_fx_and_ct(k_bw_nq_gen, num_query, N, num_bs, num_draw=100, random_state=np.random.RandomState()):
-        fx_by_sample = [Classifier.compute_kernel_fx(k_bw_nq, i, num_query, num_bs) for i, k_bw_nq in enumerate(k_bw_nq_gen)]
-        #print("#1")
-        #print(fx_by_sample)
-        #print("compute_kernel_fx end")
+        fx_by_sample = [Classifier.compute_kernel_fx(k_bw_nq, i, num_bs) for i, k_bw_nq in enumerate(k_bw_nq_gen)]
+
         return(Classifier.fx_to_tables(fx_by_sample, num_query, N, num_draw=num_draw, random_state=random_state))
 
     @staticmethod
@@ -385,6 +377,26 @@ class Classifier:
         return(cont_tables, pclass_by_sample)
 
     @staticmethod
+    def bw_var(x):
+        return(np.var(x))
+
+    @staticmethod
+    def bw_nrd(x):
+        #TODO need to improve speed of this part
+        hi = np.std(x)
+        iqr = np.subtract(*np.percentile(x, [75, 25]))
+        lo = min(hi, iqr/1.34)
+        if (lo == 0):
+            lo = hi
+            if (lo == 0):
+                lo = abs(x[1])
+                if (lo == 0):
+                    lo = 1
+
+        # this function can be run by ne.evaluate, with all lo pre-computed
+        return(1.06 * lo * len(x)**(-0.2))
+
+    @staticmethod
     def bw_nrd0(x):
         #TODO need to improve speed of this part
         hi = np.std(x)
@@ -430,17 +442,30 @@ class Classifier:
 
     @staticmethod
     def k_gaussian_kernel(x, other, min_bw, ids_split, bw):
-        if bw is None:
-            bw = Classifier.bw_nrd0(other)
-            if bw < min_bw:
-                bw = min_bw
+        other_query = other[:ids_split]
+        other_ref = other[ids_split:]
 
-        num_query = ids_split
-        num_ref = other.size - ids_split
-        norm = np.repeat(num_ref * bw, other.size)
-        norm[:ids_split] = num_query * bw
-        res = ne.evaluate('(0.3989423 * exp(-1/2*(((x - other) / bw)**2)))/norm')
-        return(res, num_query)
+        if bw is None:
+            #bw_query = Classifier.bw_nrd0(other_query)
+            #bw_ref = Classifier.bw_nrd0(other_ref)
+            bw_query = Classifier.bw_nrd(other_query)
+            bw_ref = Classifier.bw_nrd(other_ref)
+
+            if bw_query < min_bw:
+                bw_query = min_bw
+            if bw_ref < min_bw:
+                bw_ref = min_bw
+        else:
+            bw_query = bw
+            bw_ref = bw
+
+        norm_query = other_query.size * bw_query
+        norm_ref = other_ref.size * bw_ref
+
+        res_query = ne.evaluate('(0.3989423 * exp(-1/2*(((x - other_query) / bw_query)**2)))/norm_query')
+        res_ref = ne.evaluate('(0.3989423 * exp(-1/2*(((x - other_ref) / bw_ref)**2)))/norm_ref')
+
+        return(np.concatenate((res_query, res_ref)), ids_split)
 
     @staticmethod
     def compute_normal_fx_for_all_x(row_data, x_ids, num_query, epsilon=0.001, n_bagging=1, random_state=np.random.RandomState()):

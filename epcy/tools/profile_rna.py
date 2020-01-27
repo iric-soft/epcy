@@ -38,10 +38,13 @@ def main_profile_rna(args, argparser):
         pos = np.where(list_ids == id)[0]
         if pos.shape[0] == 1:
             row_data, row_num_query = uc.Classifier.rm_missing(data[pos,:][0], num_query)
-            bw = uc.Classifier.bw_nrd0(data[pos,:])
-            query_exp = data[pos,:row_num_query][0]
-            ref_exp = data[pos,row_num_query:][0]
-            up.plot_profile(id, query_exp, ref_exp, bw, args)
+            row_query = row_data[:row_num_query]
+            row_ref = row_data[row_num_query:]
+
+            bw_query = uc.Classifier.bw_nrd(row_query)
+            bw_ref = uc.Classifier.bw_nrd(row_ref)
+
+            up.plot_profile(id, row_query, row_ref, bw_query, bw_ref, args)
         else:
             if pos.shape[0] == 0:
                 sys.stderr.write("\t\t -> WARNING: This feasture is not found in your expression matrix.\n")
