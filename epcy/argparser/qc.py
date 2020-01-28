@@ -1,6 +1,7 @@
 from .common import *
 
 from .get_output_part import *
+from .get_bandwidth_part import *
 
 def get_argparser_qc(parser):
 
@@ -23,3 +24,4 @@ def get_argparser_qc(parser):
     parser.set_defaults(YLOG=False)
 
     get_argparser_output_part(parser)
+    get_argparser_bandwidth_part(parser)

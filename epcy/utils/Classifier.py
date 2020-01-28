@@ -47,6 +47,7 @@ class Classifier:
         header = header + "\tkernel_mcc_low"
         header = header + "\tkernel_mcc_high"
         header = header + "\tmean_query\tmean_ref"
+        header = header + "\tbw_query\tbw_ref"
         if args.NORMAL:
             header = header + "\tnormal_mcc"
             if args.N_BAGGING > 1:
@@ -74,7 +75,9 @@ class Classifier:
                 line = line + str(self.kernel_mcc[cpt_id][0]) + "\t"
                 line = line + str(self.kernel_mcc[cpt_id][2]) + "\t"
                 line = line + str(self.mean_query[cpt_id]) + "\t"
-                line = line + str(self.mean_ref[cpt_id])
+                line = line + str(self.mean_ref[cpt_id]) + "\t"
+                line = line + str(self.bw_query[cpt_id]) + "\t"
+                line = line + str(self.bw_ref[cpt_id])
                 if self.args.NORMAL:
                     line = line + "\t" + str(self.normal_mcc[cpt_id][1])
                     if self.args.N_BAGGING > 1:
@@ -126,6 +129,10 @@ class Classifier:
         self.mean_query.fill(np.nan)
         self.mean_ref = np.empty(shape=(len(self.list_ids)), dtype=np.float32)
         self.mean_ref.fill(np.nan)
+        self.bw_query = np.empty(shape=(len(self.list_ids)), dtype=np.float32)
+        self.bw_query.fill(np.nan)
+        self.bw_ref = np.empty(shape=(len(self.list_ids)), dtype=np.float32)
+        self.bw_ref.fill(np.nan)
 
         if self.with_na > 0:
             self.sample_query = np.empty(shape=(len(self.list_ids)), dtype=np.int32)
@@ -179,6 +186,8 @@ class Classifier:
             self.l2fc[cpt_id] = res[0]
             self.mean_query[cpt_id] = res[1]
             self.mean_ref[cpt_id] = res[2]
+            self.bw_query[cpt_id] = Classifier.bw_nrd(row_data[:num_query])
+            self.bw_ref[cpt_id] = Classifier.bw_nrd(row_data[num_query:])
             #if select_id == "ENSG00000261541.1":
             #    print(select_id)
             #    print(row_data)

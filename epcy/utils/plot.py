@@ -57,6 +57,20 @@ def plot_qc_histo(df_pred, quantiles, legend_quantile, mcc_bins, args):
 
     plt.savefig(file_out)
 
+    x_var = 'kernel_mcc'
+    # Draw
+    plt.figure(figsize=(16,9), dpi=150)
+    n, bins, patches = plt.hist([df_pred['bw_query'], df_pred['bw_ref']], bins=100, color=['r', 'b'], label=['Query', 'Ref'])
+    plt.title("QC histogram of bandwidth", fontsize=22)
+    plt.xlabel("bandwidth")
+    plt.ylabel("# features")
+    plt.legend()
+
+    # add xlimit
+    plt.axvline(x=args.MIN_BW, color='black', linestyle='--')
+    file_out = os.path.join(args.PATH_OUT, "qc_histogram_bw.pdf")
+    plt.savefig(file_out)
+
 
 def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
     df_swarn = pd.DataFrame(

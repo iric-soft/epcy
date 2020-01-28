@@ -25,6 +25,10 @@ def main_profile(args, argparser):
             bw_query = uc.Classifier.bw_nrd(row_query)
             bw_ref = uc.Classifier.bw_nrd(row_ref)
 
+            if bw_query < args.MIN_BW:
+                bw_query = args.MIN_BW
+            if bw_ref < args.MIN_BW:
+                bw_ref = args.MIN_BW
             up.plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args)
         else:
             if pos.shape[0] == 0:
