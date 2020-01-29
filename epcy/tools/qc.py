@@ -31,6 +31,7 @@ def set_color_legend():
 def main_qc(args, argparser):
     # Import Data
     df_pred = pd.read_csv(args.PRED, sep="\t")
+    df_pred = df_pred.dropna()
 
     # Prepare data
     min_mcc = df_pred['kernel_mcc'].min()
@@ -42,7 +43,7 @@ def main_qc(args, argparser):
         quantiles = [math.trunc(np.quantile(df_pred['abs_l2fc'], x) * 10000) / 10000 for x in [0.01, 0.05, 0.25, 0.50, 0.75, 0.95, 0.99]]
         legend_quantile = [
             "abs(l2fc)<" + str(quantiles[0]),
-            str(quantiles[0]) + "<= abs(l2fc) <=" + str(quantiles[1]),
+            str(quantiles[0]) + "<= abs(l2fc) <" + str(quantiles[1]),
             str(quantiles[1]) + "<= abs(l2fc) <" + str(quantiles[2]),
             str(quantiles[2]) + "<= abs(l2fc) <" + str(quantiles[3]),
             str(quantiles[3]) + "<= abs(l2fc) <" + str(quantiles[4]),
@@ -63,7 +64,7 @@ def main_qc(args, argparser):
         quantiles = [math.trunc(np.quantile(df_pred['max(query, ref)'], x) * 10000) / 10000 for x in [0.01, 0.05, 0.25, 0.50, 0.75, 0.95, 0.99]]
         legend_quantile = [
             "max(query, ref)<" + str(quantiles[0]),
-            str(quantiles[0]) + "<= max(query, ref) <=" + str(quantiles[1]),
+            str(quantiles[0]) + "<= max(query, ref) <" + str(quantiles[1]),
             str(quantiles[1]) + "<= max(query, ref) <" + str(quantiles[2]),
             str(quantiles[2]) + "<= max(query, ref) <" + str(quantiles[3]),
             str(quantiles[3]) + "<= max(query, ref) <" + str(quantiles[4]),

@@ -57,11 +57,25 @@ def plot_qc_histo(df_pred, quantiles, legend_quantile, mcc_bins, args):
 
     plt.savefig(file_out)
 
+    x_var = 'kernel_mcc'
+    # Draw
+    plt.figure(figsize=(16,9), dpi=150)
+    n, bins, patches = plt.hist([df_pred['bw_query'], df_pred['bw_ref']], bins=100, color=['r', 'b'], label=['Query', 'Ref'])
+    plt.title("QC histogram of bandwidth", fontsize=22)
+    plt.xlabel("bandwidth")
+    plt.ylabel("# features")
+    plt.legend()
 
-def plot_profile(id, query_exp, ref_exp, bw, args):
+    # add xlimit
+    plt.axvline(x=args.MIN_BW, color='black', linestyle='--')
+    file_out = os.path.join(args.PATH_OUT, "qc_histogram_bw.pdf")
+    plt.savefig(file_out)
+
+
+def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
     df_swarn = pd.DataFrame(
         data={
-            'log2(x+' + str(args.C) + ')': np.append(query_exp, ref_exp),
+            'x': np.append(query_exp, ref_exp),
             'subgroup': np.append(
                 np.repeat(args.QUERY, len(query_exp)),
                 np.repeat("Other", len(ref_exp))
@@ -95,16 +109,24 @@ def plot_profile(id, query_exp, ref_exp, bw, args):
     plt.setp(ax_swarm.yaxis.get_minorticklines(), visible=False)
     ax_swarm.yaxis.grid(False)
 
-    sns_plot = sns.kdeplot(query_exp, shade=True, bw=bw, color = col_pal[0], label=args.QUERY, ax=ax_kde)
+    sns_plot = sns.kdeplot(query_exp, shade=True, bw=bw_query, color = col_pal[0], label=args.QUERY, ax=ax_kde)
     #sns_plot = sns.rugplot(query_exp, color = "r")
-    sns_plot = sns.kdeplot(ref_exp, shade=True, bw=bw, color = col_pal[1], label="Other", ax=ax_kde)
+    sns_plot = sns.kdeplot(ref_exp, shade=True, bw=bw_ref, color = col_pal[1], label="Other", ax=ax_kde)
     #sns_plot = sns.rugplot(ref_exp, color = "b")
-    sns_plot.set_title(str(id) + " " + args.QUERY + "\nbw=" + str(bw))
+    sns_plot.set_title(str(id) + " " + args.QUERY + "\nbw_query=" + str(bw_query) + "\nbw_ref=" + str(bw_ref))
 
     sns_plot = sns.swarmplot(
-        x="log2(x+" + str(args.C) + ")", y="subgroup", data=df_swarn, ax=ax_swarm,
+        x="x", y="subgroup", data=df_swarn, ax=ax_swarm,
         palette=sns.color_palette([col_pal[0], col_pal[1]])
     )
+
+    x_label = "x"
+    if hasattr(args, 'CPM') and args.CPM:
+        x_label = "cpm(x)"
+    if hasattr(args, 'LOG') and args.LOG:
+        x_label = 'log2(' + x_label + "+"+ str(args.C) + ')'
+
+    sns_plot.set(xlabel=x_label)
 
     fig_dir = os.path.join(args.PATH_OUT)
     if not os.path.exists(fig_dir):

@@ -303,6 +303,9 @@ def read_design_matrix_rna(args, df_anno=None):
             sys.stderr.write("ERROR: No quantification matrix can be find!\n")
             return(None, None, None)
 
+    if hasattr(args, 'REPLACE_NA') and args.REPLACE_NA is not None:
+        data = data.fillna(args.REPLACE_NA)
+
     if args.KAL:
         design = design_bootstrapped
 

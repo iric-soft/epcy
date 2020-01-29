@@ -91,7 +91,7 @@ Generic case:
 Working on RNA sequencing readcounts:
 -------------------------------------
 
-* To run EPCY on readcounts not mormalized use **epcy pred_rna** as follow
+* To run EPCY on readcounts not mormalized use **pred_rna** tool as follow:
 
 .. code:: shell
 

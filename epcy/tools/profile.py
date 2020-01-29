@@ -18,10 +18,18 @@ def main_profile(args, argparser):
         sys.stderr.write(time.strftime('%X') + ":\t" + id + "\n")
         pos = np.where(list_ids == id)[0]
         if pos.shape[0] == 1:
-            bw = uc.Classifier.bw_nrd0(data[pos,:])
-            query_exp = data[pos,:num_query][0]
-            ref_exp = data[pos,num_query:][0]
-            up.plot_profile(id, query_exp, ref_exp, bw, args)
+            row_data, row_num_query = uc.Classifier.rm_missing(data[pos,:][0], num_query)
+            row_query = row_data[:row_num_query]
+            row_ref = row_data[row_num_query:]
+
+            bw_query = uc.Classifier.bw_nrd(row_query)
+            bw_ref = uc.Classifier.bw_nrd(row_ref)
+
+            if bw_query < args.MIN_BW:
+                bw_query = args.MIN_BW
+            if bw_ref < args.MIN_BW:
+                bw_ref = args.MIN_BW
+            up.plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args)
         else:
             if pos.shape[0] == 0:
                 sys.stderr.write("\t\t -> WARNING: This feasture is not found in your matrix (-m).\n")
