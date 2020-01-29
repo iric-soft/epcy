@@ -31,6 +31,7 @@ def set_color_legend():
 def main_qc(args, argparser):
     # Import Data
     df_pred = pd.read_csv(args.PRED, sep="\t")
+    df_pred = df_pred.dropna()
 
     # Prepare data
     min_mcc = df_pred['kernel_mcc'].min()

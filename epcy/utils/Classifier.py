@@ -177,7 +177,7 @@ class Classifier:
                 self.sample_query[cpt_id] = num_query
                 self.sample_ref[cpt_id] = row_data.size - num_query
 
-                if self.sample_query[cpt_id] <= 1 or self.sample_ref[cpt_id] <= 1:
+                if self.sample_query[cpt_id] <= 2 or self.sample_ref[cpt_id] <= 2:
                     cpt_id += 1
                     continue
 
