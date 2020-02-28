@@ -176,6 +176,7 @@ def get_design(args):
     """ Read and format design.
     """
     design = pd.read_csv(args.DESIGN, sep="\t")
+    design['sample'] = design['sample'].apply(str)
     drop_ids = design[ design[args.SUBGROUP] == 'None' ].index
     design.drop(drop_ids , inplace=True)
     design[args.SUBGROUP] = [1 if condition == args.QUERY else 0 for condition in design[args.SUBGROUP]]
@@ -290,6 +291,11 @@ def read_design_matrix_rna(args, df_anno=None):
     if args.KAL:
         design_bootstrapped = bootstrapped_design(design, args)
 
+    num_query = len(np.where(design[args.SUBGROUP] == 1)[0])
+    if num_query == 0 :
+        sys.stderr.write("ERROR: EPCY havn't found Query samples in your design!\n\tCheck your design file and --subgroup, --query options\n")
+        return(None, None, None)
+
     if hasattr(args, 'MATRIX') and args.MATRIX is not None:
         data = pd.io.parsers.read_csv(args.MATRIX, sep="\t", index_col=0)
         if args.GENE:
@@ -313,6 +319,8 @@ def read_design_matrix_rna(args, df_anno=None):
         sys.stderr.write("WARNING: Some samples are present in the design, but not in the quantification matrix\n")
         sys.stderr.write("\t the analysis will be made without these samples:\n")
         sys.stderr.write(str(design[~design["sample"].isin(data.columns)]) + "\n")
+        sys.stderr.write("Samples in matrix:\n")
+        sys.stderr.write(str(data.columns) + "\n")
         design = design[design["sample"].isin(data.columns)]
 
     #Select and order sample column in fonction of design

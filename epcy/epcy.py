@@ -6,6 +6,7 @@ from .argparser.profile import *
 from .argparser.profile_rna import *
 from .argparser.qc import *
 from .argparser.kal2mat import *
+from .argparser.explore import *
 
 from .tools.pred import main_pred
 from .tools.pred_rna import main_pred_rna
@@ -13,6 +14,7 @@ from .tools.profile import main_profile
 from .tools.profile_rna import main_profile_rna
 from .tools.qc import main_qc
 from .tools.kal2mat import main_kal2mat
+from .tools.explore import main_explore
 
 
 # ###########################################################################
@@ -69,6 +71,14 @@ def main():
     )
     kal2mat.set_defaults(func=main_kal2mat)
     get_argparser_kal2mat(kal2mat)
+
+    # create the argparser for the "explore" command
+    explore = subparsers.add_parser(
+        'explore',
+        help='Create figures to explore subgroup_predicted.xls.'
+    )
+    explore.set_defaults(func=main_explore)
+    get_argparser_explore(explore)
 
 
     # recover arguments

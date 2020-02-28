@@ -29,7 +29,7 @@ def main_profile(args, argparser):
                 bw_query = args.MIN_BW
             if bw_ref < args.MIN_BW:
                 bw_ref = args.MIN_BW
-            up.plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args)
+            up.plot_profile(id, row_query, row_ref, bw_query, bw_ref, args)
         else:
             if pos.shape[0] == 0:
                 sys.stderr.write("\t\t -> WARNING: This feasture is not found in your matrix (-m).\n")
