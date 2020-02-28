@@ -22,6 +22,9 @@ def main_pred_rna(args, argparser):
     sys.stderr.write(time.strftime('%X') + ": Read design and matrix features\n")
     (design, data, list_ids) = ur.read_design_matrix_rna(args, df_anno)
 
+    if design is None:
+        exit()
+
     num_pred = data.shape[0]
 
     all_classifier = uo.compute_pred(args, num_pred, list_ids, data, design)

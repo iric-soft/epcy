@@ -61,7 +61,7 @@ def cut_version(id_str):
     return(id_str)
 
 def compute_pred(args, num_pred, list_ids, data, design):
-    sys.stderr.write(time.strftime('%X') + ": Start epcy analysis\n")
+    sys.stderr.write(time.strftime('%X') + ": Start epcy analysis of " + str(num_pred) + " features\n")
     if args.BY == -1:
         args.BY = int(num_pred / args.THREAD) + 1
 

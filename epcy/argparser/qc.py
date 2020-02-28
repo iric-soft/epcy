@@ -7,7 +7,7 @@ def get_argparser_qc(parser):
 
     parser.add_argument("-p",
                         dest="PRED",
-                        help="EPCY predictive_capability output file.",
+                        help="Path to EPCY predictive_capability output file.",
                         type=lambda x: is_valid_file(parser, x))
 
     parser.add_argument("--l2fc",
