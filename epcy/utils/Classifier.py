@@ -392,7 +392,6 @@ class Classifier:
     @staticmethod
     def bw_nrd(x):
         #TODO need to improve speed of this part
-        print(x)
         hi = np.std(x)
         iqr = np.subtract(*np.percentile(x, [75, 25]))
         lo = min(hi, iqr/1.34)
