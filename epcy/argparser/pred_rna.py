@@ -5,6 +5,7 @@ from .get_kallisto_part import *
 from .get_gene_part import *
 from .pred import *
 
+
 def get_argparser_pred_rna(parser):
 
     get_argparser_pred(parser)

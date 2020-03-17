@@ -3,6 +3,7 @@ from .common import *
 from .get_output_part import *
 from .get_bandwidth_part import *
 
+
 def get_argparser_qc(parser):
 
     parser.add_argument("-p",
@@ -12,7 +13,8 @@ def get_argparser_qc(parser):
 
     parser.add_argument("--l2fc",
                         dest="L2FC",
-                        help="Filled in foction of log2(FoldChange). (Default: max of mean expression)",
+                        help="Filled in foction of log2(FoldChange). \
+                              (Default: max of mean expression)",
                         action='store_true')
 
     parser.add_argument("--ylog",

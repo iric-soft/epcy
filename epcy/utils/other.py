@@ -7,6 +7,7 @@ import numpy as np
 from multiprocessing import Pool
 from .. utils import Classifier as uc
 
+
 def run_classifier(args, design, data, list_ids, start):
     """Run a classifier.
     """
@@ -16,6 +17,7 @@ def run_classifier(args, design, data, list_ids, start):
     c.run()
 
     return(c)
+
 
 def save_pred_res(args, all_classifier):
     """Save results compute by all classifiers.
@@ -51,6 +53,7 @@ def save_pred_res(args, all_classifier):
 
     sys.stderr.write(time.strftime('%X') + ": End\n")
 
+
 def cut_version(id_str):
     """Remove the version ensembl gene/transcript ids
     """
@@ -60,20 +63,25 @@ def cut_version(id_str):
 
     return(id_str)
 
+
 def compute_pred(args, num_pred, list_ids, data, design):
-    sys.stderr.write(time.strftime('%X') + ": Start epcy analysis of " + str(num_pred) + " features\n")
+    sys.stderr.write(time.strftime('%X') + ": Start epcy analysis of " +
+                     str(num_pred) + " features\n")
     if args.BY == -1:
         args.BY = int(num_pred / args.THREAD) + 1
 
     all_classifier = []
     if args.THREAD <= 1:
-        tasks = [(args, design, data, list_ids, start) for start in np.arange(0, num_pred, args.BY)]
+        tasks = [(args, design, data, list_ids, start)
+                 for start in np.arange(0, num_pred, args.BY)]
         for task in tasks:
-            all_classifier.append(run_classifier(task[0], task[1], task[2], task[3], task[4]))
+            all_classifier.append(run_classifier(task[0], task[1], task[2],
+                                                 task[3], task[4]))
 
     else:
         with Pool(processes=args.THREAD) as p:
-            tasks = [(args, design, data, list_ids, start) for start in np.arange(0, num_pred, args.BY)]
+            tasks = [(args, design, data, list_ids, start)
+                     for start in np.arange(0, num_pred, args.BY)]
 
             jobs = [p.apply_async(run_classifier, t) for t in tasks]
             all_classifier = [job.get(None) for job in jobs]

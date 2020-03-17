@@ -11,11 +11,13 @@ def get_argparser_other_pred_part(parser):
                         action='store_true')
     parser.add_argument("--ttest",
                         dest="TTEST",
-                        help="Compute a p-value using ttest_ind from scipy.stats.",
+                        help="Compute a p-value using ttest_ind \
+                              from scipy.stats.",
                         action='store_true')
     parser.add_argument("--utest",
                         dest="UTEST",
-                        help="Compute a p-value using Mann-Whitney from scipy.stats. (NEED --auc)",
+                        help="Compute a p-value using Mann-Whitney from \
+                              scipy.stats. (NEED --auc)",
                         action='store_true')
 
     parser.set_defaults(AUC=False)

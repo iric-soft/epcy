@@ -14,6 +14,7 @@ from epcy.utils import readers as ur
 
 from contextlib import contextmanager
 
+
 @contextmanager
 def captured_output():
     new_out, new_err = io.StringIO(), io.StringIO()
@@ -23,6 +24,7 @@ def captured_output():
         yield sys.stdout, sys.stderr
     finally:
         sys.stdout, sys.stderr = old_out, old_err
+
 
 class epcyTest(unittest.TestCase):
     def test_pred(self):
@@ -53,7 +55,7 @@ class epcyTest(unittest.TestCase):
             FULL=False,
             AUC=False,
             NORMAL=False,
-            RANDOM_SEED = 42
+            RANDOM_SEED=42
         )
 
         with captured_output() as (out, err):
@@ -154,7 +156,7 @@ class epcyTest(unittest.TestCase):
             FULL=False,
             AUC=False,
             NORMAL=False,
-            RANDOM_SEED = 42
+            RANDOM_SEED=42
         )
 
         with captured_output() as (out, err):
@@ -165,16 +167,18 @@ class epcyTest(unittest.TestCase):
 
         selected_line = all_lines[0].split("\t")
         self.assertEqual(selected_line[2],
-                        "kernel_mcc",
-                        "Test fail: test_pred_thread normal -> header")
+                         "kernel_mcc",
+                         "Test fail: test_pred_thread normal -> header")
 
         selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[1],
-                        "2.8047473",
-                        "Test fail: test_pred -> L2FC")
+                         "2.8047473",
+                         "Test fail: test_pred -> L2FC")
+
 
 def runTests():
     unittest.main()
+
 
 if __name__ == "__main__":
     runTests()

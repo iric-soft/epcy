@@ -16,6 +16,7 @@ col_pal = [
     mpl.colors.hex2color('#1483D2')
 ]
 
+
 def plot_explore_heatmap(df_heatmap, df_pred, args):
     if not os.path.exists(args.PATH_OUT):
         os.makedirs(args.PATH_OUT)
@@ -24,23 +25,14 @@ def plot_explore_heatmap(df_heatmap, df_pred, args):
 
     mcc_colors_palette = sns.light_palette("green", reverse=True, n_colors=3)
 
-
     mcc_colors = []
     for x in df_pred.KERNEL_MCC.values:
         if x >= 0.9:
             mcc_colors.append(mcc_colors_palette[0])
-        elif x >=0.5:
+        elif x >= 0.5:
             mcc_colors.append(mcc_colors_palette[1])
         else:
             mcc_colors.append(mcc_colors_palette[2])
-
-    #DOESN'T WORKS
-    #mcc = df_pred.KERNEL_MCC.values.copy()
-    #mcc_colors = df_pred.KERNEL_MCC.values.copy()
-    #mcc_colors[np.where(mcc >= 0.9)] = [mcc_colors_palette[0]] * len(mcc_colors[np.where(mcc >= 0.9)])
-    #mcc_colors[np.where((mcc < 0.9) & (mcc >= 0.5))] = [mcc_colors_palette[1]] * len(mcc_colors[np.where((mcc < 0.9) & (mcc >= 0.5))])
-    #mcc_colors[np.where(mcc < 0.5)] = [mcc_colors_palette[2]] * len(mcc_colors[np.where(mcc < 0.5)])
-
 
     sns_plot = sns.clustermap(
         df_heatmap, linewidths=0, metric='euclidean',
@@ -49,17 +41,22 @@ def plot_explore_heatmap(df_heatmap, df_pred, args):
         row_colors=mcc_colors,
         cmap="vlag"
     )
-    sns_plot.fig.suptitle("Heatmap of predicted subgroup using top " + str(args.TOP) + " features")
-    sns_plot.ax_heatmap.set_xticklabels(sns_plot.ax_heatmap.get_xmajorticklabels(), fontsize = 4)
-    sns_plot.ax_heatmap.set_yticklabels(sns_plot.ax_heatmap.get_ymajorticklabels(), fontsize = 4)
+    sns_plot.fig.suptitle("Heatmap of predicted subgroup using top " +
+                          str(args.TOP) + " features")
+    sns_plot.ax_heatmap.set_xticklabels(
+        sns_plot.ax_heatmap.get_xmajorticklabels(),
+        fontsize=4)
+    sns_plot.ax_heatmap.set_yticklabels(
+        sns_plot.ax_heatmap.get_ymajorticklabels(),
+        fontsize=4)
 
     file_out = os.path.join(args.PATH_OUT, "explore_heatmap.pdf")
     sns_plot.fig.savefig(file_out)
 
+
 def plot_qc_histo(df_pred, quantiles, legend_quantile, mcc_bins, args):
     if not os.path.exists(args.PATH_OUT):
         os.makedirs(args.PATH_OUT)
-
 
     x_var = 'kernel_mcc'
     groupby_var = 'color_legend'
@@ -67,16 +64,20 @@ def plot_qc_histo(df_pred, quantiles, legend_quantile, mcc_bins, args):
     vals = [df[x_var].values.tolist() for i, df in df_pred_agg]
 
     # Draw
-    plt.figure(figsize=(16,9), dpi=150)
+    plt.figure(figsize=(16, 9), dpi=150)
     colors = [plt.cm.copper(i/float(len(vals)-1)) for i in range(len(vals))]
-    n, bins, patches = plt.hist(vals, mcc_bins, stacked=True, density=False, color=colors[:len(vals)])
+    n, bins, patches = plt.hist(vals, mcc_bins, stacked=True, density=False,
+                                color=colors[:len(vals)])
 
     # Decoration
-    plt.legend({group:col for group, col in zip(legend_quantile, colors[:len(vals)])})
+    plt.legend({group: col
+                for group, col in zip(legend_quantile, colors[:len(vals)])})
     if args.L2FC:
-        plt.title("QC histogram of kernel_mcc colored by abs_l2fc", fontsize=22)
+        plt.title("QC histogram of kernel_mcc colored by abs_l2fc",
+                  fontsize=22)
     else:
-        plt.title("QC histogram of kernel_mcc colored by max of mean expression", fontsize=22)
+        plt.title("QC histogram of kernel_mcc colored by max of mean \
+                   expression", fontsize=22)
     plt.xlabel(x_var)
     plt.ylabel("# features")
 
@@ -87,9 +88,11 @@ def plot_qc_histo(df_pred, quantiles, legend_quantile, mcc_bins, args):
     if args.YLOG:
         plt.yscale("log")
         if args.L2FC:
-            file_out = os.path.join(args.PATH_OUT, "qc_histogram_l2fc_ylog.pdf")
+            file_out = os.path.join(args.PATH_OUT,
+                                    "qc_histogram_l2fc_ylog.pdf")
         else:
-            file_out = os.path.join(args.PATH_OUT, "qc_histogram_exp_ylog.pdf")
+            file_out = os.path.join(args.PATH_OUT,
+                                    "qc_histogram_exp_ylog.pdf")
     else:
         if args.L2FC:
             file_out = os.path.join(args.PATH_OUT, "qc_histogram_l2fc.pdf")
@@ -98,8 +101,10 @@ def plot_qc_histo(df_pred, quantiles, legend_quantile, mcc_bins, args):
 
     x_var = 'kernel_mcc'
     # Draw
-    plt.figure(figsize=(16,9), dpi=150)
-    n, bins, patches = plt.hist([df_pred['bw_query'], df_pred['bw_ref']], bins=100, color=['r', 'b'], label=['Query', 'Ref'])
+    plt.figure(figsize=(16, 9), dpi=150)
+    n, bins, patches = plt.hist([df_pred['bw_query'], df_pred['bw_ref']],
+                                bins=100, color=['r', 'b'],
+                                label=['Query', 'Ref'])
     plt.title("QC histogram of bandwidth", fontsize=22)
     plt.xlabel("bandwidth")
     plt.ylabel("# features")
@@ -148,11 +153,14 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
     plt.setp(ax_swarm.yaxis.get_minorticklines(), visible=False)
     ax_swarm.yaxis.grid(False)
 
-    sns_plot = sns.kdeplot(query_exp, shade=True, bw=bw_query, color = col_pal[0], label=args.QUERY, ax=ax_kde)
-    #sns_plot = sns.rugplot(query_exp, color = "r")
-    sns_plot = sns.kdeplot(ref_exp, shade=True, bw=bw_ref, color = col_pal[1], label="Other", ax=ax_kde)
-    #sns_plot = sns.rugplot(ref_exp, color = "b")
-    sns_plot.set_title(str(id) + " " + args.QUERY + "\nbw_query=" + str(bw_query) + "\nbw_ref=" + str(bw_ref))
+    sns_plot = sns.kdeplot(query_exp, shade=True, bw=bw_query,
+                           color=col_pal[0], label=args.QUERY, ax=ax_kde)
+    # sns_plot = sns.rugplot(query_exp, color = "r")
+    sns_plot = sns.kdeplot(ref_exp, shade=True, bw=bw_ref, color=col_pal[1],
+                           label="Other", ax=ax_kde)
+    # sns_plot = sns.rugplot(ref_exp, color = "b")
+    sns_plot.set_title(str(id) + " " + args.QUERY + "\nbw_query=" +
+                       str(bw_query) + "\nbw_ref=" + str(bw_ref))
 
     sns_plot = sns.swarmplot(
         x="x", y="subgroup", data=df_swarn, ax=ax_swarm,
@@ -163,7 +171,7 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
     if hasattr(args, 'CPM') and args.CPM:
         x_label = "cpm(x)"
     if hasattr(args, 'LOG') and args.LOG:
-        x_label = 'log2(' + x_label + "+"+ str(args.C) + ')'
+        x_label = 'log2(' + x_label + "+" + str(args.C) + ')'
 
     sns_plot.set(xlabel=x_label)
 
