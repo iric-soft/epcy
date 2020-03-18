@@ -6,6 +6,7 @@ from .get_bandwidth_part import *
 from .get_output_part import *
 from .get_matrix_part import *
 
+
 def get_argparser_profile(parser):
 
     get_argparser_matrix(parser)
@@ -15,8 +16,8 @@ def get_argparser_profile(parser):
     get_argparser_output_part(parser)
 
     parser.add_argument("--ids",
-                        dest = "IDS",
-                        help = 'List of features id to plot',
-                        type = str,
-                        nargs = '+',
-                        default = [])
+                        dest="IDS",
+                        help='List of features id to plot',
+                        type=str,
+                        nargs='+',
+                        default=[])

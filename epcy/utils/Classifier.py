@@ -4,11 +4,12 @@ import math
 import numpy as np
 import pandas as pd
 
+from scipy.stats import mannwhitneyu, ttest_ind
+from statistics import median
+
 import numexpr as ne
 ne.set_num_threads(1)
 
-from scipy.stats import mannwhitneyu, ttest_ind
-from statistics import median
 
 def print_memory(fn):
     def wrapper(*args, **kwargs):
@@ -18,6 +19,7 @@ def print_memory(fn):
         finally:
             print(psutil.virtual_memory())
     return wrapper
+
 
 class Classifier:
     def __init__(self, args, design, data, list_ids, start):
@@ -125,7 +127,8 @@ class Classifier:
     def __create_empty_res(self):
         self.l2fc = np.empty(shape=(len(self.list_ids)), dtype=np.float32)
         self.l2fc.fill(np.nan)
-        self.mean_query = np.empty(shape=(len(self.list_ids)), dtype=np.float32)
+        self.mean_query = np.empty(shape=(len(self.list_ids)),
+                                   dtype=np.float32)
         self.mean_query.fill(np.nan)
         self.mean_ref = np.empty(shape=(len(self.list_ids)), dtype=np.float32)
         self.mean_ref.fill(np.nan)
@@ -135,28 +138,38 @@ class Classifier:
         self.bw_ref.fill(np.nan)
 
         if self.with_na > 0:
-            self.sample_query = np.empty(shape=(len(self.list_ids)), dtype=np.int32)
-            self.sample_ref = np.empty(shape=(len(self.list_ids)), dtype=np.int32)
+            self.sample_query = np.empty(shape=(len(self.list_ids)),
+                                         dtype=np.int32)
+            self.sample_ref = np.empty(shape=(len(self.list_ids)),
+                                       dtype=np.int32)
         if self.args.AUC:
             self.auc = np.empty(shape=(len(self.list_ids)), dtype=np.float32)
             self.auc.fill(np.nan)
             if self.args.UTEST:
-                self.utest_pv = np.empty(shape=(len(self.list_ids)), dtype=np.float32)
+                self.utest_pv = np.empty(shape=(len(self.list_ids)),
+                                         dtype=np.float32)
                 self.utest_pv.fill(np.nan)
         if self.args.TTEST:
-            self.ttest_pv = np.empty(shape=(len(self.list_ids)), dtype=np.float32)
+            self.ttest_pv = np.empty(shape=(len(self.list_ids)),
+                                     dtype=np.float32)
             self.ttest_pv.fill(np.nan)
         if self.args.NORMAL:
-            self.normal_mcc = np.empty(shape=(len(self.list_ids), 3), dtype=np.float32)
+            self.normal_mcc = np.empty(shape=(len(self.list_ids), 3),
+                                       dtype=np.float32)
             self.normal_mcc.fill(np.nan)
-        self.kernel_mcc = np.empty(shape=(len(self.list_ids), 3), dtype=np.float32)
+        self.kernel_mcc = np.empty(shape=(len(self.list_ids), 3),
+                                   dtype=np.float32)
         self.kernel_mcc.fill(np.nan)
 
         if self.args.FULL:
             if self.args.NORMAL:
-                self.normal_pred = np.empty(shape=(len(self.list_ids), len(self.design["sample"])), dtype=np.float16)
+                self.normal_pred = np.empty(shape=(len(self.list_ids),
+                                                   len(self.design["sample"])),
+                                            dtype=np.float16)
                 self.normal_pred.fill(np.nan)
-            self.kernel_pred = np.empty(shape=(len(self.list_ids), len(self.design["sample"])), dtype=np.float16)
+            self.kernel_pred = np.empty(shape=(len(self.list_ids),
+                                               len(self.design["sample"])),
+                                        dtype=np.float16)
             self.kernel_pred.fill(np.nan)
 
     def __pred(self):
@@ -168,7 +181,7 @@ class Classifier:
 
         cpt_id = 0
         for select_id in self.list_ids:
-            row_data = self.data[cpt_id,:]
+            row_data = self.data[cpt_id, :]
 
             num_query = self.num_query
             if self.with_na > 0:
@@ -188,7 +201,7 @@ class Classifier:
             self.mean_ref[cpt_id] = res[2]
             self.bw_query[cpt_id] = Classifier.bw_nrd(row_data[:num_query])
             self.bw_ref[cpt_id] = Classifier.bw_nrd(row_data[num_query:])
-            #if select_id == "ENSG00000261541.1":
+            # if select_id == "ENSG00000261541.1":
             #    print(select_id)
             #    print(row_data)
             #    print(self.l2fc[cpt_id])
@@ -198,14 +211,16 @@ class Classifier:
             if np.unique(row_data).size != 1:
                 if sum_row >= self.args.EXP and abs(self.l2fc[cpt_id]) >= self.args.L2FC:
                     if self.args.AUC:
-                        res = self.auc_u_test(row_data, num_query, self.num_ref)
+                        res = self.auc_u_test(row_data, num_query,
+                                              self.num_ref)
                         self.auc[cpt_id] = res[0]
 
                         if self.args.UTEST:
                             self.utest_pv[cpt_id] = res[1]
 
                     if self.args.TTEST:
-                        self.ttest_pv[cpt_id] = self.t_test_welch(row_data, num_query)
+                        self.ttest_pv[cpt_id] = self.t_test_welch(row_data,
+                                                                  num_query)
 
                     ct_by_bagging_and_pred_by_sample = self.pred_fill_cont_table_kernel(row_data, num_query, self.args.MIN_BW, n_bagging=self.args.N_BAGGING, num_bs=num_bs, num_draw=self.args.N_DRAW, random_state=self.random_state)
                     mcc, pred_by_sample = self.get_mcc_ped_by_bagging(ct_by_bagging_and_pred_by_sample)
@@ -214,13 +229,7 @@ class Classifier:
 
                     if self.args.FULL:
                         self.kernel_pred[cpt_id, :] = pred_by_sample
-                    #if self.kernel_mcc[cpt_id] < 0:
-                    #    print(select_id)
-                    #    print(self.l2fc[cpt_id])
-                    #    # print(row_data)
-                    #    print(ct)
-                    #    print(self.kernel_mcc[cpt_id])
-                    #########
+
                     if self.args.NORMAL:
                         ct_by_bagging_and_pred_by_sample = self.pred_fill_cont_table_normal(row_data, num_query, n_bagging=self.args.N_BAGGING, num_draw=self.args.N_DRAW, random_state=self.random_state)
                         mcc, pred_by_sample = self.get_mcc_ped_by_bagging(ct_by_bagging_and_pred_by_sample)
@@ -228,12 +237,6 @@ class Classifier:
                         self.normal_mcc[cpt_id] = mcc
                         if self.args.FULL:
                             self.normal_pred[cpt_id, :] = pred_by_sample
-
-            #else:
-            #    print(select_id)
-            #    print(row_data)
-            #    print(sum_row)
-            #    print(abs(self.l2fc[cpt_id]))
 
             cpt_id += 1
 
@@ -262,34 +265,48 @@ class Classifier:
 
     @staticmethod
     def auc_u_test(row_data, num_query, num_ref):
-        #print(row_data)
-        (u_value, p_value) = mannwhitneyu(row_data[:num_query], row_data[num_query:], alternative="two-sided")
+        # print(row_data)
+        (u_value, p_value) = mannwhitneyu(row_data[:num_query],
+                                          row_data[num_query:],
+                                          alternative="two-sided")
         auc = u_value / (num_query * num_ref)
 
         return(auc, p_value)
 
     @staticmethod
     def t_test_welch(row_data, num_query):
-        (t_value, p_value) = ttest_ind(row_data[:num_query], row_data[num_query:], equal_var=False)
+        (t_value, p_value) = ttest_ind(row_data[:num_query],
+                                       row_data[num_query:],
+                                       equal_var=False)
 
         return(p_value)
 
     @staticmethod
-    def pred_fill_cont_table_kernel(row_data, num_query, min_bw, bw=None, n_bagging=1, num_bs=0, num_draw=100, random_state=np.random.RandomState()):
+    def pred_fill_cont_table_kernel(row_data, num_query, min_bw, bw=None,
+                                    n_bagging=1, num_bs=0, num_draw=100,
+                                    random_state=np.random.RandomState()):
         # Compute sample assignation using kernel
         N = len(row_data)
-        return(Classifier.get_ct_using_fx_kernel(row_data, num_query, N, min_bw, bw=bw, n_bagging=n_bagging, num_bs=num_bs, num_draw=num_draw, random_state=random_state))
+        return(Classifier.get_ct_using_fx_kernel(
+            row_data, num_query, N, min_bw, bw=bw, n_bagging=n_bagging,
+            num_bs=num_bs, num_draw=num_draw, random_state=random_state)
+        )
 
     @staticmethod
-    def pred_fill_cont_table_normal(row_data, num_query, n_bagging=1, num_draw=100, random_state=np.random.RandomState()):
+    def pred_fill_cont_table_normal(row_data, num_query, n_bagging=1,
+                                    num_draw=100,
+                                    random_state=np.random.RandomState()):
         # Compute sample assignation using normal dist
         N = len(row_data)
-        return(Classifier.get_ct_using_fx_normal(row_data, num_query, N, n_bagging=n_bagging, num_draw=num_draw, random_state=random_state))
+        return(Classifier.get_ct_using_fx_normal(
+            row_data, num_query, N, n_bagging=n_bagging, num_draw=num_draw,
+            random_state=random_state)
+        )
 
     @staticmethod
     def compute_kernel_fx(all_k, i, num_bs):
         ''' return (1/(n*bw)) * sum k((x-xi) / bw) '''
-        #TODO: clean this
+        # TODO: clean this
         all_k, num_query = all_k
 
         k_query = all_k[:num_query]
@@ -304,13 +321,20 @@ class Classifier:
         return(res)
 
     @staticmethod
-    def compute_kernel_fx_and_ct(k_bw_nq_gen, num_query, N, num_bs, num_draw=100, random_state=np.random.RandomState()):
-        fx_by_sample = [Classifier.compute_kernel_fx(k_bw_nq, i, num_bs) for i, k_bw_nq in enumerate(k_bw_nq_gen)]
+    def compute_kernel_fx_and_ct(k_bw_nq_gen, num_query, N, num_bs,
+                                 num_draw=100,
+                                 random_state=np.random.RandomState()):
+        fx_by_sample = [Classifier.compute_kernel_fx(k_bw_nq, i, num_bs)
+                        for i, k_bw_nq in enumerate(k_bw_nq_gen)]
 
-        return(Classifier.fx_to_tables(fx_by_sample, num_query, N, num_draw=num_draw, random_state=random_state))
+        return(Classifier.fx_to_tables(fx_by_sample, num_query, N,
+                                       num_draw=num_draw,
+                                       random_state=random_state))
 
     @staticmethod
-    def get_ct_using_fx_kernel(row_data, num_query, N, min_bw, bw=None, n_bagging=1, num_bs=0, num_draw=100, random_state=np.random.RandomState()):
+    def get_ct_using_fx_kernel(row_data, num_query, N, min_bw, bw=None,
+                               n_bagging=1, num_bs=0, num_draw=100,
+                               random_state=np.random.RandomState()):
         # Create leave one out index and manage kallisto bootstrap
         # TODO: implement n_folds
         n_folds = None
@@ -320,23 +344,33 @@ class Classifier:
             n_folds = np.array_split(np.arange(N), N)
 
         # Compute k((x-xi) / bw) for each leave one out
-        k_bw_gen_by_fold = [Classifier.get_k_gaussian_kernel_for_all_x(row_data, x_ids, num_query, min_bw, bw=bw, n_bagging=n_bagging, random_state=random_state)
+        k_bw_gen_by_fold = [Classifier.get_k_gaussian_kernel_for_all_x(
+                                row_data, x_ids, num_query, min_bw,
+                                bw=bw, n_bagging=n_bagging,
+                                random_state=random_state)
                             for x_ids in n_folds]
 
-        k_bw_gen_by_bag = np.transpose(np.asarray(k_bw_gen_by_fold), (2, 0, 1, 3))
+        k_bw_gen_by_bag = np.transpose(
+                            np.asarray(k_bw_gen_by_fold),
+                            (2, 0, 1, 3))
         k_bw_gen_by_bag = np.reshape(k_bw_gen_by_bag, (n_bagging, N, 2))
 
-        #print("BAG")
-        #print(k_bw_gen_by_bag)
+        # print("BAG")
+        # print(k_bw_gen_by_bag)
 
         # (1/(n*bw)) * sum k((x-xi) / bw)
-        ct_by_bag = np.asarray([Classifier.compute_kernel_fx_and_ct(k_bw_nq_gen, num_query, N, num_bs, num_draw=num_draw, random_state=random_state)
-                                    for k_bw_nq_gen in k_bw_gen_by_bag])
+        ct_by_bag = np.asarray([Classifier.compute_kernel_fx_and_ct(
+                                                k_bw_nq_gen, num_query, N,
+                                                num_bs, num_draw=num_draw,
+                                                random_state=random_state)
+                                for k_bw_nq_gen in k_bw_gen_by_bag])
 
         return(ct_by_bag)
 
     @staticmethod
-    def get_ct_using_fx_normal(row_data, num_query, N, n_bagging=1, num_bs=0, num_draw=100, random_state=np.random.RandomState()):
+    def get_ct_using_fx_normal(row_data, num_query, N, n_bagging=1, num_bs=0,
+                               num_draw=100,
+                               random_state=np.random.RandomState()):
         # Create leave one out index
         n_folds = None
         if num_bs > 0:
@@ -344,36 +378,43 @@ class Classifier:
         else:
             n_folds = np.array_split(np.arange(N), N)
 
-        fx_by_fold = [Classifier.compute_normal_fx_for_all_x(row_data, x_ids, num_query, n_bagging=n_bagging, random_state=random_state)
-                            for x_ids in n_folds]
+        fx_by_fold = [Classifier.compute_normal_fx_for_all_x(
+                                    row_data, x_ids, num_query,
+                                    n_bagging=n_bagging,
+                                    random_state=random_state)
+                      for x_ids in n_folds]
         fx_by_fold = np.asarray(fx_by_fold)
-        #print(fx_by_fold.shape)
-        #print(fx_by_fold)
+        # print(fx_by_fold.shape)
+        # print(fx_by_fold)
         fx_by_bag = np.transpose(fx_by_fold, (2, 0, 1))
         fx_by_bag = np.reshape(fx_by_bag, (n_bagging, N, N - num_bs))
-        #exit()
 
-        #print("####################################### normal")
-        ct_by_bag = (Classifier.fx_to_tables(fx_by_sample, num_query, N, num_draw=num_draw, random_state=random_state)
-                        for fx_by_sample in fx_by_bag)
+        ct_by_bag = (Classifier.fx_to_tables(
+                                    fx_by_sample, num_query, N,
+                                    num_draw=num_draw,
+                                    random_state=random_state)
+                     for fx_by_sample in fx_by_bag)
 
         return(ct_by_bag)
 
     @staticmethod
-    def fx_to_tables(fx_by_sample, num_query, N, num_draw=100, random_state=np.random.RandomState()):
-        # print(fx_by_sample)
-        # return:
-        #  cont_table[tp, fp, fn, tn]
-        #  pred_by_sample: 1=tp, 2=fn, 3=fp, tn=4
+    def fx_to_tables(fx_by_sample, num_query, N, num_draw=100,
+                     random_state=np.random.RandomState()):
+        """return:
+           cont_table[tp, fp, fn, tn]
+           pred_by_sample: 1=tp, 2=fn, 3=fp, tn=4"""
 
         cont_tables = []
-        pclass_by_sample = np.zeros(shape=(len(fx_by_sample)), dtype=np.float16)
+        pclass_by_sample = np.zeros(
+            shape=(len(fx_by_sample)),
+            dtype=np.float16)
         for i in range(num_draw):
-            pred_by_sample = np.array([random_state.random() < fx for fx in fx_by_sample])
-            #pred_by_sample = [True if fx > 0 else False for fx in fx_by_sample]
-            tp_fn = np.add.reduceat(pred_by_sample,[0,num_query])
+            pred_by_sample = np.array([random_state.random() < fx
+                                      for fx in fx_by_sample])
+            tp_fn = np.add.reduceat(pred_by_sample, [0, num_query])
 
-            cont_table = [tp_fn[0], num_query-tp_fn[0], tp_fn[1], N - num_query - tp_fn[1]]
+            cont_table = [tp_fn[0], num_query-tp_fn[0],
+                          tp_fn[1], N - num_query - tp_fn[1]]
             cont_tables.append(cont_table)
 
             pclass_by_sample[np.where(pred_by_sample[:num_query] == 1)] += 1
@@ -391,7 +432,7 @@ class Classifier:
 
     @staticmethod
     def bw_nrd(x):
-        #TODO need to improve speed of this part
+        # TODO need to improve speed of this part
         hi = np.std(x)
         iqr = np.subtract(*np.percentile(x, [75, 25]))
         lo = min(hi, iqr/1.34)
@@ -407,7 +448,7 @@ class Classifier:
 
     @staticmethod
     def bw_nrd0(x):
-        #TODO need to improve speed of this part
+        # TODO need to improve speed of this part
         hi = np.std(x)
         iqr = np.subtract(*np.percentile(x, [75, 25]))
         lo = min(hi, iqr/1.34)
@@ -422,32 +463,42 @@ class Classifier:
         return(0.9 * lo * len(x)**(-0.2))
 
     @staticmethod
-    def get_bagging_other(other, num_query, random_state=np.random.RandomState()):
+    def get_bagging_other(other, num_query,
+                          random_state=np.random.RandomState()):
         while True:
             ids = np.sort(random_state.choice(len(other), len(other)))
-            bag_num_query = np.where(ids<num_query)[0].shape[0]
+            bag_num_query = np.where(ids < num_query)[0].shape[0]
             if bag_num_query >= 2 and bag_num_query <= len(other) - 2:
                 break
 
         return(other[ids], bag_num_query)
 
     @staticmethod
-    def get_k_gaussian_kernel_for_all_x(row_data, x_ids, num_query, min_bw, bw=None, n_bagging=1, random_state=np.random.RandomState()):
+    def get_k_gaussian_kernel_for_all_x(row_data, x_ids, num_query, min_bw,
+                                        bw=None, n_bagging=1,
+                                        random_state=np.random.RandomState()):
         x_values = row_data[x_ids]
         other = np.delete(row_data, x_ids)
         o_num_query = num_query - np.sum(x_ids < num_query)
 
-        return([Classifier.get_k_gaussian_kernel(x, other, o_num_query, min_bw, bw, n_bagging, random_state) for x in x_values])
+        return([Classifier.get_k_gaussian_kernel(x, other, o_num_query, min_bw,
+                                                 bw, n_bagging, random_state)
+                for x in x_values])
 
     @staticmethod
-    def get_k_gaussian_kernel(x, other, num_query, min_bw, bw, n_bagging, random_state):
+    def get_k_gaussian_kernel(x, other, num_query, min_bw, bw, n_bagging,
+                              random_state):
         if n_bagging > 1:
-            bag_others = [Classifier.get_bagging_other(other, num_query, random_state=random_state) for j in range(n_bagging)]
-            #print("bag_others")
-            #print(bag_others)
-            return( [Classifier.k_gaussian_kernel(x, other, min_bw, b_num_query, bw) for other, b_num_query in bag_others] )
+            bag_others = [Classifier.get_bagging_other(other, num_query,
+                                                       random_state=random_state)
+                          for j in range(n_bagging)]
+            return([Classifier.k_gaussian_kernel(x, other, min_bw,
+                                                 b_num_query, bw)
+                    for other, b_num_query in bag_others])
         else:
-            return( [Classifier.k_gaussian_kernel(x, other, min_bw, num_query, bw) for j in range(1)] )
+            return([Classifier.k_gaussian_kernel(x, other, min_bw,
+                                                 num_query, bw)
+                    for j in range(1)])
 
     @staticmethod
     def k_gaussian_kernel(x, other, min_bw, ids_split, bw):
@@ -455,8 +506,8 @@ class Classifier:
         other_ref = other[ids_split:]
 
         if bw is None:
-            #bw_query = Classifier.bw_nrd0(other_query)
-            #bw_ref = Classifier.bw_nrd0(other_ref)
+            # bw_query = Classifier.bw_nrd0(other_query)
+            # bw_ref = Classifier.bw_nrd0(other_ref)
             bw_query = Classifier.bw_nrd(other_query)
             bw_ref = Classifier.bw_nrd(other_ref)
 
@@ -477,20 +528,31 @@ class Classifier:
         return(np.concatenate((res_query, res_ref)), ids_split)
 
     @staticmethod
-    def compute_normal_fx_for_all_x(row_data, x_ids, num_query, epsilon=0.001, n_bagging=1, random_state=np.random.RandomState()):
+    def compute_normal_fx_for_all_x(row_data, x_ids, num_query, epsilon=0.001,
+                                    n_bagging=1,
+                                    random_state=np.random.RandomState()):
         x_values = row_data[x_ids]
         other = np.delete(row_data, x_ids)
         o_num_query = num_query - np.sum(x_ids < num_query)
 
-        return([Classifier.compute_normal_fx(x, other, o_num_query, epsilon, n_bagging, random_state=random_state) for x in x_values])
+        return([Classifier.compute_normal_fx(x, other, o_num_query,
+                                             epsilon, n_bagging,
+                                             random_state=random_state)
+                for x in x_values])
 
     @staticmethod
-    def compute_normal_fx(x, other, num_query, epsilon, n_bagging, random_state):
+    def compute_normal_fx(x, other, num_query, epsilon, n_bagging,
+                          random_state):
         if n_bagging > 1:
-            bag_others = (Classifier.get_bagging_other(other, num_query, random_state=random_state) for j in range(n_bagging))
-            return( [Classifier.fx_normal(x, other, b_num_query, epsilon=epsilon) for other, b_num_query in bag_others] )
+            bag_others = (Classifier.get_bagging_other(other, num_query,
+                                                       random_state=random_state)
+                          for j in range(n_bagging))
+            return([Classifier.fx_normal(x, other, b_num_query,
+                                         epsilon=epsilon)
+                    for other, b_num_query in bag_others])
         else:
-            return( [Classifier.fx_normal(x, other, num_query, epsilon=epsilon) for j in range(1)] )
+            return([Classifier.fx_normal(x, other, num_query, epsilon=epsilon)
+                    for j in range(1)])
 
     @staticmethod
     def fx_normal(x, other, id_split, epsilon):
@@ -517,7 +579,7 @@ class Classifier:
             for ct in cts:
                 all_mcc.append(Classifier.get_mcc(ct))
             all_pred.append(pred)
-        pred_by_sample = np.mean(np.asarray(all_pred),axis=0)
+        pred_by_sample = np.mean(np.asarray(all_pred), axis=0)
 
         all_mcc = np.sort(all_mcc)
         num_value = all_mcc.size
@@ -527,7 +589,8 @@ class Classifier:
             last_quantile = last_quantile - 1
         mean_mcc = np.mean(all_mcc[first_quantile:(last_quantile+1)])
 
-        return([all_mcc[first_quantile], mean_mcc, all_mcc[last_quantile]], pred_by_sample)
+        return([all_mcc[first_quantile], mean_mcc,
+                all_mcc[last_quantile]], pred_by_sample)
 
     @staticmethod
     def get_mcc(ct):
@@ -539,4 +602,5 @@ class Classifier:
         n1 = ct[0] * ct[3]
         n2 = ct[1] * ct[2]
 
-        return((n1 - n2) / math.sqrt(d1 * d2 * d3 * d4) if d1!=0 and d2!=0 and d3!=0 and d4!=0 else 0)
+        return((n1 - n2) / math.sqrt(d1 * d2 * d3 * d4)
+               if d1 != 0 and d2 != 0 and d3 != 0 and d4 != 0 else 0)

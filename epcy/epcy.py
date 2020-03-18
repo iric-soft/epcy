@@ -27,7 +27,8 @@ def main():
     # create the argparser for the "pred" command
     pred = subparsers.add_parser(
         'pred',
-        help='Compute predictive capability of each normalized features (Generic case).'
+        help='Compute predictive capability of each normalized features \
+              (Generic case).'
     )
     pred.set_defaults(func=main_pred)
     get_argparser_pred(pred)
@@ -35,7 +36,8 @@ def main():
     # create the argparser for the "pred_rna" command
     pred_rna = subparsers.add_parser(
         'pred_rna',
-        help='Compute predictive capability of each genes/transcripts expression.'
+        help='Compute predictive capability of each genes/transcripts \
+              expression.'
     )
     pred_rna.set_defaults(func=main_pred_rna)
     get_argparser_pred_rna(pred_rna)
@@ -67,7 +69,8 @@ def main():
     # create the argparser for the "kal2mat" command
     kal2mat = subparsers.add_parser(
         'kal2mat',
-        help='Build and save matrix expression from kallisto quantification h5 files.'
+        help='Build and save matrix expression from kallisto quantification \
+              h5 files.'
     )
     kal2mat.set_defaults(func=main_kal2mat)
     get_argparser_kal2mat(kal2mat)
@@ -79,7 +82,6 @@ def main():
     )
     explore.set_defaults(func=main_explore)
     get_argparser_explore(explore)
-
 
     # recover arguments
     args = argparser.parse_args()
