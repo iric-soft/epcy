@@ -21,8 +21,8 @@ def get_argparser_pred(parser):
 
     parser.add_argument("-b",
                         dest="N_BAGGING",
-                        help="Number of bagging performed for each prediction \
-                              (Default: 1 = no bagging).",
+                        help="Number of bagging performed for each " +
+                             "prediction (Default: 1 = no bagging).",
                         type=int,
                         default=1)
 
@@ -33,10 +33,10 @@ def get_argparser_pred(parser):
                         default=1)
     parser.add_argument("--by",
                         dest="BY",
-                        help="Number of feature by thread. By default this \
-                              number is automaticaly set (#features/#thread). \
-                              If you encounter memory issues, you can try \
-                              using lower values.",
+                        help="Number of feature by thread. By default this " +
+                             "number is automaticaly set " +
+                             "(#features/#thread). If you encounter memory " +
+                             "issues, you can try using lower values.",
                         type=int,
                         default=-1)
 
@@ -47,16 +47,16 @@ def get_argparser_pred(parser):
 
     parser.add_argument("--ndraw",
                         dest="N_DRAW",
-                        help="Number of time that EPCY will draw a predicted \
-                              class (default 100).",
+                        help="Number of time that EPCY will draw a " +
+                             "predicted class (default 100).",
                         type=int,
                         default=100)
 
     parser.add_argument("--randomseed",
                         dest="RANDOM_SEED",
-                        help="To specify a random seed (Int). If None, the \
-                              random number generator is the RandomState \
-                              instance used by np.random.",
+                        help="To specify a random seed (Int). If None, the " +
+                             "random number generator is the RandomState " +
+                             "instance used by np.random.",
                         type=int,
                         default=None)
 

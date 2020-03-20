@@ -197,10 +197,10 @@ def read_design_matrix(args):
     design = get_design(args)
     data = pd.io.parsers.read_csv(args.MATRIX, sep="\t", index_col=0)
     if sum(~design["sample"].isin(data.columns)) > 0:
-        sys.stderr.write("WARNING: Some samples are present in the design, \
-                         but not in the quantification matrix\n")
-        sys.stderr.write("\t the analysis will be made without these \
-                         samples:\n")
+        sys.stderr.write("WARNING: Some samples are present in the design, " +
+                         "but not in the quantification matrix\n")
+        sys.stderr.write("\t the analysis will be made without these " +
+                         "samples:\n")
         sys.stderr.write(str(design[~design["sample"].isin(data.columns)]) +
                          "\n")
         design = design[design["sample"].isin(data.columns)]
@@ -245,8 +245,8 @@ def create_kal_mat(args, design, design_bootstrapped, df_anno):
         uniq_genes = np.array(uniq_genes)
         sys.stderr.write(time.strftime('%X') + ":\t\tkeep " +
                          str(uniq_genes.size) + " ENSG ids\n")
-        sys.stderr.write(time.strftime('%X') + ":\t\tfound genes ids for \
-                         each trans\n")
+        sys.stderr.write(time.strftime('%X') + ":\t\tfound genes ids for " +
+                         "each trans\n")
         ids_genes = [np.where(parents == gene)[0] for gene in uniq_genes]
         ids_genes = np.array(ids_genes)
 
@@ -259,8 +259,8 @@ def create_kal_mat(args, design, design_bootstrapped, df_anno):
         rows_id = uniq_genes
         num_features = uniq_genes.size
 
-    sys.stderr.write(time.strftime('%X') + ":\tRead samples kallisto \
-                     quantification from h5\n")
+    sys.stderr.write(time.strftime('%X') + ":\tRead samples kallisto " +
+                     "quantification from h5\n")
     if args.BS == 0:
         kallisto = np.zeros((num_features, design.shape[0]), dtype=np.float32)
     else:
@@ -313,18 +313,18 @@ def read_design_matrix_rna(args, df_anno=None):
 
     num_query = len(np.where(design[args.SUBGROUP] == 1)[0])
     if num_query == 0:
-        sys.stderr.write("ERROR: EPCY havn't found Query samples in your \
-                         design!\n\tCheck your design file and --subgroup, \
-                         --query options\n")
+        sys.stderr.write("ERROR: EPCY havn't found Query samples in your " +
+                         "design!\n\tCheck your design file and --subgroup, " +
+                         "--query options\n")
         return(None, None, None)
 
     if hasattr(args, 'MATRIX') and args.MATRIX is not None:
         data = pd.io.parsers.read_csv(args.MATRIX, sep="\t", index_col=0)
         if args.GENE:
             # TODO
-            sys.stderr.write("ERROR: Sorry, switch transcript to gene \
-                             quantification from a matrix file is not \
-                             implemented!!!\n")
+            sys.stderr.write("ERROR: Sorry, switch transcript to gene " +
+                             "quantification from a matrix file is not " +
+                             "implemented!!!\n")
             return(None, None, None)
     else:
         if args.KAL:
@@ -340,8 +340,8 @@ def read_design_matrix_rna(args, df_anno=None):
         design = design_bootstrapped
 
     if sum(~design["sample"].isin(data.columns)) > 0:
-        sys.stderr.write("WARNING: Some samples are present in the design, \
-                         but not in the quantification matrix\n")
+        sys.stderr.write("WARNING: Some samples are present in the design, " +
+                         "but not in the quantification matrix\n")
         sys.stderr.write("\t the analysis will be made without these \
                          samples:\n")
         sys.stderr.write(str(design[~design["sample"].isin(data.columns)]) +

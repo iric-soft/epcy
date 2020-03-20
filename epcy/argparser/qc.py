@@ -13,8 +13,8 @@ def get_argparser_qc(parser):
 
     parser.add_argument("--l2fc",
                         dest="L2FC",
-                        help="Filled in foction of log2(FoldChange). \
-                              (Default: max of mean expression)",
+                        help="Filled in foction of log2(FoldChange). " +
+                             "(Default: max of mean expression)",
                         action='store_true')
 
     parser.add_argument("--ylog",
