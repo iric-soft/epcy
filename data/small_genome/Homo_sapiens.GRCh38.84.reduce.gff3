@@ -1,0 +1,322 @@
+##gff-version   3
+##sequence-region   1 1 248956422
+##sequence-region   10 1 133797422
+##sequence-region   11 1 135086622
+##sequence-region   12 1 133275309
+##sequence-region   13 1 114364328
+##sequence-region   14 1 107043718
+##sequence-region   15 1 101991189
+##sequence-region   16 1 90338345
+##sequence-region   17 1 83257441
+##sequence-region   18 1 80373285
+##sequence-region   19 1 58617616
+##sequence-region   2 1 242193529
+##sequence-region   20 1 64444167
+##sequence-region   21 1 46709983
+##sequence-region   22 1 50818468
+##sequence-region   3 1 198295559
+##sequence-region   4 1 190214555
+##sequence-region   5 1 181538259
+##sequence-region   6 1 170805979
+##sequence-region   7 1 159345973
+##sequence-region   8 1 145138636
+##sequence-region   9 1 138394717
+##sequence-region   GL000008.2 1 209709
+##sequence-region   GL000009.2 1 201709
+##sequence-region   GL000194.1 1 191469
+##sequence-region   GL000195.1 1 182896
+##sequence-region   GL000205.2 1 185591
+##sequence-region   GL000208.1 1 92689
+##sequence-region   GL000213.1 1 164239
+##sequence-region   GL000214.1 1 137718
+##sequence-region   GL000216.2 1 176608
+##sequence-region   GL000218.1 1 161147
+##sequence-region   GL000219.1 1 179198
+##sequence-region   GL000220.1 1 161802
+##sequence-region   GL000221.1 1 155397
+##sequence-region   GL000224.1 1 179693
+##sequence-region   GL000225.1 1 211173
+##sequence-region   GL000226.1 1 15008
+##sequence-region   KI270302.1 1 2274
+##sequence-region   KI270303.1 1 1942
+##sequence-region   KI270304.1 1 2165
+##sequence-region   KI270305.1 1 1472
+##sequence-region   KI270310.1 1 1201
+##sequence-region   KI270311.1 1 12399
+##sequence-region   KI270312.1 1 998
+##sequence-region   KI270315.1 1 2276
+##sequence-region   KI270316.1 1 1444
+##sequence-region   KI270317.1 1 37690
+##sequence-region   KI270320.1 1 4416
+##sequence-region   KI270322.1 1 21476
+##sequence-region   KI270329.1 1 1040
+##sequence-region   KI270330.1 1 1652
+##sequence-region   KI270333.1 1 2699
+##sequence-region   KI270334.1 1 1368
+##sequence-region   KI270335.1 1 1048
+##sequence-region   KI270336.1 1 1026
+##sequence-region   KI270337.1 1 1121
+##sequence-region   KI270338.1 1 1428
+##sequence-region   KI270340.1 1 1428
+##sequence-region   KI270362.1 1 3530
+##sequence-region   KI270363.1 1 1803
+##sequence-region   KI270364.1 1 2855
+##sequence-region   KI270366.1 1 8320
+##sequence-region   KI270371.1 1 2805
+##sequence-region   KI270372.1 1 1650
+##sequence-region   KI270373.1 1 1451
+##sequence-region   KI270374.1 1 2656
+##sequence-region   KI270375.1 1 2378
+##sequence-region   KI270376.1 1 1136
+##sequence-region   KI270378.1 1 1048
+##sequence-region   KI270379.1 1 1045
+##sequence-region   KI270381.1 1 1930
+##sequence-region   KI270382.1 1 4215
+##sequence-region   KI270383.1 1 1750
+##sequence-region   KI270384.1 1 1658
+##sequence-region   KI270385.1 1 990
+##sequence-region   KI270386.1 1 1788
+##sequence-region   KI270387.1 1 1537
+##sequence-region   KI270388.1 1 1216
+##sequence-region   KI270389.1 1 1298
+##sequence-region   KI270390.1 1 2387
+##sequence-region   KI270391.1 1 1484
+##sequence-region   KI270392.1 1 971
+##sequence-region   KI270393.1 1 1308
+##sequence-region   KI270394.1 1 970
+##sequence-region   KI270395.1 1 1143
+##sequence-region   KI270396.1 1 1880
+##sequence-region   KI270411.1 1 2646
+##sequence-region   KI270412.1 1 1179
+##sequence-region   KI270414.1 1 2489
+##sequence-region   KI270417.1 1 2043
+##sequence-region   KI270418.1 1 2145
+##sequence-region   KI270419.1 1 1029
+##sequence-region   KI270420.1 1 2321
+##sequence-region   KI270422.1 1 1445
+##sequence-region   KI270423.1 1 981
+##sequence-region   KI270424.1 1 2140
+##sequence-region   KI270425.1 1 1884
+##sequence-region   KI270429.1 1 1361
+##sequence-region   KI270435.1 1 92983
+##sequence-region   KI270438.1 1 112505
+##sequence-region   KI270442.1 1 392061
+##sequence-region   KI270448.1 1 7992
+##sequence-region   KI270465.1 1 1774
+##sequence-region   KI270466.1 1 1233
+##sequence-region   KI270467.1 1 3920
+##sequence-region   KI270468.1 1 4055
+##sequence-region   KI270507.1 1 5353
+##sequence-region   KI270508.1 1 1951
+##sequence-region   KI270509.1 1 2318
+##sequence-region   KI270510.1 1 2415
+##sequence-region   KI270511.1 1 8127
+##sequence-region   KI270512.1 1 22689
+##sequence-region   KI270515.1 1 6361
+##sequence-region   KI270516.1 1 1300
+##sequence-region   KI270517.1 1 3253
+##sequence-region   KI270518.1 1 2186
+##sequence-region   KI270519.1 1 138126
+##sequence-region   KI270521.1 1 7642
+##sequence-region   KI270522.1 1 5674
+##sequence-region   KI270528.1 1 2983
+##sequence-region   KI270529.1 1 1899
+##sequence-region   KI270530.1 1 2168
+##sequence-region   KI270538.1 1 91309
+##sequence-region   KI270539.1 1 993
+##sequence-region   KI270544.1 1 1202
+##sequence-region   KI270548.1 1 1599
+##sequence-region   KI270579.1 1 31033
+##sequence-region   KI270580.1 1 1553
+##sequence-region   KI270581.1 1 7046
+##sequence-region   KI270582.1 1 6504
+##sequence-region   KI270583.1 1 1400
+##sequence-region   KI270584.1 1 4513
+##sequence-region   KI270587.1 1 2969
+##sequence-region   KI270588.1 1 6158
+##sequence-region   KI270589.1 1 44474
+##sequence-region   KI270590.1 1 4685
+##sequence-region   KI270591.1 1 5796
+##sequence-region   KI270593.1 1 3041
+##sequence-region   KI270706.1 1 175055
+##sequence-region   KI270707.1 1 32032
+##sequence-region   KI270708.1 1 127682
+##sequence-region   KI270709.1 1 66860
+##sequence-region   KI270710.1 1 40176
+##sequence-region   KI270711.1 1 42210
+##sequence-region   KI270712.1 1 176043
+##sequence-region   KI270713.1 1 40745
+##sequence-region   KI270714.1 1 41717
+##sequence-region   KI270715.1 1 161471
+##sequence-region   KI270716.1 1 153799
+##sequence-region   KI270717.1 1 40062
+##sequence-region   KI270718.1 1 38054
+##sequence-region   KI270719.1 1 176845
+##sequence-region   KI270720.1 1 39050
+##sequence-region   KI270721.1 1 100316
+##sequence-region   KI270722.1 1 194050
+##sequence-region   KI270723.1 1 38115
+##sequence-region   KI270724.1 1 39555
+##sequence-region   KI270725.1 1 172810
+##sequence-region   KI270726.1 1 43739
+##sequence-region   KI270727.1 1 448248
+##sequence-region   KI270728.1 1 1872759
+##sequence-region   KI270729.1 1 280839
+##sequence-region   KI270730.1 1 112551
+##sequence-region   KI270731.1 1 150754
+##sequence-region   KI270732.1 1 41543
+##sequence-region   KI270733.1 1 179772
+##sequence-region   KI270734.1 1 165050
+##sequence-region   KI270735.1 1 42811
+##sequence-region   KI270736.1 1 181920
+##sequence-region   KI270737.1 1 103838
+##sequence-region   KI270738.1 1 99375
+##sequence-region   KI270739.1 1 73985
+##sequence-region   KI270740.1 1 37240
+##sequence-region   KI270741.1 1 157432
+##sequence-region   KI270742.1 1 186739
+##sequence-region   KI270743.1 1 210658
+##sequence-region   KI270744.1 1 168472
+##sequence-region   KI270745.1 1 41891
+##sequence-region   KI270746.1 1 66486
+##sequence-region   KI270747.1 1 198735
+##sequence-region   KI270748.1 1 93321
+##sequence-region   KI270749.1 1 158759
+##sequence-region   KI270750.1 1 148850
+##sequence-region   KI270751.1 1 150742
+##sequence-region   KI270752.1 1 27745
+##sequence-region   KI270753.1 1 62944
+##sequence-region   KI270754.1 1 40191
+##sequence-region   KI270755.1 1 36723
+##sequence-region   KI270756.1 1 79590
+##sequence-region   KI270757.1 1 71251
+##sequence-region   MT 1 16569
+##sequence-region   X 1 156040895
+##sequence-region   Y 2781480 56887902
+#!genome-build  GRCh38.p5
+#!genome-version GRCh38
+#!genome-date 2013-12
+#!genome-build-accession NCBI:GCA_000001405.20
+#!genebuild-last-updated 2015-10
+16	ensembl_havana	gene	15703135	15857033	.	-	.	ID=gene:ENSG00000133392;Name=MYH11;biotype=protein_coding;description=myosin%2C heavy chain 11%2C smooth muscle [Source:HGNC Symbol%3BAcc:HGNC:7569];gene_id=ENSG00000133392;havana_gene=OTTHUMG00000129935;havana_version=4;logic_name=ensembl_havana_gene;version=16
+16	ensembl_havana	transcript	15703135	15857030	.	-	.	ID=transcript:ENST00000616439;Parent=gene:ENSG00000133392;Name=MYH11-201;biotype=protein_coding;tag=basic;transcript_id=ENST00000616439;transcript_support_level=5;version=4
+16	ensembl_havana	transcript	15703172	15857011	.	-	.	ID=transcript:ENST00000396324;Parent=gene:ENSG00000133392;Name=MYH11-006;biotype=protein_coding;ccdsid=CCDS45423.1;havana_transcript=OTTHUMT00000436646;havana_version=2;tag=basic;transcript_id=ENST00000396324;transcript_support_level=1;version=7
+16	ensembl_havana	transcript	15703172	15857011	.	-	.	ID=transcript:ENST00000452625;Parent=gene:ENSG00000133392;Name=MYH11-013;biotype=protein_coding;ccdsid=CCDS45424.1;havana_transcript=OTTHUMT00000436647;havana_version=2;tag=basic;transcript_id=ENST00000452625;transcript_support_level=1;version=6
+16	ensembl_havana	processed_transcript	15703741	15711270	.	-	.	ID=transcript:ENST00000573908;Parent=gene:ENSG00000133392;Name=MYH11-012;biotype=processed_transcript;havana_transcript=OTTHUMT00000436649;havana_version=1;transcript_id=ENST00000573908;transcript_support_level=4;version=1
+16	ensembl_havana	transcript	15703787	15857033	.	-	.	ID=transcript:ENST00000576790;Parent=gene:ENSG00000133392;Name=MYH11-003;biotype=protein_coding;ccdsid=CCDS10566.1;havana_transcript=OTTHUMT00000436651;havana_version=2;tag=basic;transcript_id=ENST00000576790;transcript_support_level=1;version=6
+16	ensembl_havana	transcript	15703991	15857033	.	-	.	ID=transcript:ENST00000300036;Parent=gene:ENSG00000133392;Name=MYH11-001;biotype=protein_coding;ccdsid=CCDS10565.1;havana_transcript=OTTHUMT00000252192;havana_version=3;tag=basic;transcript_id=ENST00000300036;transcript_support_level=1;version=5
+16	ensembl_havana	aberrant_processed_transcript	15712890	15724328	.	-	.	ID=transcript:ENST00000576164;Parent=gene:ENSG00000133392;Name=MYH11-009;biotype=retained_intron;havana_transcript=OTTHUMT00000436652;havana_version=1;transcript_id=ENST00000576164;transcript_support_level=2;version=5
+16	ensembl_havana	aberrant_processed_transcript	15712896	15725138	.	-	.	ID=transcript:ENST00000571275;Parent=gene:ENSG00000133392;Name=MYH11-008;biotype=retained_intron;havana_transcript=OTTHUMT00000436653;havana_version=1;transcript_id=ENST00000571275;transcript_support_level=1;version=1
+16	ensembl_havana	aberrant_processed_transcript	15741553	15742191	.	-	.	ID=transcript:ENST00000574119;Parent=gene:ENSG00000133392;Name=MYH11-015;biotype=retained_intron;havana_transcript=OTTHUMT00000437926;havana_version=1;transcript_id=ENST00000574119;transcript_support_level=2;version=1
+16	ensembl_havana	aberrant_processed_transcript	15749168	15783532	.	-	.	ID=transcript:ENST00000570785;Parent=gene:ENSG00000133392;Name=MYH11-011;biotype=retained_intron;havana_transcript=OTTHUMT00000436655;havana_version=1;transcript_id=ENST00000570785;transcript_support_level=2;version=1
+16	ensembl_havana	aberrant_processed_transcript	15775842	15779423	.	-	.	ID=transcript:ENST00000571910;Parent=gene:ENSG00000133392;Name=MYH11-014;biotype=retained_intron;havana_transcript=OTTHUMT00000437927;havana_version=1;transcript_id=ENST00000571910;transcript_support_level=4;version=1
+16	ensembl_havana	aberrant_processed_transcript	15785015	15857028	.	-	.	ID=transcript:ENST00000571505;Parent=gene:ENSG00000133392;Name=MYH11-004;biotype=retained_intron;havana_transcript=OTTHUMT00000436656;havana_version=1;transcript_id=ENST00000571505;transcript_support_level=1;version=1
+8	ensembl_havana	gene	52110839	52460959	.	-	.	ID=gene:ENSG00000147488;Name=ST18;biotype=protein_coding;description=suppression of tumorigenicity 18%2C zinc finger [Source:HGNC Symbol%3BAcc:HGNC:18695];gene_id=ENSG00000147488;havana_gene=OTTHUMG00000164233;havana_version=3;logic_name=ensembl_havana_gene;version=11
+8	ensembl_havana	transcript	52110839	52409743	.	-	.	ID=transcript:ENST00000276480;Parent=gene:ENSG00000147488;Name=ST18-001;biotype=protein_coding;ccdsid=CCDS6149.1;havana_transcript=OTTHUMT00000377867;havana_version=1;tag=basic;transcript_id=ENST00000276480;transcript_support_level=1;version=11
+8	ensembl_havana	NMD_transcript_variant	52112544	52217821	.	-	.	ID=transcript:ENST00000521824;Parent=gene:ENSG00000147488;Name=ST18-007;biotype=nonsense_mediated_decay;havana_transcript=OTTHUMT00000377868;havana_version=1;transcript_id=ENST00000521824;transcript_support_level=1;version=5
+8	ensembl_havana	NMD_transcript_variant	52112544	52217822	.	-	.	ID=transcript:ENST00000522251;Parent=gene:ENSG00000147488;Name=ST18-008;biotype=nonsense_mediated_decay;havana_transcript=OTTHUMT00000377869;havana_version=1;transcript_id=ENST00000522251;transcript_support_level=1;version=5
+8	ensembl_havana	NMD_transcript_variant	52112546	52217822	.	-	.	ID=transcript:ENST00000521582;Parent=gene:ENSG00000147488;Name=ST18-006;biotype=nonsense_mediated_decay;havana_transcript=OTTHUMT00000377870;havana_version=1;transcript_id=ENST00000521582;transcript_support_level=1;version=5
+8	ensembl_havana	aberrant_processed_transcript	52116271	52133218	.	-	.	ID=transcript:ENST00000518053;Parent=gene:ENSG00000147488;Name=ST18-019;biotype=retained_intron;havana_transcript=OTTHUMT00000377932;havana_version=1;transcript_id=ENST00000518053;transcript_support_level=3;version=5
+8	ensembl_havana	aberrant_processed_transcript	52125884	52133144	.	-	.	ID=transcript:ENST00000522861;Parent=gene:ENSG00000147488;Name=ST18-020;biotype=retained_intron;havana_transcript=OTTHUMT00000377933;havana_version=1;transcript_id=ENST00000522861;transcript_support_level=3;version=1
+8	ensembl_havana	processed_transcript	52133104	52137812	.	-	.	ID=transcript:ENST00000518501;Parent=gene:ENSG00000147488;Name=ST18-018;biotype=processed_transcript;havana_transcript=OTTHUMT00000377934;havana_version=1;transcript_id=ENST00000518501;transcript_support_level=4;version=1
+8	ensembl_havana	transcript	52149922	52409805	.	-	.	ID=transcript:ENST00000517580;Parent=gene:ENSG00000147488;Name=ST18-002;biotype=protein_coding;havana_transcript=OTTHUMT00000377871;havana_version=2;transcript_id=ENST00000517580;transcript_support_level=1;version=5
+8	ensembl_havana	processed_transcript	52172513	52217779	.	-	.	ID=transcript:ENST00000520257;Parent=gene:ENSG00000147488;Name=ST18-023;biotype=processed_transcript;havana_transcript=OTTHUMT00000377935;havana_version=1;transcript_id=ENST00000520257;transcript_support_level=3;version=5
+8	ensembl_havana	processed_transcript	52180294	52409749	.	-	.	ID=transcript:ENST00000521549;Parent=gene:ENSG00000147488;Name=ST18-005;biotype=processed_transcript;havana_transcript=OTTHUMT00000377872;havana_version=1;transcript_id=ENST00000521549;transcript_support_level=1;version=5
+8	ensembl_havana	processed_transcript	52206416	52246664	.	-	.	ID=transcript:ENST00000518037;Parent=gene:ENSG00000147488;Name=ST18-016;biotype=processed_transcript;havana_transcript=OTTHUMT00000377936;havana_version=1;transcript_id=ENST00000518037;transcript_support_level=2;version=5
+8	ensembl_havana	processed_transcript	52206583	52246664	.	-	.	ID=transcript:ENST00000517456;Parent=gene:ENSG00000147488;Name=ST18-017;biotype=processed_transcript;havana_transcript=OTTHUMT00000377937;havana_version=1;transcript_id=ENST00000517456;transcript_support_level=2;version=5
+8	ensembl_havana	transcript	52214220	52248526	.	-	.	ID=transcript:ENST00000519118;Parent=gene:ENSG00000147488;Name=ST18-015;biotype=protein_coding;havana_transcript=OTTHUMT00000377873;havana_version=2;transcript_id=ENST00000519118;transcript_support_level=4;version=5
+8	ensembl_havana	processed_transcript	52217772	52249412	.	-	.	ID=transcript:ENST00000518545;Parent=gene:ENSG00000147488;Name=ST18-014;biotype=processed_transcript;havana_transcript=OTTHUMT00000377874;havana_version=1;transcript_id=ENST00000518545;transcript_support_level=5;version=5
+8	ensembl_havana	aberrant_processed_transcript	52220564	52254348	.	-	.	ID=transcript:ENST00000521119;Parent=gene:ENSG00000147488;Name=ST18-013;biotype=retained_intron;havana_transcript=OTTHUMT00000377875;havana_version=1;transcript_id=ENST00000521119;transcript_support_level=4;version=1
+8	ensembl_havana	aberrant_processed_transcript	52220732	52222095	.	-	.	ID=transcript:ENST00000518453;Parent=gene:ENSG00000147488;Name=ST18-022;biotype=retained_intron;havana_transcript=OTTHUMT00000377938;havana_version=1;transcript_id=ENST00000518453;transcript_support_level=1;version=1
+8	ensembl_havana	aberrant_processed_transcript	52229693	52409756	.	-	.	ID=transcript:ENST00000520279;Parent=gene:ENSG00000147488;Name=ST18-021;biotype=retained_intron;havana_transcript=OTTHUMT00000377939;havana_version=1;transcript_id=ENST00000520279;transcript_support_level=4;version=5
+8	ensembl_havana	processed_transcript	52393576	52409792	.	-	.	ID=transcript:ENST00000519201;Parent=gene:ENSG00000147488;Name=ST18-012;biotype=processed_transcript;havana_transcript=OTTHUMT00000377876;havana_version=1;transcript_id=ENST00000519201;transcript_support_level=4;version=5
+8	ensembl_havana	processed_transcript	52403327	52409772	.	-	.	ID=transcript:ENST00000524183;Parent=gene:ENSG00000147488;Name=ST18-011;biotype=processed_transcript;havana_transcript=OTTHUMT00000377877;havana_version=1;transcript_id=ENST00000524183;transcript_support_level=4;version=5
+8	ensembl_havana	processed_transcript	52403701	52409945	.	-	.	ID=transcript:ENST00000522102;Parent=gene:ENSG00000147488;Name=ST18-003;biotype=processed_transcript;havana_transcript=OTTHUMT00000377878;havana_version=1;transcript_id=ENST00000522102;transcript_support_level=1;version=5
+8	ensembl_havana	processed_transcript	52405806	52409772	.	-	.	ID=transcript:ENST00000520811;Parent=gene:ENSG00000147488;Name=ST18-010;biotype=processed_transcript;havana_transcript=OTTHUMT00000377879;havana_version=1;transcript_id=ENST00000520811;transcript_support_level=4;version=5
+8	ensembl_havana	aberrant_processed_transcript	52407636	52409882	.	-	.	ID=transcript:ENST00000524078;Parent=gene:ENSG00000147488;Name=ST18-004;biotype=retained_intron;havana_transcript=OTTHUMT00000377880;havana_version=1;transcript_id=ENST00000524078;transcript_support_level=1;version=1
+8	ensembl_havana	processed_transcript	52407665	52409879	.	-	.	ID=transcript:ENST00000520716;Parent=gene:ENSG00000147488;Name=ST18-009;biotype=processed_transcript;havana_transcript=OTTHUMT00000377881;havana_version=1;transcript_id=ENST00000520716;transcript_support_level=3;version=1
+8	ensembl_havana	aberrant_processed_transcript	52408983	52460959	.	-	.	ID=transcript:ENST00000523652;Parent=gene:ENSG00000147488;Name=ST18-024;biotype=retained_intron;havana_transcript=OTTHUMT00000377940;havana_version=1;transcript_id=ENST00000523652;transcript_support_level=5;version=1
+13	ensembl_havana	gene	113820549	113864067	.	-	.	ID=gene:ENSG00000183087;Name=GAS6;biotype=protein_coding;description=growth arrest specific 6 [Source:HGNC Symbol%3BAcc:HGNC:4168];gene_id=ENSG00000183087;havana_gene=OTTHUMG00000017395;havana_version=4;logic_name=ensembl_havana_gene;version=14
+13	ensembl_havana	aberrant_processed_transcript	113820549	113823194	.	-	.	ID=transcript:ENST00000608763;Parent=gene:ENSG00000183087;Name=GAS6-005;biotype=retained_intron;havana_transcript=OTTHUMT00000473159;havana_version=1;transcript_id=ENST00000608763;transcript_support_level=NA;version=1
+13	ensembl_havana	aberrant_processed_transcript	113820549	113833741	.	-	.	ID=transcript:ENST00000480426;Parent=gene:ENSG00000183087;Name=GAS6-002;biotype=retained_intron;havana_transcript=OTTHUMT00000045947;havana_version=2;transcript_id=ENST00000480426;transcript_support_level=2;version=5
+13	ensembl_havana	aberrant_processed_transcript	113820552	113836044	.	-	.	ID=transcript:ENST00000610073;Parent=gene:ENSG00000183087;Name=GAS6-004;biotype=retained_intron;havana_transcript=OTTHUMT00000473160;havana_version=1;transcript_id=ENST00000610073;transcript_support_level=2;version=1
+13	ensembl_havana	transcript	113820558	113864067	.	-	.	ID=transcript:ENST00000327773;Parent=gene:ENSG00000183087;Name=GAS6-001;biotype=protein_coding;ccdsid=CCDS45072.1;havana_transcript=OTTHUMT00000045946;havana_version=2;tag=basic;transcript_id=ENST00000327773;transcript_support_level=1;version=6
+13	ensembl_havana	processed_transcript	113847677	113864015	.	-	.	ID=transcript:ENST00000476291;Parent=gene:ENSG00000183087;Name=GAS6-003;biotype=processed_transcript;havana_transcript=OTTHUMT00000045948;havana_version=1;transcript_id=ENST00000476291;transcript_support_level=2;version=1
+3	ensembl_havana	gene	52833114	52835219	.	-	.	ID=gene:ENSG00000272573;Name=MUSTN1;biotype=protein_coding;description=musculoskeletal%2C embryonic nuclear protein 1 [Source:HGNC Symbol%3BAcc:HGNC:22144];gene_id=ENSG00000272573;havana_gene=OTTHUMG00000159024;havana_version=5;logic_name=ensembl_havana_gene;version=5
+3	ensembl_havana	transcript	52833114	52834915	.	-	.	ID=transcript:ENST00000486659;Parent=gene:ENSG00000272573;Name=MUSTN1-002;biotype=protein_coding;havana_transcript=OTTHUMT00000352953;havana_version=1;tag=basic;transcript_id=ENST00000486659;transcript_support_level=2;version=5
+3	ensembl_havana	transcript	52833123	52835219	.	-	.	ID=transcript:ENST00000446157;Parent=gene:ENSG00000272573;Name=MUSTN1-001;biotype=protein_coding;ccdsid=CCDS46846.1;havana_transcript=OTTHUMT00000352933;havana_version=2;tag=basic;transcript_id=ENST00000446157;transcript_support_level=1;version=2
+1	ensembl_havana	gene	24899511	24965121	.	-	.	ID=gene:ENSG00000020633;Name=RUNX3;biotype=protein_coding;description=runt-related transcription factor 3 [Source:HGNC Symbol%3BAcc:HGNC:10473];gene_id=ENSG00000020633;havana_gene=OTTHUMG00000003316;havana_version=1;logic_name=ensembl_havana_gene;version=18
+1	ensembl_havana	transcript	24899511	24965010	.	-	.	ID=transcript:ENST00000399916;Parent=gene:ENSG00000020633;Name=RUNX3-201;biotype=protein_coding;ccdsid=CCDS30633.1;tag=basic;transcript_id=ENST00000399916;transcript_support_level=2;version=5
+1	ensembl_havana	transcript	24899518	24929877	.	-	.	ID=transcript:ENST00000308873;Parent=gene:ENSG00000020633;Name=RUNX3-001;biotype=protein_coding;ccdsid=CCDS257.1;havana_transcript=OTTHUMT00000009284;havana_version=1;tag=basic;transcript_id=ENST00000308873;transcript_support_level=1;version=10
+1	ensembl_havana	transcript	24901029	24964984	.	-	.	ID=transcript:ENST00000338888;Parent=gene:ENSG00000020633;Name=RUNX3-002;biotype=protein_coding;ccdsid=CCDS30633.1;havana_transcript=OTTHUMT00000009285;havana_version=1;tag=basic;transcript_id=ENST00000338888;transcript_support_level=1;version=3
+1	ensembl_havana	processed_transcript	24902572	24928798	.	-	.	ID=transcript:ENST00000496967;Parent=gene:ENSG00000020633;Name=RUNX3-004;biotype=processed_transcript;havana_transcript=OTTHUMT00000009287;havana_version=1;transcript_id=ENST00000496967;transcript_support_level=3;version=1
+1	ensembl_havana	processed_transcript	24929737	24965121	.	-	.	ID=transcript:ENST00000479341;Parent=gene:ENSG00000020633;Name=RUNX3-003;biotype=processed_transcript;havana_transcript=OTTHUMT00000009286;havana_version=1;transcript_id=ENST00000479341;transcript_support_level=1;version=1
+8	ensembl_havana	gene	140657900	141002216	.	-	.	ID=gene:ENSG00000169398;Name=PTK2;biotype=protein_coding;description=protein tyrosine kinase 2 [Source:HGNC Symbol%3BAcc:HGNC:9611];gene_id=ENSG00000169398;havana_gene=OTTHUMG00000067438;havana_version=24;logic_name=ensembl_havana_gene;version=19
+8	ensembl_havana	transcript	140657900	141001233	.	-	.	ID=transcript:ENST00000522684;Parent=gene:ENSG00000169398;Name=PTK2-001;biotype=protein_coding;ccdsid=CCDS6381.1;havana_transcript=OTTHUMT00000378054;havana_version=5;tag=basic;transcript_id=ENST00000522684;transcript_support_level=1;version=5
+8	ensembl_havana	transcript	140658382	141001313	.	-	.	ID=transcript:ENST00000395218;Parent=gene:ENSG00000169398;Name=PTK2-201;biotype=protein_coding;tag=basic;transcript_id=ENST00000395218;transcript_support_level=5;version=3
+8	ensembl_havana	transcript	140658389	140890768	.	-	.	ID=transcript:ENST00000519654;Parent=gene:ENSG00000169398;Name=PTK2-010;biotype=protein_coding;havana_transcript=OTTHUMT00000378068;havana_version=1;transcript_id=ENST00000519654;transcript_support_level=1;version=5
+8	ensembl_havana	transcript	140658402	140764523	.	-	.	ID=transcript:ENST00000519465;Parent=gene:ENSG00000169398;Name=PTK2-005;biotype=protein_coding;havana_transcript=OTTHUMT00000378053;havana_version=3;tag=basic;transcript_id=ENST00000519465;transcript_support_level=1;version=5
+8	ensembl_havana	transcript	140658402	140921219	.	-	.	ID=transcript:ENST00000517887;Parent=gene:ENSG00000169398;Name=PTK2-008;biotype=protein_coding;havana_transcript=OTTHUMT00000378062;havana_version=1;tag=basic;transcript_id=ENST00000517887;transcript_support_level=5;version=5
+8	ensembl_havana	transcript	140658402	141001196	.	-	.	ID=transcript:ENST00000521059;Parent=gene:ENSG00000169398;Name=PTK2-057;biotype=protein_coding;ccdsid=CCDS6381.1;havana_transcript=OTTHUMT00000378540;havana_version=1;tag=basic;transcript_id=ENST00000521059;transcript_support_level=1;version=5
+8	ensembl_havana	transcript	140658405	140670264	.	-	.	ID=transcript:ENST00000517712;Parent=gene:ENSG00000169398;Name=PTK2-004;biotype=protein_coding;havana_transcript=OTTHUMT00000378055;havana_version=2;tag=basic;transcript_id=ENST00000517712;transcript_support_level=2;version=5
+8	ensembl_havana	transcript	140658405	140800546	.	-	.	ID=transcript:ENST00000523539;Parent=gene:ENSG00000169398;Name=PTK2-002;biotype=protein_coding;havana_transcript=OTTHUMT00000378057;havana_version=2;transcript_id=ENST00000523539;transcript_support_level=2;version=5
+8	ensembl_havana	transcript	140658405	141001158	.	-	.	ID=transcript:ENST00000340930;Parent=gene:ENSG00000169398;Name=PTK2-011;biotype=protein_coding;ccdsid=CCDS56557.1;havana_transcript=OTTHUMT00000378103;havana_version=1;tag=basic;transcript_id=ENST00000340930;transcript_support_level=2;version=7
+8	ensembl_havana	NMD_transcript_variant	140658405	141001379	.	-	.	ID=transcript:ENST00000519993;Parent=gene:ENSG00000169398;Name=PTK2-013;biotype=nonsense_mediated_decay;havana_transcript=OTTHUMT00000378104;havana_version=3;transcript_id=ENST00000519993;transcript_support_level=1;version=5
+8	ensembl_havana	transcript	140658630	140954835	.	-	.	ID=transcript:ENST00000519419;Parent=gene:ENSG00000169398;Name=PTK2-007;biotype=protein_coding;havana_transcript=OTTHUMT00000378063;havana_version=1;tag=basic;transcript_id=ENST00000519419;transcript_support_level=5;version=5
+8	ensembl_havana	NMD_transcript_variant	140659071	140846290	.	-	.	ID=transcript:ENST00000524202;Parent=gene:ENSG00000169398;Name=PTK2-003;biotype=nonsense_mediated_decay;havana_transcript=OTTHUMT00000378056;havana_version=2;transcript_id=ENST00000524202;transcript_support_level=1;version=5
+8	ensembl_havana	transcript	140659073	140718734	.	-	.	ID=transcript:ENST00000430260;Parent=gene:ENSG00000169398;Name=PTK2-006;biotype=protein_coding;havana_transcript=OTTHUMT00000378058;havana_version=2;tag=basic;transcript_id=ENST00000430260;transcript_support_level=2;version=6
+8	ensembl_havana	transcript	140659335	140800543	.	-	.	ID=transcript:ENST00000521986;Parent=gene:ENSG00000169398;Name=PTK2-009;biotype=protein_coding;havana_transcript=OTTHUMT00000378067;havana_version=1;transcript_id=ENST00000521986;transcript_support_level=2;version=5
+8	ensembl_havana	transcript	140659487	140663084	.	-	.	ID=transcript:ENST00000523435;Parent=gene:ENSG00000169398;Name=PTK2-015;biotype=protein_coding;havana_transcript=OTTHUMT00000378105;havana_version=2;transcript_id=ENST00000523435;transcript_support_level=4;version=1
+8	ensembl_havana	transcript	140659620	140663088	.	-	.	ID=transcript:ENST00000522950;Parent=gene:ENSG00000169398;Name=PTK2-014;biotype=protein_coding;havana_transcript=OTTHUMT00000378106;havana_version=1;tag=basic;transcript_id=ENST00000522950;transcript_support_level=4;version=1
+8	ensembl_havana	processed_transcript	140668279	140686778	.	-	.	ID=transcript:ENST00000523805;Parent=gene:ENSG00000169398;Name=PTK2-017;biotype=processed_transcript;havana_transcript=OTTHUMT00000378109;havana_version=1;transcript_id=ENST00000523805;transcript_support_level=3;version=5
+8	ensembl_havana	processed_transcript	140668289	140675779	.	-	.	ID=transcript:ENST00000520460;Parent=gene:ENSG00000169398;Name=PTK2-016;biotype=processed_transcript;havana_transcript=OTTHUMT00000378110;havana_version=1;transcript_id=ENST00000520460;transcript_support_level=4;version=1
+8	ensembl_havana	processed_transcript	140686870	140702715	.	-	.	ID=transcript:ENST00000521985;Parent=gene:ENSG00000169398;Name=PTK2-018;biotype=processed_transcript;havana_transcript=OTTHUMT00000378111;havana_version=1;transcript_id=ENST00000521985;transcript_support_level=3;version=1
+8	ensembl_havana	aberrant_processed_transcript	140700770	140706168	.	-	.	ID=transcript:ENST00000518173;Parent=gene:ENSG00000169398;Name=PTK2-056;biotype=retained_intron;havana_transcript=OTTHUMT00000378430;havana_version=1;transcript_id=ENST00000518173;transcript_support_level=2;version=5
+8	ensembl_havana	transcript	140700921	140721788	.	-	.	ID=transcript:ENST00000522424;Parent=gene:ENSG00000169398;Name=PTK2-047;biotype=protein_coding;havana_transcript=OTTHUMT00000378362;havana_version=2;transcript_id=ENST00000522424;transcript_support_level=4;version=5
+8	ensembl_havana	transcript	140700924	140718355	.	-	.	ID=transcript:ENST00000521562;Parent=gene:ENSG00000169398;Name=PTK2-019;biotype=protein_coding;havana_transcript=OTTHUMT00000378112;havana_version=2;transcript_id=ENST00000521562;transcript_support_level=4;version=5
+8	ensembl_havana	NMD_transcript_variant	140700943	140800549	.	-	.	ID=transcript:ENST00000521250;Parent=gene:ENSG00000169398;Name=PTK2-049;biotype=nonsense_mediated_decay;havana_transcript=OTTHUMT00000378366;havana_version=1;transcript_id=ENST00000521250;transcript_support_level=4;version=5
+8	ensembl_havana	transcript	140702665	140718048	.	-	.	ID=transcript:ENST00000523388;Parent=gene:ENSG00000169398;Name=PTK2-020;biotype=protein_coding;havana_transcript=OTTHUMT00000378113;havana_version=2;transcript_id=ENST00000523388;transcript_support_level=2;version=5
+8	ensembl_havana	NMD_transcript_variant	140702698	140800543	.	-	.	ID=transcript:ENST00000521981;Parent=gene:ENSG00000169398;Name=PTK2-052;biotype=nonsense_mediated_decay;havana_transcript=OTTHUMT00000378369;havana_version=1;transcript_id=ENST00000521981;transcript_support_level=5;version=5
+8	ensembl_havana	NMD_transcript_variant	140706157	140764353	.	-	.	ID=transcript:ENST00000521029;Parent=gene:ENSG00000169398;Name=PTK2-051;biotype=nonsense_mediated_decay;havana_transcript=OTTHUMT00000378370;havana_version=1;transcript_id=ENST00000521029;transcript_support_level=4;version=5
+8	ensembl_havana	processed_transcript	140717689	140744803	.	-	.	ID=transcript:ENST00000518509;Parent=gene:ENSG00000169398;Name=PTK2-048;biotype=processed_transcript;havana_transcript=OTTHUMT00000378367;havana_version=1;transcript_id=ENST00000518509;transcript_support_level=4;version=5
+8	ensembl_havana	aberrant_processed_transcript	140735045	140744702	.	-	.	ID=transcript:ENST00000520917;Parent=gene:ENSG00000169398;Name=PTK2-021;biotype=retained_intron;havana_transcript=OTTHUMT00000378114;havana_version=1;transcript_id=ENST00000520917;transcript_support_level=4;version=1
+8	ensembl_havana	transcript	140743237	140764413	.	-	.	ID=transcript:ENST00000520151;Parent=gene:ENSG00000169398;Name=PTK2-054;biotype=protein_coding;havana_transcript=OTTHUMT00000378378;havana_version=1;tag=basic;transcript_id=ENST00000520151;transcript_support_level=4;version=5
+8	ensembl_havana	NMD_transcript_variant	140743290	140764419	.	-	.	ID=transcript:ENST00000523670;Parent=gene:ENSG00000169398;Name=PTK2-050;biotype=nonsense_mediated_decay;havana_transcript=OTTHUMT00000378371;havana_version=1;transcript_id=ENST00000523670;transcript_support_level=4;version=5
+8	ensembl_havana	transcript	140744685	140764421	.	-	.	ID=transcript:ENST00000519024;Parent=gene:ENSG00000169398;Name=PTK2-053;biotype=protein_coding;havana_transcript=OTTHUMT00000378377;havana_version=2;transcript_id=ENST00000519024;transcript_support_level=4;version=5
+8	ensembl_havana	processed_transcript	140744697	140799297	.	-	.	ID=transcript:ENST00000523746;Parent=gene:ENSG00000169398;Name=PTK2-026;biotype=processed_transcript;havana_transcript=OTTHUMT00000378175;havana_version=1;transcript_id=ENST00000523746;transcript_support_level=4;version=5
+8	ensembl_havana	aberrant_processed_transcript	140744701	140747272	.	-	.	ID=transcript:ENST00000510126;Parent=gene:ENSG00000169398;Name=PTK2-022;biotype=retained_intron;havana_transcript=OTTHUMT00000378115;havana_version=1;transcript_id=ENST00000510126;transcript_support_level=4;version=2
+8	ensembl_havana	processed_transcript	140744747	140770966	.	-	.	ID=transcript:ENST00000523474;Parent=gene:ENSG00000169398;Name=PTK2-027;biotype=processed_transcript;havana_transcript=OTTHUMT00000378176;havana_version=1;transcript_id=ENST00000523474;transcript_support_level=5;version=5
+8	ensembl_havana	aberrant_processed_transcript	140746450	140764401	.	-	.	ID=transcript:ENST00000519899;Parent=gene:ENSG00000169398;Name=PTK2-023;biotype=retained_intron;havana_transcript=OTTHUMT00000378116;havana_version=2;transcript_id=ENST00000519899;transcript_support_level=2;version=5
+8	ensembl_havana	processed_transcript	140746834	140765236	.	-	.	ID=transcript:ENST00000519361;Parent=gene:ENSG00000169398;Name=PTK2-025;biotype=processed_transcript;havana_transcript=OTTHUMT00000378177;havana_version=1;transcript_id=ENST00000519361;transcript_support_level=5;version=5
+8	ensembl_havana	processed_transcript	140750203	140764260	.	-	.	ID=transcript:ENST00000520843;Parent=gene:ENSG00000169398;Name=PTK2-024;biotype=processed_transcript;havana_transcript=OTTHUMT00000378178;havana_version=1;transcript_id=ENST00000520843;transcript_support_level=5;version=5
+8	ensembl_havana	processed_transcript	140752232	140771444	.	-	.	ID=transcript:ENST00000521172;Parent=gene:ENSG00000169398;Name=PTK2-028;biotype=processed_transcript;havana_transcript=OTTHUMT00000378179;havana_version=1;transcript_id=ENST00000521172;transcript_support_level=5;version=1
+8	ensembl_havana	transcript	140818984	141001260	.	-	.	ID=transcript:ENST00000524357;Parent=gene:ENSG00000169398;Name=PTK2-055;biotype=protein_coding;havana_transcript=OTTHUMT00000378379;havana_version=2;transcript_id=ENST00000524357;transcript_support_level=4;version=5
+8	ensembl_havana	NMD_transcript_variant	140830476	141000926	.	-	.	ID=transcript:ENST00000521791;Parent=gene:ENSG00000169398;Name=PTK2-031;biotype=nonsense_mediated_decay;havana_transcript=OTTHUMT00000378180;havana_version=1;transcript_id=ENST00000521791;transcript_support_level=4;version=5
+8	ensembl_havana	NMD_transcript_variant	140846607	141001167	.	-	.	ID=transcript:ENST00000523067;Parent=gene:ENSG00000169398;Name=PTK2-046;biotype=nonsense_mediated_decay;havana_transcript=OTTHUMT00000378320;havana_version=1;transcript_id=ENST00000523067;transcript_support_level=4;version=5
+8	ensembl_havana	transcript	140846649	141001164	.	-	.	ID=transcript:ENST00000520828;Parent=gene:ENSG00000169398;Name=PTK2-041;biotype=protein_coding;havana_transcript=OTTHUMT00000378313;havana_version=3;transcript_id=ENST00000520828;transcript_support_level=4;version=5
+8	ensembl_havana	transcript	140846659	140934560	.	-	.	ID=transcript:ENST00000520475;Parent=gene:ENSG00000169398;Name=PTK2-033;biotype=protein_coding;havana_transcript=OTTHUMT00000378295;havana_version=2;transcript_id=ENST00000520475;transcript_support_level=5;version=5
+8	ensembl_havana	transcript	140879162	141001284	.	-	.	ID=transcript:ENST00000519881;Parent=gene:ENSG00000169398;Name=PTK2-037;biotype=protein_coding;havana_transcript=OTTHUMT00000378296;havana_version=1;tag=basic;transcript_id=ENST00000519881;transcript_support_level=3;version=5
+8	ensembl_havana	transcript	140879441	141000937	.	-	.	ID=transcript:ENST00000520892;Parent=gene:ENSG00000169398;Name=PTK2-038;biotype=protein_coding;havana_transcript=OTTHUMT00000378314;havana_version=1;tag=basic;transcript_id=ENST00000520892;transcript_support_level=4;version=5
+8	ensembl_havana	transcript	140879471	140984039	.	-	.	ID=transcript:ENST00000523803;Parent=gene:ENSG00000169398;Name=PTK2-032;biotype=protein_coding;havana_transcript=OTTHUMT00000378181;havana_version=1;transcript_id=ENST00000523803;transcript_support_level=3;version=5
+8	ensembl_havana	transcript	140879476	140983994	.	-	.	ID=transcript:ENST00000521907;Parent=gene:ENSG00000169398;Name=PTK2-035;biotype=protein_coding;havana_transcript=OTTHUMT00000378297;havana_version=2;transcript_id=ENST00000521907;transcript_support_level=4;version=5
+8	ensembl_havana	transcript	140879480	141002110	.	-	.	ID=transcript:ENST00000517453;Parent=gene:ENSG00000169398;Name=PTK2-043;biotype=protein_coding;havana_transcript=OTTHUMT00000378318;havana_version=2;transcript_id=ENST00000517453;transcript_support_level=4;version=5
+8	ensembl_havana	transcript	140879482	141001285	.	-	.	ID=transcript:ENST00000520045;Parent=gene:ENSG00000169398;Name=PTK2-044;biotype=protein_coding;havana_transcript=OTTHUMT00000378321;havana_version=2;transcript_id=ENST00000520045;transcript_support_level=4;version=5
+8	ensembl_havana	transcript	140879512	140934590	.	-	.	ID=transcript:ENST00000521395;Parent=gene:ENSG00000169398;Name=PTK2-034;biotype=protein_coding;havana_transcript=OTTHUMT00000378298;havana_version=2;transcript_id=ENST00000521395;transcript_support_level=4;version=5
+8	ensembl_havana	aberrant_processed_transcript	140890316	140921009	.	-	.	ID=transcript:ENST00000523675;Parent=gene:ENSG00000169398;Name=PTK2-036;biotype=retained_intron;havana_transcript=OTTHUMT00000378299;havana_version=1;transcript_id=ENST00000523675;transcript_support_level=3;version=1
+8	ensembl_havana	transcript	140890543	141001266	.	-	.	ID=transcript:ENST00000521332;Parent=gene:ENSG00000169398;Name=PTK2-039;biotype=protein_coding;havana_transcript=OTTHUMT00000378315;havana_version=2;transcript_id=ENST00000521332;transcript_support_level=4;version=5
+8	ensembl_havana	transcript	140890584	141001266	.	-	.	ID=transcript:ENST00000524040;Parent=gene:ENSG00000169398;Name=PTK2-045;biotype=protein_coding;havana_transcript=OTTHUMT00000378322;havana_version=2;transcript_id=ENST00000524040;transcript_support_level=2;version=5
+8	ensembl_havana	transcript	140920870	141001177	.	-	.	ID=transcript:ENST00000523679;Parent=gene:ENSG00000169398;Name=PTK2-040;biotype=protein_coding;havana_transcript=OTTHUMT00000378316;havana_version=2;transcript_id=ENST00000523679;transcript_support_level=3;version=1
+8	ensembl_havana	transcript	140920890	141001164	.	-	.	ID=transcript:ENST00000524257;Parent=gene:ENSG00000169398;Name=PTK2-042;biotype=protein_coding;havana_transcript=OTTHUMT00000378319;havana_version=2;transcript_id=ENST00000524257;transcript_support_level=4;version=5
+8	ensembl_havana	processed_transcript	140925588	141001122	.	-	.	ID=transcript:ENST00000523797;Parent=gene:ENSG00000169398;Name=PTK2-030;biotype=processed_transcript;havana_transcript=OTTHUMT00000378182;havana_version=1;transcript_id=ENST00000523797;transcript_support_level=3;version=1
+8	ensembl_havana	processed_transcript	140925689	141002216	.	-	.	ID=transcript:ENST00000519635;Parent=gene:ENSG00000169398;Name=PTK2-029;biotype=processed_transcript;havana_transcript=OTTHUMT00000378183;havana_version=2;transcript_id=ENST00000519635;transcript_support_level=4;version=1
+7	ensembl_havana	gene	27830573	28180743	.	-	.	ID=gene:ENSG00000153814;Name=JAZF1;biotype=protein_coding;description=JAZF zinc finger 1 [Source:HGNC Symbol%3BAcc:HGNC:28917];gene_id=ENSG00000153814;havana_gene=OTTHUMG00000128545;havana_version=5;logic_name=ensembl_havana_gene;version=11
+7	ensembl_havana	transcript	27830573	27992056	.	-	.	ID=transcript:ENST00000427814;Parent=gene:ENSG00000153814;Name=JAZF1-008;biotype=protein_coding;havana_transcript=OTTHUMT00000327767;havana_version=1;transcript_id=ENST00000427814;transcript_support_level=1;version=5
+7	ensembl_havana	transcript	27830573	28180743	.	-	.	ID=transcript:ENST00000283928;Parent=gene:ENSG00000153814;Name=JAZF1-001;biotype=protein_coding;ccdsid=CCDS5416.1;havana_transcript=OTTHUMT00000250382;havana_version=2;tag=basic;transcript_id=ENST00000283928;transcript_support_level=1;version=9
+7	ensembl_havana	processed_transcript	27832805	27864080	.	-	.	ID=transcript:ENST00000466516;Parent=gene:ENSG00000153814;Name=JAZF1-007;biotype=processed_transcript;havana_transcript=OTTHUMT00000327766;havana_version=1;transcript_id=ENST00000466516;transcript_support_level=4;version=1
+7	ensembl_havana	transcript	27832913	28071684	.	-	.	ID=transcript:ENST00000430432;Parent=gene:ENSG00000153814;Name=JAZF1-002;biotype=protein_coding;havana_transcript=OTTHUMT00000327761;havana_version=2;transcript_id=ENST00000430432;transcript_support_level=4;version=5
+7	ensembl_havana	transcript	27832915	27992252	.	-	.	ID=transcript:ENST00000447620;Parent=gene:ENSG00000153814;Name=JAZF1-004;biotype=protein_coding;havana_transcript=OTTHUMT00000327763;havana_version=2;transcript_id=ENST00000447620;transcript_support_level=4;version=5
+7	ensembl_havana	NMD_transcript_variant	27840769	28180578	.	-	.	ID=transcript:ENST00000452993;Parent=gene:ENSG00000153814;Name=JAZF1-005;biotype=nonsense_mediated_decay;havana_transcript=OTTHUMT00000327764;havana_version=1;transcript_id=ENST00000452993;transcript_support_level=4;version=5
+7	ensembl_havana	processed_transcript	27846503	28020799	.	-	.	ID=transcript:ENST00000420835;Parent=gene:ENSG00000153814;Name=JAZF1-003;biotype=processed_transcript;havana_transcript=OTTHUMT00000327762;havana_version=2;transcript_id=ENST00000420835;transcript_support_level=4;version=4
+7	ensembl_havana	NMD_transcript_variant	27895219	28180632	.	-	.	ID=transcript:ENST00000454041;Parent=gene:ENSG00000153814;Name=JAZF1-006;biotype=nonsense_mediated_decay;havana_transcript=OTTHUMT00000327765;havana_version=1;transcript_id=ENST00000454041;transcript_support_level=5;version=1
+14	havana	gene	106153624	106154163	.	-	.	ID=gene:ENSG00000211943;Name=IGHV3-15;biotype=IG_V_gene;description=immunoglobulin heavy variable 3-15 [Source:HGNC Symbol%3BAcc:HGNC:5582];gene_id=ENSG00000211943;havana_gene=OTTHUMG00000152282;havana_version=2;logic_name=havana_ig_gene;version=2
+14	havana	transcript	106153624	106154163	.	-	.	ID=transcript:ENST00000390603;Parent=gene:ENSG00000211943;Name=IGHV3-15-001;biotype=IG_V_gene;havana_transcript=OTTHUMT00000325670;havana_version=2;tag=basic;transcript_id=ENST00000390603;transcript_support_level=NA;version=2

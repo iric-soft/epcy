@@ -1,0 +1,13 @@
+{
+	"n_targets": 114,
+	"n_bootstraps": 100,
+	"n_processed": 100696107,
+	"n_pseudoaligned": 219114,
+	"n_unique": 194770,
+	"p_pseudoaligned": 0.2,
+	"p_unique": 0.2,
+	"kallisto_version": "0.46.0",
+	"index_version": 10,
+	"start_time": "Tue Mar 24 12:39:24 2020",
+	"call": "kallisto quant -b 100 -t 6 -i /u/eaudemard/dev/epcy/data//small_genome/Homo_sapiens.GRCh38.84.reduce.transcripts.kix -o /u/eaudemard/dev/epcy/data/01H002 /scratch/1721558.lemsrv1.iric.ca/01H002/01H002_1.ffastq /scratch/1721558.lemsrv1.iric.ca/01H002/01H002_2.ffastq"
+}
