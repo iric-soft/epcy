@@ -1,0 +1,13 @@
+{
+	"n_targets": 114,
+	"n_bootstraps": 100,
+	"n_processed": 0,
+	"n_pseudoaligned": 0,
+	"n_unique": 0,
+	"p_pseudoaligned": 0.0,
+	"p_unique": 0.0,
+	"kallisto_version": "0.46.0",
+	"index_version": 10,
+	"start_time": "Tue Mar 24 12:22:33 2020",
+	"call": "kallisto quant -b 100 -t 6 -i /scratch/Homo_sapiens.GRCh38.84.reduce.transcripts.kix -o ./data/small_leucegene/kallisto/04H061 /scratch/04H061/04H061_1.ffastq /scratch/04H061/04H061_2.ffastq"
+}
