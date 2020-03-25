@@ -1,0 +1,11 @@
+sample	subgroup	kallisto
+01H001	Ref	./data/small_leucegene/kallisto/01H001/
+01H002	Ref	./data/small_leucegene/kallisto/01H002/
+02H003	Ref	./data/small_leucegene/kallisto/02H003/
+02H009	Ref	./data/small_leucegene/kallisto/02H009/
+02H017	Ref	./data/small_leucegene/kallisto/02H017/
+03H095	Query	./data/small_leucegene/kallisto/03H095/
+03H109	Query	./data/small_leucegene/kallisto/03H109/
+03H112	Query	./data/small_leucegene/kallisto/03H112/
+04H030	Query	./data/small_leucegene/kallisto/04H030/
+04H061	Query	./data/small_leucegene/kallisto/04H061/
