@@ -1,13 +1,13 @@
 {
-	"n_targets": 114,
-	"n_bootstraps": 100,
+	"n_targets": 387,
+	"n_bootstraps": 40,
 	"n_processed": 99029550,
-	"n_pseudoaligned": 327310,
-	"n_unique": 301476,
-	"p_pseudoaligned": 0.3,
-	"p_unique": 0.3,
+	"n_pseudoaligned": 785005,
+	"n_unique": 534143,
+	"p_pseudoaligned": 0.8,
+	"p_unique": 0.5,
 	"kallisto_version": "0.46.0",
 	"index_version": 10,
-	"start_time": "Tue Mar 24 16:24:13 2020",
-	"call": "kallisto quant -b 100 -t 6 -i /u/eaudemard/dev/epcy/data//small_genome/Homo_sapiens.GRCh38.84.reduce.transcripts.kix -o /u/eaudemard/dev/epcy/data/small_leucegene/kallisto/02H009 /scratch/1721562.lemsrv1.iric.ca/02H009/02H009_1.ffastq /scratch/1721562.lemsrv1.iric.ca/02H009/02H009_2.ffastq"
+	"start_time": "Thu Mar 26 14:36:55 2020",
+	"call": "kallisto quant --pseudobam -b 40 -t 12 -i /u/eaudemard/dev/epcy/data//small_genome/Homo_sapiens.GRCh38.84.reduce.transcripts.kix -o /u/eaudemard/dev/epcy/data/small_leucegene/kallisto/02H009 /scratch/1722024.lemsrv1.iric.ca/02H009/02H009_1.ffastq /scratch/1722024.lemsrv1.iric.ca/02H009/02H009_2.ffastq"
 }
