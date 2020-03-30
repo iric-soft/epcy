@@ -8,6 +8,7 @@ import io
 
 from argparse import Namespace
 from epcy.tools import pred as tp
+from epcy.tools import pred_rna as tpr
 
 from epcy.utils import Classifier as uc
 from epcy.utils import readers as ur
@@ -83,6 +84,148 @@ class epcyTest(unittest.TestCase):
         self.assertEqual(selected_line[2],
                          "nan",
                          "Test fail: test_pred -> NaN")
+
+    def test_pred_rna_kall_gene(self):
+        design = "./data/small_leucegene/5_inv16_vs_5/design.tsv"
+        anno = "./data/small_genome/Homo_sapiens.GRCh38.84.reduce.gff3"
+
+        args = Namespace(
+            C=1,
+            DESIGN=design,
+            EXP=0,
+            L2FC=0,
+            THREAD=1,
+            N_DRAW=100,
+            N_BAGGING=1,
+            BY=-1,
+            BS=0,
+            LOG=True,
+            QUERY="Query",
+            MIN_BW=0.1,
+            CPM=True,
+            ANNO=anno,
+            PATH_OUT=None,
+            SUBGROUP="subgroup",
+            UTEST=False,
+            TTEST=False,
+            FULL=False,
+            AUC=False,
+            NORMAL=False,
+            GENE=True,
+            TPM=False,
+            KAL=True,
+            RANDOM_SEED=42,
+
+        )
+
+        with captured_output() as (out, err):
+            tpr.main_pred_rna(args, None)
+
+        output = out.getvalue()
+        all_lines = output.split("\n")
+
+        selected_line = all_lines[0].split("\t")
+        self.assertEqual(selected_line[2],
+                         "kernel_mcc",
+                         "Test fail: test_pred_rna_kall_gene -> header")
+
+        selected_line = all_lines[1].split("\t")
+        self.assertEqual(selected_line[2],
+                         "1.0",
+                         "Test fail: test_pred_rna_kall_gene -> MCC")
+
+    def test_pred_rna_kall_trans(self):
+        design = "./data/small_leucegene/5_inv16_vs_5/design.tsv"
+        anno = "./data/small_genome/Homo_sapiens.GRCh38.84.reduce.gff3"
+
+        args = Namespace(
+            C=1,
+            DESIGN=design,
+            EXP=0,
+            L2FC=0,
+            THREAD=1,
+            N_DRAW=10,
+            N_BAGGING=1,
+            BY=-1,
+            BS=0,
+            LOG=True,
+            QUERY="Query",
+            MIN_BW=0.1,
+            CPM=True,
+            ANNO=anno,
+            PATH_OUT=None,
+            SUBGROUP="subgroup",
+            UTEST=False,
+            TTEST=False,
+            FULL=False,
+            AUC=False,
+            NORMAL=False,
+            GENE=False,
+            TPM=False,
+            KAL=True,
+            RANDOM_SEED=42,
+
+        )
+
+        with captured_output() as (out, err):
+            tpr.main_pred_rna(args, None)
+
+        output = out.getvalue()
+        all_lines = output.split("\n")
+
+        selected_line = all_lines[0].split("\t")
+        self.assertEqual(selected_line[2],
+                         "kernel_mcc",
+                         "Test fail: test_pred_rna_kall_trans -> header")
+
+        selected_line = all_lines[1].split("\t")
+        self.assertEqual(selected_line[2],
+                         "0.51592886",
+                         "Test fail: test_pred_rna_kall_trans -> MCC")
+
+    def test_pred_rna_kall_miss_anno(self):
+        design = "./data/small_leucegene/5_inv16_vs_5/design.tsv"
+        anno = "./data/small_genome/Homo_sapiens.GRCh38.84.reduce2.gff3"
+
+        args = Namespace(
+            C=1,
+            DESIGN=design,
+            EXP=0,
+            L2FC=0,
+            THREAD=1,
+            N_DRAW=10,
+            N_BAGGING=1,
+            BY=-1,
+            BS=0,
+            LOG=True,
+            QUERY="Query",
+            MIN_BW=0.1,
+            CPM=True,
+            ANNO=anno,
+            PATH_OUT=None,
+            SUBGROUP="subgroup",
+            UTEST=False,
+            TTEST=False,
+            FULL=False,
+            AUC=False,
+            NORMAL=False,
+            GENE=True,
+            TPM=False,
+            KAL=True,
+            RANDOM_SEED=42,
+
+        )
+
+        with captured_output() as (out, err):
+            tpr.main_pred_rna(args, None)
+
+        output = out.getvalue()
+        all_lines = output.split("\n")
+        selected_line = all_lines[len(all_lines) - 2].split("\t")
+
+        self.assertEqual(selected_line[0],
+                         "ENST00000411957",
+                         "Test fail: test_pred_rna_kall_miss_anno -> ENST")
 
     def test_pred_pvalue(self):
 

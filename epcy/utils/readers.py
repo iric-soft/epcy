@@ -166,7 +166,7 @@ def read_kall_project(file_h5, num_features, transcripts_len, args,
         counts = f["est_counts"][:]
 
         if args.TPM:
-            counts = counts2tpm(counts, args)
+            counts = counts2tpm(counts, transcripts_len)
 
         if args.GENE:
             counts = trans_to_gene(counts, ids_genes)
