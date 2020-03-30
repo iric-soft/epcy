@@ -240,9 +240,13 @@ def create_kal_mat(args, design, design_bootstrapped, df_anno):
     if args.GENE:
         sys.stderr.write(time.strftime('%X') + ":\tTranscripts to genes\n")
         parents = df_anno.reindex(transcripts)["Parent"].values
+        ids_notin_anno = np.argwhere(pd.isnull(parents))
+        parents[ids_notin_anno] = transcripts[ids_notin_anno]
         # TODO find an other way to works with other ids not ENSG
         uniq_genes = df_anno.index[df_anno.index.str.contains("ENSG")]
         uniq_genes = np.array(uniq_genes)
+        # To add transcropts not in annotation file
+        uniq_genes = np.append(uniq_genes, transcripts[ids_notin_anno])
         sys.stderr.write(time.strftime('%X') + ":\t\tkeep " +
                          str(uniq_genes.size) + " ENSG ids\n")
         sys.stderr.write(time.strftime('%X') + ":\t\tfound genes ids for " +
