@@ -331,7 +331,7 @@ class Classifier:
         return(res)
 
     @staticmethod
-    def compute_kernel_fx_and_ct(k_bw_nq_gen, num_query, N, num_bs,
+    def compute_kernel_fx_and_ct(k_bw_nq_gen, num_query, N, num_bs=0,
                                  num_draw=100,
                                  random_state=np.random.RandomState()):
         fx_by_sample = [Classifier.compute_kernel_fx(k_bw_nq, i, num_bs=num_bs)
@@ -444,7 +444,7 @@ class Classifier:
     def bw_nrd(x, num_bs=0):
         # TODO need to improve speed of this part
         if num_bs != 0:
-            x = x[range(1, len(x), 4)]
+            x = x[range(1, len(x), num_bs)]
 
         hi = np.std(x)
         iqr = np.subtract(*np.percentile(x, [75, 25]))
@@ -461,9 +461,9 @@ class Classifier:
 
     @staticmethod
     def bw_nrd0(x, num_bs=0):
-        # TODO need to improve speed of this part
+        # TODO need to improve speed of this par
         if num_bs != 0:
-            x = x[range(1, len(x), 4)]
+            x = x[range(1, len(x), num_bs)]
 
         hi = np.std(x)
         iqr = np.subtract(*np.percentile(x, [75, 25]))
@@ -608,6 +608,7 @@ class Classifier:
         num_value = all_mcc.size
         first_quantile = int(num_value * 0.05)
         last_quantile = int(num_value * 0.95)
+
         if last_quantile != 0:
             last_quantile = last_quantile - 1
         mean_mcc = np.mean(all_mcc[first_quantile:(last_quantile+1)])
