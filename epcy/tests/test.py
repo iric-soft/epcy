@@ -80,10 +80,80 @@ class epcyTest(unittest.TestCase):
                          "1.0",
                          "Test fail: test_pred -> KERNEL_MCC")
 
-        selected_line = all_lines[4].split("\t")
+        selected_line = all_lines[8].split("\t")
         self.assertEqual(selected_line[2],
                          "nan",
                          "Test fail: test_pred -> NaN")
+
+        selected_line = all_lines[3].split("\t")
+        self.assertEqual(selected_line[2],
+                         "0.7856584",
+                         "Test fail: test_pred -> feature without missing value")
+
+        selected_line = all_lines[4].split("\t")
+        self.assertEqual(selected_line[2],
+                         "0.5833333",
+                         "Test fail: test_pred -> feature with missing value")
+
+        selected_line = all_lines[5].split("\t")
+        self.assertEqual(selected_line[2],
+                         "nan",
+                         "Test fail: test_pred -> feature too much missing value")
+
+    def test_pred_rna_kall_gene_bagging(self):
+        design = "./data/small_leucegene/5_inv16_vs_5/design.tsv"
+        anno = "./data/small_genome/Homo_sapiens.GRCh38.84.reduce.gff3"
+
+        args = Namespace(
+            C=1,
+            DESIGN=design,
+            EXP=0,
+            L2FC=0,
+            THREAD=1,
+            N_DRAW=10,
+            N_BAGGING=2,
+            BY=-1,
+            BS=0,
+            LOG=True,
+            QUERY="Query",
+            MIN_BW=0.1,
+            CPM=True,
+            ANNO=anno,
+            PATH_OUT=None,
+            SUBGROUP="subgroup",
+            UTEST=False,
+            TTEST=False,
+            FULL=False,
+            AUC=False,
+            NORMAL=True,
+            GENE=True,
+            TPM=False,
+            KAL=True,
+            RANDOM_SEED=42,
+
+        )
+
+        with captured_output() as (out, err):
+            tpr.main_pred_rna(args, None)
+
+        output = out.getvalue()
+        all_lines = output.split("\n")
+
+        selected_line = all_lines[0].split("\t")
+        self.assertEqual(selected_line[2],
+                         "kernel_mcc",
+                         "Test fail: test_pred_rna_kall_gene_bagging -> header")
+
+        selected_line = all_lines[1].split("\t")
+        self.assertEqual(selected_line[2],
+                         "1.0",
+                         "Test fail: test_pred_rna_kall_gene_bagging -> MCC")
+
+        selected_line = all_lines[1].split("\t")
+        self.assertEqual(selected_line[9],
+                         "0.8",
+                         "Test fail: test_pred_rna_kall_gene_bagging -> MCC")
+
 
     def test_pred_rna_kall_gene(self):
         design = "./data/small_leucegene/5_inv16_vs_5/design.tsv"
@@ -110,7 +180,7 @@ class epcyTest(unittest.TestCase):
             TTEST=False,
             FULL=False,
             AUC=False,
-            NORMAL=False,
+            NORMAL=True,
             GENE=True,
             TPM=False,
             KAL=True,
@@ -132,6 +202,11 @@ class epcyTest(unittest.TestCase):
         selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[2],
                          "1.0",
+                         "Test fail: test_pred_rna_kall_gene -> MCC")
+
+        selected_line = all_lines[1].split("\t")
+        self.assertEqual(selected_line[9],
+                         "0.9836886",
                          "Test fail: test_pred_rna_kall_gene -> MCC")
 
     def test_pred_rna_kall_trans(self):
@@ -285,7 +360,7 @@ class epcyTest(unittest.TestCase):
                          "1.9629755e-05",
                          "Test fail: test_pred_pvalue -> TTEST value l1")
 
-        selected_line = all_lines[4].split("\t")
+        selected_line = all_lines[8].split("\t")
         self.assertEqual(selected_line[9],
                          "nan",
                          "Test fail: test_pred_pvalue -> AUC value l4")

@@ -184,8 +184,10 @@ class Classifier:
             row_data = self.data[cpt_id, :]
 
             num_query = self.num_query
+            ids_na = None
             if self.with_na > 0:
-                row_data, num_query = self.rm_missing(row_data, num_query)
+                row_data, num_query, ids_na = self.rm_missing(row_data,
+                                                              num_query)
 
                 self.sample_query[cpt_id] = num_query
                 self.sample_ref[cpt_id] = row_data.size - num_query
@@ -234,6 +236,8 @@ class Classifier:
                     self.kernel_mcc[cpt_id] = mcc
 
                     if self.args.FULL:
+                        if ids_na is not None and len(ids_na) > 0:
+                            pred_by_sample = np.insert(pred_by_sample, ids_na, np.nan)
                         self.kernel_pred[cpt_id, :] = pred_by_sample
 
                     if self.args.NORMAL:
@@ -246,6 +250,8 @@ class Classifier:
 
                         self.normal_mcc[cpt_id] = mcc
                         if self.args.FULL:
+                            if ids_na is not None and len(ids_na) > 0:
+                                pred_by_sample = np.insert(pred_by_sample, ids_na, np.nan)
                             self.normal_pred[cpt_id, :] = pred_by_sample
 
             cpt_id += 1
@@ -263,7 +269,7 @@ class Classifier:
             row_data = row_data[~np.isnan(row_data)]
             num_query = num_query - sum(ids_na[:num_query])
 
-        return(row_data, num_query)
+        return(row_data, num_query, np.where(ids_na)[0])
 
     @staticmethod
     def get_foldchange(row_data, num_query):
@@ -394,10 +400,8 @@ class Classifier:
                                     random_state=random_state)
                       for x_ids in n_folds]
         fx_by_fold = np.asarray(fx_by_fold)
-        # print(fx_by_fold.shape)
-        # print(fx_by_fold)
         fx_by_bag = np.transpose(fx_by_fold, (2, 0, 1))
-        fx_by_bag = np.reshape(fx_by_bag, (n_bagging, N, N - num_bs))
+        fx_by_bag = np.reshape(fx_by_bag, (n_bagging, N))
 
         ct_by_bag = (Classifier.fx_to_tables(
                                     fx_by_sample, num_query, N,
