@@ -100,6 +100,52 @@ class epcyTest(unittest.TestCase):
                          "nan",
                          "Test fail: test_pred -> feature too much missing value")
 
+    def test_pred_rna_cpm(self):
+        design = "./data/small_for_test/design.tsv"
+        mat = "./data/small_for_test/exp_matrix.tsv"
+
+        args = Namespace(
+            C=1,
+            DESIGN=design,
+            EXP=0,
+            L2FC=0.3,
+            MATRIX=mat,
+            THREAD=1,
+            N_DRAW=100,
+            N_BAGGING=1,
+            BY=-1,
+            BS=0,
+            LOG=True,
+            QUERY="Query",
+            MIN_BW=0.0,
+            CPM=True,
+            ANNO=None,
+            PATH_OUT=None,
+            SUBGROUP="subgroup",
+            UTEST=False,
+            TTEST=False,
+            FULL=False,
+            AUC=False,
+            NORMAL=False,
+            GENE=False,
+            TPM=False,
+            KAL=False,
+            RANDOM_SEED=42
+        )
+
+        with captured_output() as (out, err):
+            tpr.main_pred_rna(args, None)
+
+        output = out.getvalue()
+        all_lines = output.split("\n")
+
+        selected_line = all_lines[0].split("\t")
+
+        selected_line = all_lines[1].split("\t")
+        self.assertEqual(selected_line[1],
+                         "2.7649796",
+                         "Test fail: test_pred_rna_cpm -> L2FC with CPM")
+
     def test_pred_rna_kall_gene_bagging(self):
         design = "./data/small_leucegene/5_inv16_vs_5/design.tsv"
         anno = "./data/small_genome/Homo_sapiens.GRCh38.84.reduce.gff3"
@@ -145,6 +191,11 @@ class epcyTest(unittest.TestCase):
                          "Test fail: test_pred_rna_kall_gene_bagging -> header")
 
         selected_line = all_lines[1].split("\t")
+        self.assertEqual(selected_line[1],
+                         "1.6704607",
+                         "Test fail: test_pred_rna_kall_gene_bagging -> L2FC")
+
+        selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[2],
                          "1.0",
                          "Test fail: test_pred_rna_kall_gene_bagging -> MCC")
@@ -154,6 +205,49 @@ class epcyTest(unittest.TestCase):
                          "0.8",
                          "Test fail: test_pred_rna_kall_gene_bagging -> MCC")
 
+    def test_pred_rna_kall_gene_bagging_tpm(self):
+        design = "./data/small_leucegene/5_inv16_vs_5/design.tsv"
+        anno = "./data/small_genome/Homo_sapiens.GRCh38.84.reduce.gff3"
+
+        args = Namespace(
+            C=1,
+            DESIGN=design,
+            EXP=0,
+            L2FC=0,
+            THREAD=1,
+            N_DRAW=10,
+            N_BAGGING=2,
+            BY=-1,
+            BS=0,
+            LOG=True,
+            QUERY="Query",
+            MIN_BW=0.1,
+            CPM=False,
+            ANNO=anno,
+            PATH_OUT=None,
+            SUBGROUP="subgroup",
+            UTEST=False,
+            TTEST=False,
+            FULL=False,
+            AUC=False,
+            NORMAL=True,
+            GENE=True,
+            TPM=True,
+            KAL=True,
+            RANDOM_SEED=42,
+
+        )
+
+        with captured_output() as (out, err):
+            tpr.main_pred_rna(args, None)
+
+        output = out.getvalue()
+        all_lines = output.split("\n")
+
+        selected_line = all_lines[1].split("\t")
+        self.assertEqual(selected_line[1],
+                         "2.3213472",
+                         "Test fail: test_pred_rna_kall_gene_bagging_tpm -> L2FC TPM")
 
     def test_pred_rna_kall_gene(self):
         design = "./data/small_leucegene/5_inv16_vs_5/design.tsv"
@@ -168,7 +262,7 @@ class epcyTest(unittest.TestCase):
             N_DRAW=100,
             N_BAGGING=1,
             BY=-1,
-            BS=0,
+            BS=5,
             LOG=True,
             QUERY="Query",
             MIN_BW=0.1,
@@ -206,7 +300,7 @@ class epcyTest(unittest.TestCase):
 
         selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[9],
-                         "0.9836886",
+                         "0.882861",
                          "Test fail: test_pred_rna_kall_gene -> MCC")
 
     def test_pred_rna_kall_trans(self):

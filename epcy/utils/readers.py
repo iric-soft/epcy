@@ -127,7 +127,7 @@ def trans_to_gene(values, ids_genes):
 def counts2cpm(counts):
     """ Transform counts matrix into cpm.
     """
-    total_mass = np.sum(counts, axis=0)
+    total_mass = np.nansum(counts, axis=0)
     counts = (counts / total_mass) * 1e6
 
     return(counts)
@@ -295,17 +295,16 @@ def create_kal_mat(args, design, design_bootstrapped, df_anno):
 def bootstrapped_design(design, args):
     """ Update generic design to match with the number of botstrap.
     """
-    if args.BS == 0:
-        header = design['sample']
-    else:
+    if args.BS != 0:
         header = np.repeat(design['sample'].values, args.BS)
         header_id = np.tile(["_" + str(x)
                              for x in range(0, args.BS)], design.shape[0])
         header = np.core.defchararray.add(header.astype(str),
                                           header_id.astype(str))
-        design = design.loc[design.index.repeat(args.BS)]
-        design.is_copy = None
-        design['sample'] = header
+        design_bs = design.loc[design.index.repeat(args.BS)]
+        design_bs['sample'] = header
+
+        return(design_bs)
 
     return(design)
 

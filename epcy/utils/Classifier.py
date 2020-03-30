@@ -579,10 +579,6 @@ class Classifier:
 
     @staticmethod
     def fx_normal(x, other, id_split, epsilon, num_bs=0):
-        if num_bs != 0:
-            x = x[range(1, len(x), 4)]
-            other = other[range(1, len(x), 4)]
-
         mu = np.mean(other[:id_split])
         var = np.var(other[:id_split]) + epsilon
         first_part = 1 / math.sqrt(2 * np.pi * var)
