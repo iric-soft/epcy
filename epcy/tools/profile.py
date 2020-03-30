@@ -15,6 +15,10 @@ def main_profile(args, argparser):
     (design, data, list_ids) = ur.read_design_matrix(args)
     num_query = len(np.where(design[args.SUBGROUP] == 1)[0])
 
+    num_bs = 0
+    if hasattr(self.args, 'BS') and self.args.BS is not None:
+        num_bs = self.args.BS
+
     sys.stderr.write(time.strftime('%X') + ": Start profiling:\n")
     for id in args.IDS:
         sys.stderr.write(time.strftime('%X') + ":\t" + id + "\n")
@@ -25,8 +29,8 @@ def main_profile(args, argparser):
             row_query = row_data[:row_num_query]
             row_ref = row_data[row_num_query:]
 
-            bw_query = uc.Classifier.bw_nrd(row_query)
-            bw_ref = uc.Classifier.bw_nrd(row_ref)
+            bw_query = uc.Classifier.bw_nrd(row_query, num_bs)
+            bw_ref = uc.Classifier.bw_nrd(row_ref, num_bs)
 
             if bw_query < args.MIN_BW:
                 bw_query = args.MIN_BW

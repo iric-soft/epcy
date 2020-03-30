@@ -84,50 +84,74 @@ class epcyTest(unittest.TestCase):
                          "nan",
                          "Test fail: test_pred -> NaN")
 
-#    def test_pred_pvalue(self):
-#
-#        design = "./data/small_for_test/design.tsv"
-#        mat = "./data/small_for_test/exp_matrix.tsv"
-#
-#        args = Namespace(
-#            C=1,
-#            DESIGN=design,
-#            EXP=0,
-#            L2FC=0.3,
-#            MATRIX=mat,
-#            THREAD=1,
-#            N_BAGGING=1,
-#            BY=-1,
-#            BS=0,
-#            LOG=True,
-#            QUERY="Query",
-#            MIN_BW=0.0,
-#            ANNO=None,
-#            PATH_OUT=None,
-#            SUBGROUP="subgroup",
-#            UTEST=True,
-#            TTEST=True,
-#            FULL=True,
-#            AUC=True,
-#            NORMAL=False
-#        )
-#
-#        with captured_output() as (out, err):
-#            tp.main_pred(args, None)
-#
-#        output = out.getvalue()
-#        all_lines = output.split("\n")
-#
-#        selected_line = all_lines[0].split("\t")
-#        self.assertEqual(selected_line[5],
-#                         "auc",
-#                         "Test fail: test_pred_pvalue -> AUC")
-#        self.assertEqual(selected_line[6],
-#                         "u_pv",
-#                         "Test fail: test_pred_pvalue -> UTEST")
-#        self.assertEqual(selected_line[7],
-#                         "t_pv",
-#                         "Test fail: test_pred_pvalue -> TTEST")
+    def test_pred_pvalue(self):
+
+        design = "./data/small_for_test/design.tsv"
+        mat = "./data/small_for_test/exp_matrix.tsv"
+
+        args = Namespace(
+            C=1,
+            DESIGN=design,
+            EXP=0,
+            L2FC=0.3,
+            MATRIX=mat,
+            THREAD=1,
+            N_BAGGING=1,
+            BY=-1,
+            BS=0,
+            LOG=True,
+            QUERY="Query",
+            MIN_BW=0.0,
+            ANNO=None,
+            PATH_OUT=None,
+            SUBGROUP="subgroup",
+            UTEST=True,
+            TTEST=True,
+            FULL=True,
+            AUC=True,
+            NORMAL=False,
+            RANDOM_SEED=42,
+            N_DRAW=100
+        )
+
+        with captured_output() as (out, err):
+            tp.main_pred(args, None)
+
+        output = out.getvalue()
+        all_lines = output.split("\n")
+
+        selected_line = all_lines[0].split("\t")
+        self.assertEqual(selected_line[9],
+                         "auc",
+                         "Test fail: test_pred_pvalue -> AUC")
+        self.assertEqual(selected_line[10],
+                         "u_pv",
+                         "Test fail: test_pred_pvalue -> UTEST")
+        self.assertEqual(selected_line[11],
+                         "t_pv",
+                         "Test fail: test_pred_pvalue -> TTEST")
+
+        selected_line = all_lines[1].split("\t")
+        self.assertEqual(selected_line[9],
+                         "1.0",
+                         "Test fail: test_pred_pvalue -> AUC value l1")
+        self.assertEqual(selected_line[10],
+                         "0.0047718217",
+                         "Test fail: test_pred_pvalue -> UTEST value l1")
+        self.assertEqual(selected_line[11],
+                         "1.9629755e-05",
+                         "Test fail: test_pred_pvalue -> TTEST value l1")
+
+        selected_line = all_lines[4].split("\t")
+        self.assertEqual(selected_line[9],
+                         "nan",
+                         "Test fail: test_pred_pvalue -> AUC value l4")
+        self.assertEqual(selected_line[10],
+                         "nan",
+                         "Test fail: test_pred_pvalue -> UTEST value l4")
+        self.assertEqual(selected_line[11],
+                         "nan",
+                         "Test fail: test_pred_pvalue -> TTEST value l4")
 
     def test_pred_thread(self):
         design = "./data/small_for_test/design.tsv"
