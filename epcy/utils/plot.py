@@ -166,6 +166,13 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
         }
     )
 
+    # dummy plots, just to get the Path objects
+    fig, ax = plt.subplots(1, 1)
+    a = ax.scatter([1, 2], [3, 4], marker='s')
+    b = ax.scatter([1, 2], [3, 4])
+    square_mk, = a.get_paths()
+    circle_mk, = b.get_paths()
+
     fig = plt.figure(figsize=(5, 5))
     gs = plt.GridSpec(4, 1)
 
@@ -205,6 +212,20 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
         x="x", y="subgroup", data=df_swarn, ax=ax_swarm,
         palette=sns.color_palette([col_pal[0], col_pal[1]])
     )
+
+    # Change shape in function of subgroup
+    collections = sns_plot.collections
+    unique_colors = [list(col_pal[0]) + [1], list(col_pal[1]) + [1]]
+    markers = [circle_mk, square_mk]
+    for collection in collections:
+        paths = []
+        for current_color in collection.get_facecolors():
+            for possible_marker, possible_color in zip(markers, unique_colors):
+                if np.array_equal(current_color, possible_color):
+                    paths.append(possible_marker)
+                    break
+        collection.set_paths(paths)
+    # sns_plot.legend(collections[-2:], pd.unique(df_swarn.subgroup))
 
     x_label = "x"
     if hasattr(args, 'CPM') and args.CPM:

@@ -10,8 +10,8 @@ from .. utils import readers as ur
 
 def main_pred(args, argparser):
 
-    sys.stderr.write(time.strftime('%X') + ": Read design and matrix \
-                     features\n")
+    sys.stderr.write(time.strftime('%X') + ": Read design and matrix " +
+                     "features\n")
     (design, data, list_ids) = ur.read_design_matrix(args)
 
     num_pred = data.shape[0]

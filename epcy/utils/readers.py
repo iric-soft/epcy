@@ -127,7 +127,7 @@ def trans_to_gene(values, ids_genes):
 def counts2cpm(counts):
     """ Transform counts matrix into cpm.
     """
-    total_mass = np.sum(counts, axis=0)
+    total_mass = np.nansum(counts, axis=0)
     counts = (counts / total_mass) * 1e6
 
     return(counts)
@@ -166,7 +166,7 @@ def read_kall_project(file_h5, num_features, transcripts_len, args,
         counts = f["est_counts"][:]
 
         if args.TPM:
-            counts = counts2tpm(counts, args)
+            counts = counts2tpm(counts, transcripts_len)
 
         if args.GENE:
             counts = trans_to_gene(counts, ids_genes)
@@ -197,10 +197,10 @@ def read_design_matrix(args):
     design = get_design(args)
     data = pd.io.parsers.read_csv(args.MATRIX, sep="\t", index_col=0)
     if sum(~design["sample"].isin(data.columns)) > 0:
-        sys.stderr.write("WARNING: Some samples are present in the design, \
-                         but not in the quantification matrix\n")
-        sys.stderr.write("\t the analysis will be made without these \
-                         samples:\n")
+        sys.stderr.write("WARNING: Some samples are present in the design, " +
+                         "but not in the quantification matrix\n")
+        sys.stderr.write("\t the analysis will be made without these " +
+                         "samples:\n")
         sys.stderr.write(str(design[~design["sample"].isin(data.columns)]) +
                          "\n")
         design = design[design["sample"].isin(data.columns)]
@@ -240,13 +240,17 @@ def create_kal_mat(args, design, design_bootstrapped, df_anno):
     if args.GENE:
         sys.stderr.write(time.strftime('%X') + ":\tTranscripts to genes\n")
         parents = df_anno.reindex(transcripts)["Parent"].values
+        ids_notin_anno = np.argwhere(pd.isnull(parents))
+        parents[ids_notin_anno] = transcripts[ids_notin_anno]
         # TODO find an other way to works with other ids not ENSG
         uniq_genes = df_anno.index[df_anno.index.str.contains("ENSG")]
         uniq_genes = np.array(uniq_genes)
+        # To add transcropts not in annotation file
+        uniq_genes = np.append(uniq_genes, transcripts[ids_notin_anno])
         sys.stderr.write(time.strftime('%X') + ":\t\tkeep " +
                          str(uniq_genes.size) + " ENSG ids\n")
-        sys.stderr.write(time.strftime('%X') + ":\t\tfound genes ids for \
-                         each trans\n")
+        sys.stderr.write(time.strftime('%X') + ":\t\tfound genes ids for " +
+                         "each trans\n")
         ids_genes = [np.where(parents == gene)[0] for gene in uniq_genes]
         ids_genes = np.array(ids_genes)
 
@@ -259,8 +263,8 @@ def create_kal_mat(args, design, design_bootstrapped, df_anno):
         rows_id = uniq_genes
         num_features = uniq_genes.size
 
-    sys.stderr.write(time.strftime('%X') + ":\tRead samples kallisto \
-                     quantification from h5\n")
+    sys.stderr.write(time.strftime('%X') + ":\tRead samples kallisto " +
+                     "quantification from h5\n")
     if args.BS == 0:
         kallisto = np.zeros((num_features, design.shape[0]), dtype=np.float32)
     else:
@@ -291,17 +295,16 @@ def create_kal_mat(args, design, design_bootstrapped, df_anno):
 def bootstrapped_design(design, args):
     """ Update generic design to match with the number of botstrap.
     """
-    if args.BS == 0:
-        header = design['sample']
-    else:
+    if args.BS != 0:
         header = np.repeat(design['sample'].values, args.BS)
         header_id = np.tile(["_" + str(x)
                              for x in range(0, args.BS)], design.shape[0])
         header = np.core.defchararray.add(header.astype(str),
                                           header_id.astype(str))
-        design = design.loc[design.index.repeat(args.BS)]
-        design.is_copy = None
-        design['sample'] = header
+        design_bs = design.loc[design.index.repeat(args.BS)]
+        design_bs['sample'] = header
+
+        return(design_bs)
 
     return(design)
 
@@ -313,18 +316,18 @@ def read_design_matrix_rna(args, df_anno=None):
 
     num_query = len(np.where(design[args.SUBGROUP] == 1)[0])
     if num_query == 0:
-        sys.stderr.write("ERROR: EPCY havn't found Query samples in your \
-                         design!\n\tCheck your design file and --subgroup, \
-                         --query options\n")
+        sys.stderr.write("ERROR: EPCY havn't found Query samples in your " +
+                         "design!\n\tCheck your design file and --subgroup, " +
+                         "--query options\n")
         return(None, None, None)
 
     if hasattr(args, 'MATRIX') and args.MATRIX is not None:
         data = pd.io.parsers.read_csv(args.MATRIX, sep="\t", index_col=0)
         if args.GENE:
             # TODO
-            sys.stderr.write("ERROR: Sorry, switch transcript to gene \
-                             quantification from a matrix file is not \
-                             implemented!!!\n")
+            sys.stderr.write("ERROR: Sorry, switch transcript to gene " +
+                             "quantification from a matrix file is not " +
+                             "implemented!!!\n")
             return(None, None, None)
     else:
         if args.KAL:
@@ -340,8 +343,8 @@ def read_design_matrix_rna(args, df_anno=None):
         design = design_bootstrapped
 
     if sum(~design["sample"].isin(data.columns)) > 0:
-        sys.stderr.write("WARNING: Some samples are present in the design, \
-                         but not in the quantification matrix\n")
+        sys.stderr.write("WARNING: Some samples are present in the design, " +
+                         "but not in the quantification matrix\n")
         sys.stderr.write("\t the analysis will be made without these \
                          samples:\n")
         sys.stderr.write(str(design[~design["sample"].isin(data.columns)]) +
