@@ -106,7 +106,7 @@ Working on kallisto quantification:
 .. code:: shell
 
   # To run on kallisto quantification, add --kall (+ --cpm --log)
-  epcy pred_rna --kal --cpm --log -d [design.tsv] -o [output_directory]
+  epcy pred_rna --kal --cpm --log -d ./data/small_leucegene/5_inv16_vs_5/design.tsv -o [./data/small_leucegene/5_inv16_vs_5/
   # !!! Take care kallisto quantification is on transcript not on gene
 
 * To run on gene level, a gff3 file of the genome annotation is needed, to have the correspondence between transcript and gene. This file can be download on `ensembl`_
@@ -116,21 +116,21 @@ Working on kallisto quantification:
 .. code:: shell
 
   # To run on kallisto quantification and gene level, add --gene --anno [file.gff] (+ --kall --cpm --log)
-  epcy pred_rna --kal --cpm --log --gene --anno [gff.file] -d [design.tsv] -o [output_directory]
+  epcy pred_rna --kal --cpm --log --gene --anno [./data/small_genome/Homo_sapiens.GRCh38.84.reduce.gff3 -d ./data/small_leucegene/5_inv16_vs_5/design.tsv -o ./data/small_leucegene/5_inv16_vs_5/
 
 * kallisto quantification allow to work on TPM:
 
 .. code:: shell
 
   # work on TPM, replace --cpm by --tpm
-  epcy pred_rna --kal --tpm --log --gene --anno [gff.file] -d [design.tsv] -o [output_directory]
+  epcy pred_rna --kal --tpm --log --gene --anno ./data/small_genome/Homo_sapiens.GRCh38.84.reduce.gff3 -d ./data/small_leucegene/5_inv16_vs_5/design.tsv -o ./data/small_leucegene/5_inv16_vs_5/
 
 
 -------
 Output:
 -------
 
-Prediction\_capability.xls
+predictive\_capability.xls
 ---------------------------
 
 This file is the main output which contain the evaluation of each features (genes, proteins, ...). It's a tabulated files 9 columns:
@@ -140,8 +140,11 @@ This file is the main output which contain the evaluation of each features (gene
   - id: the id of each feature.
   - l2fc: log2 Fold change.
   - kernel\_mcc: Matthews Correlation Coefficient (`MCC`_) compute by a predictor using `KDE`_.
+  - kernel\_mcc\_low, kernel\_mcc\_high: boundaries of confidence interval (90%).
   - mean\_query: mean(values) of samples specify as Query in design.tsv
   - mean\_ref: mean(values) of samples specify as Ref in design.ts
+  - bw\_query: Estimate bandwidth used by `KDE`_, to calculate the density of query samples
+  - bw\_ref: Estimate bandwidth used by `KDE`_, to calculate the density of ref samples
 
 * Using --normal:
 
@@ -161,13 +164,7 @@ subgroup\_predicted.xls
 -----------------------
 
 Using --full a secondary output file (subgroup\_predicted.xls) specify for each features if the sample as been correctly predicted. Build an heatmap with this output could help you to explore your data.
-
-* Legend:
-
-  - 1: true positive
-  - 2: false negative
-  - 3: false positive
-  - 4: true negative
+More details coming soon.
 
   .. _MCC: https://en.wikipedia.org/wiki/Matthews_correlation_coefficient
   .. _KDE: https://en.wikipedia.org/wiki/Kernel_density_estimation
