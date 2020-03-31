@@ -106,7 +106,7 @@ Working on kallisto quantification:
 .. code:: shell
 
   # To run on kallisto quantification, add --kall (+ --cpm --log)
-  epcy pred_rna --kal --cpm --log -d ./data/small_leucegene/5_inv16_vs_5/design.tsv -o [./data/small_leucegene/5_inv16_vs_5/
+  epcy pred_rna --kal --cpm --log -d ./data/small_leucegene/5_inv16_vs_5/design.tsv -o ./data/small_leucegene/5_inv16_vs_5/
   # !!! Take care kallisto quantification is on transcript not on gene
 
 * To run on gene level, a gff3 file of the genome annotation is needed, to have the correspondence between transcript and gene. This file can be download on `ensembl`_
@@ -116,7 +116,7 @@ Working on kallisto quantification:
 .. code:: shell
 
   # To run on kallisto quantification and gene level, add --gene --anno [file.gff] (+ --kall --cpm --log)
-  epcy pred_rna --kal --cpm --log --gene --anno [./data/small_genome/Homo_sapiens.GRCh38.84.reduce.gff3 -d ./data/small_leucegene/5_inv16_vs_5/design.tsv -o ./data/small_leucegene/5_inv16_vs_5/
+  epcy pred_rna --kal --cpm --log --gene --anno ./data/small_genome/Homo_sapiens.GRCh38.84.reduce.gff3 -d ./data/small_leucegene/5_inv16_vs_5/design.tsv -o ./data/small_leucegene/5_inv16_vs_5/
 
 * kallisto quantification allow to work on TPM:
 
