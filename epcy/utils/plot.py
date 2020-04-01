@@ -16,6 +16,45 @@ col_pal = [
     mpl.colors.hex2color('#1483D2')
 ]
 
+def plot_explore_heatmap(df_heatmap, df_pred, args):
+    if not os.path.exists(args.PATH_OUT):
+        os.makedirs(args.PATH_OUT)
+
+    df_heatmap = df_heatmap.set_index('ID')
+
+    mcc_colors_palette = sns.light_palette("green", reverse=True, n_colors=3)
+
+
+    mcc_colors = []
+    for x in df_pred.KERNEL_MCC.values:
+        if x >= 0.9:
+            mcc_colors.append(mcc_colors_palette[0])
+        elif x >=0.5:
+            mcc_colors.append(mcc_colors_palette[1])
+        else:
+            mcc_colors.append(mcc_colors_palette[2])
+
+    #DOESN'T WORKS
+    #mcc = df_pred.KERNEL_MCC.values.copy()
+    #mcc_colors = df_pred.KERNEL_MCC.values.copy()
+    #mcc_colors[np.where(mcc >= 0.9)] = [mcc_colors_palette[0]] * len(mcc_colors[np.where(mcc >= 0.9)])
+    #mcc_colors[np.where((mcc < 0.9) & (mcc >= 0.5))] = [mcc_colors_palette[1]] * len(mcc_colors[np.where((mcc < 0.9) & (mcc >= 0.5))])
+    #mcc_colors[np.where(mcc < 0.5)] = [mcc_colors_palette[2]] * len(mcc_colors[np.where(mcc < 0.5)])
+
+
+    sns_plot = sns.clustermap(
+        df_heatmap, linewidths=0, metric='euclidean',
+        xticklabels=True, yticklabels=True,
+        vmin=-1, vmax=1, row_cluster=False,
+        row_colors=mcc_colors,
+        cmap="vlag"
+    )
+    sns_plot.fig.suptitle("Heatmap of predicted subgroup using top " + str(args.TOP) + " features")
+    sns_plot.ax_heatmap.set_xticklabels(sns_plot.ax_heatmap.get_xmajorticklabels(), fontsize = 4)
+    sns_plot.ax_heatmap.set_yticklabels(sns_plot.ax_heatmap.get_ymajorticklabels(), fontsize = 4)
+
+    file_out = os.path.join(args.PATH_OUT, "explore_heatmap.pdf")
+    sns_plot.fig.savefig(file_out)
 
 def plot_explore_heatmap(df_heatmap, df_pred, args):
     if not os.path.exists(args.PATH_OUT):
