@@ -22,3 +22,12 @@ install:
 script: coverage run -m unittest discover epcy/tests/
 
 after_success: bash <(curl -s https://codecov.io/bash)
+
+deploy:
+  provider: pypi
+  user: IRIC_biofino
+  distributions: sdist bdist_wheel
+  skip_existing: true
+  password:
+    secure: "A+Pu6ze4ZlDM0YLiCTWzrIgL/2E/plwUAI0itpqwF5jsN5kOxIckC5iAu5fj83792sUfaAQw5F6beKt0EVVoi9fKXjHzXUVxiVEI5EuJixkDvpQdn8OwhGssG/ElctWU7659Z381rYMRxE5+TsH5gTHQBULJv+j0l8buFQgaGKlhCHAN/ZgKLAQfYm00beGQTP+HrE3wvcivUZ8fid7HAA9e2qkT7siHrVZ1eyZ1mQD4KNsFaXmSxV40wcfa3F11S5y2c8/MUTJ78O0NFL7Uq3RcfWGiizKyMB9ONI6CX4GsPLyK6Bg0kK7WBq7HzPbEE+no4b5yp+mkL188i/Bj92BDlsgf7jBf/UMdyLLAL2uHYaaXz+0ekOPMoFnuy39aEzGTVxypqlx+CMaSo1QllDgHL0iHu5fXoum6J9QGfmT//vlwbs+HkfL7ejj++dxqV6k2oiLh5qavIKAVFEvMGrGXur+ddU7SZWUEiZtEVGlr4WWbiyQgEmkCYEmLQdj4IVzgoRg3k/PX74yB9dcjrDdP8FeZ3yIgkHFAxMqISQW4Q006GWvSRGPdmhJMtslXyQdXAG7+8UXd3A8FIWx0M5arNHcU+C4aFIvZn4B7mk+AwZZ2FSCinHtsDqcviYDgKvh5XVrvp8N4zXzSxSaQ6rpSA6QKSeZz2ZSn0xDHCcE="
+    
