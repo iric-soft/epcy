@@ -40,8 +40,8 @@ def main_profile_rna(args, argparser):
     num_query = len(np.where(design[args.SUBGROUP] == 1)[0])
 
     num_bs = 0
-    if hasattr(self.args, 'BS') and self.args.BS is not None:
-        num_bs = self.args.BS
+    if hasattr(args, 'BS') and args.BS is not None:
+        num_bs = args.BS
 
     sys.stderr.write(time.strftime('%X') + ": Start profiling:\n")
     for id in args.IDS:

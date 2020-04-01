@@ -28,8 +28,8 @@ setup(
     url='https://github.com/iric-soft/epcy',
 
     # Author details
-    author='Eric Audemard',
-    author_email='eric.audemard@umontreal.ca',
+    author='IRIC_bioinfo, Eric Audemard',
+    author_email='pipy@iric.ca, eric.audemard@umontreal.ca',
 
     # Choose your license
     license='MIT',
@@ -40,7 +40,7 @@ setup(
         #   3 - Alpha
         #   4 - Beta
         #   5 - Production/Stable
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
 
         # Indicate who your project is intended for
         'Intended Audience :: Science/Research',
