@@ -24,7 +24,8 @@ def main_profile(args, argparser):
         sys.stderr.write(time.strftime('%X') + ":\t" + id + "\n")
         pos = np.where(list_ids == id)[0]
         if pos.shape[0] == 1:
-            row_data, row_num_query = uc.Classifier.rm_missing(data[pos, :][0],
+            row_data, row_num_query, ids_na = uc.Classifier.rm_missing(
+                                                               data[pos, :][0],
                                                                num_query)
             row_query = row_data[:row_num_query]
             row_ref = row_data[row_num_query:]
