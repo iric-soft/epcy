@@ -16,15 +16,16 @@ def main_profile(args, argparser):
     num_query = len(np.where(design[args.SUBGROUP] == 1)[0])
 
     num_bs = 0
-    if hasattr(self.args, 'BS') and self.args.BS is not None:
-        num_bs = self.args.BS
+    if hasattr(args, 'BS') and args.BS is not None:
+        num_bs = args.BS
 
     sys.stderr.write(time.strftime('%X') + ": Start profiling:\n")
     for id in args.IDS:
         sys.stderr.write(time.strftime('%X') + ":\t" + id + "\n")
         pos = np.where(list_ids == id)[0]
         if pos.shape[0] == 1:
-            row_data, row_num_query = uc.Classifier.rm_missing(data[pos, :][0],
+            row_data, row_num_query, ids_na = uc.Classifier.rm_missing(
+                                                               data[pos, :][0],
                                                                num_query)
             row_query = row_data[:row_num_query]
             row_ref = row_data[row_num_query:]
