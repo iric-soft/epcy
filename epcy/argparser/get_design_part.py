@@ -5,6 +5,7 @@ def get_argparser_design_part(parser):
 
     parser.add_argument("-d",
                         dest="DESIGN",
+                        required=True,
                         help="Tabulated file who discribe your design.",
                         type=lambda x: is_valid_file(parser, x))
 

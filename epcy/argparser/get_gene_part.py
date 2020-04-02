@@ -13,7 +13,7 @@ def get_argparser_gene_part(parser):
 
     parser.add_argument("--anno",
                         dest="ANNO",
-                        help="(Optional) gff3 file of the feautres " +
+                        help="gff3 file of the feautres " +
                              "annotation.",
                         type=lambda x: is_valid_file(parser, x))
 

@@ -9,6 +9,7 @@ def get_argparser_explore(parser):
     get_argparser_design_part(parser)
     parser.add_argument("-p",
                         dest="PRED",
+                        required=True,
                         help="Path to EPCY predictive_capability output file.",
                         type=lambda x: is_valid_file(parser, x))
 
@@ -19,6 +20,7 @@ def get_argparser_explore(parser):
 
     parser.add_argument("--top",
                         dest="TOP",
+                        required=True,
                         help="Top x features used to explore. (Default: 10)",
                         type=int,
                         default=10)

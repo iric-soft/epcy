@@ -17,6 +17,7 @@ def get_argparser_profile(parser):
 
     parser.add_argument("--ids",
                         dest="IDS",
+                        required=True,
                         help='List of features id to plot',
                         type=str,
                         nargs='+',
