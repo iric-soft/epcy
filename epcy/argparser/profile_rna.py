@@ -8,6 +8,8 @@ from .profile import *
 
 def get_argparser_profile_rna(parser):
 
+    requiredNamed = parser.add_argument_group('required arguments')
+    
     get_argparser_profile(parser)
     get_argparser_rna_norm_part(parser)
     get_argparser_kallisto_part(parser)

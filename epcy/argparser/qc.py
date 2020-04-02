@@ -6,6 +6,8 @@ from .get_bandwidth_part import *
 
 def get_argparser_qc(parser):
 
+    requiredNamed = parser.add_argument_group('required arguments')
+    
     parser.add_argument("-p",
                         dest="PRED",
                         required=True,

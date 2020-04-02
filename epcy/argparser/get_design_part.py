@@ -1,9 +1,9 @@
 from .common import *
 
 
-def get_argparser_design_part(parser):
+def get_argparser_design_part(parser, requiredNamed):
 
-    parser.add_argument("-d",
+    requiredNamed.add_argument("-d",
                         dest="DESIGN",
                         required=True,
                         help="Tabulated file who discribe your design.",

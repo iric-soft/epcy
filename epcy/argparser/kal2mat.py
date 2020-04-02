@@ -10,7 +10,9 @@ from .get_output_part import *
 
 def get_argparser_kal2mat(parser):
 
-    get_argparser_design_part(parser)
+    requiredNamed = parser.add_argument_group('required arguments')
+
+    get_argparser_design_part(parser, requiredNamed)
     get_argparser_rna_norm_part(parser)
     get_argparser_log_part(parser)
     get_argparser_gene_part(parser)
