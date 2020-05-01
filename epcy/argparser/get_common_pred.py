@@ -3,7 +3,6 @@ from .common import *
 from .get_design_part import *
 from .get_log_part import *
 from .get_filter_part import *
-from .get_other_pred_part import *
 from .get_bandwidth_part import *
 from .get_output_part import *
 from .get_matrix_part import *
@@ -15,7 +14,6 @@ def get_argparser_common_pred_part(parser, requiredNamed):
     get_argparser_design_part(parser, requiredNamed)
     get_argparser_log_part(parser)
     get_argparser_filter_part(parser)
-    get_argparser_other_pred_part(parser)
     get_argparser_bandwidth_part(parser)
     get_argparser_output_part(parser)
 
@@ -31,6 +29,12 @@ def get_argparser_common_pred_part(parser, requiredNamed):
                         help="Number of thread.",
                         type=int,
                         default=1)
+
+    parser.add_argument("--auc",
+                        dest="AUC",
+                        help="Compute sample assignation using normal dist.",
+                        action='store_true')
+
     parser.add_argument("--by",
                         dest="BY",
                         help="Number of feature by thread. By default this " +
@@ -52,6 +56,11 @@ def get_argparser_common_pred_part(parser, requiredNamed):
                         type=int,
                         default=100)
 
+    parser.add_argument("--normal",
+                        dest="NORMAL",
+                        help="Compute sample assignation using normal dist.",
+                        action='store_true')
+
     parser.add_argument("--randomseed",
                         dest="RANDOM_SEED",
                         help="To specify a random seed (Int). If None, the " +
@@ -60,4 +69,20 @@ def get_argparser_common_pred_part(parser, requiredNamed):
                         type=int,
                         default=None)
 
+    parser.add_argument("--ttest",
+                        dest="TTEST",
+                        help="Compute a p-value using ttest_ind " +
+                             "from scipy.stats.",
+                        action='store_true')
+
+    parser.add_argument("--utest",
+                        dest="UTEST",
+                        help="Compute a p-value using Mann-Whitney from " +
+                             "scipy.stats. (NEED --auc)",
+                        action='store_true')
+
+    parser.set_defaults(AUC=False)
+    parser.set_defaults(NORMAL=False)
+    parser.set_defaults(UTEST=False)
+    parser.set_defaults(TTEST=False)
     parser.set_defaults(FULL=False)

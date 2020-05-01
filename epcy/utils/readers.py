@@ -124,6 +124,16 @@ def trans_to_gene(values, ids_genes):
     return(counts)
 
 
+def counts2cpmed(counts):
+    """ Transform counts matrix into cpmed.
+    """
+    total_mass = np.nansum(counts, axis=0)
+    med_count = np.median(total_mass)
+    counts = (counts / total_mass) * med_count
+
+    return(counts)
+
+
 def counts2cpm(counts):
     """ Transform counts matrix into cpm.
     """
@@ -363,8 +373,11 @@ def read_design_matrix_rna(args, df_anno=None):
 
     data = data.values
 
-    if not args.TPM and args.CPM:
-        data = counts2cpm(data)
+    if not args.TPM:
+        if args.CPM:
+            data = counts2cpm(data)
+        if args.CPMED:
+            data = counts2cpmed(data)
 
     if args.LOG:
         data = np.log2(data + args.C)

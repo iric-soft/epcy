@@ -8,6 +8,13 @@ def get_argparser_rna_norm_part(parser):
                              "(-m)",
                         action='store_true')
 
+    parser.add_argument("--cpmed",
+                        dest="CPMED",
+                        help="To apply a Count Par Median " +
+                             "normalization to the matrix given in input " +
+                             "(-m)",
+                        action='store_true')
+
     parser.add_argument("--tpm",
                         dest="TPM",
                         help="Compute TPM from readcounts. (Need --anno)",
@@ -15,3 +22,4 @@ def get_argparser_rna_norm_part(parser):
 
     parser.set_defaults(TPM=False)
     parser.set_defaults(CPM=False)
+    parser.set_defaults(CPMED=False)
