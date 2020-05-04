@@ -208,10 +208,17 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
     sns_plot.set_title(str(id) + " " + args.QUERY + "\nbw_query=" +
                        str(bw_query) + "\nbw_ref=" + str(bw_ref))
 
-    sns_plot = sns.swarmplot(
-        x="x", y="subgroup", data=df_swarn, ax=ax_swarm,
-        palette=sns.color_palette([col_pal[0], col_pal[1]])
-    )
+    if args.STRIP:
+        sns_plot = sns.striplot(
+            x="x", y="subgroup", data=df_swarn, ax=ax_swarm,
+            size=args.SIZE, alpha=args.ALPHA,
+            palette=sns.color_palette([col_pal[0], col_pal[1]])
+        )
+    else:
+        sns_plot = sns.swarmplot(
+            x="x", y="subgroup", data=df_swarn, ax=ax_swarm, size=args.SIZE,
+            palette=sns.color_palette([col_pal[0], col_pal[1]])
+        )
 
     # Change shape in function of subgroup
     collections = sns_plot.collections
