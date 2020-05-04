@@ -209,9 +209,9 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
                        str(bw_query) + "\nbw_ref=" + str(bw_ref))
 
     if args.STRIP:
-        sns_plot = sns.striplot(
+        sns_plot = sns.stripplot(
             x="x", y="subgroup", data=df_swarn, ax=ax_swarm,
-            size=args.SIZE, alpha=args.ALPHA,
+            size=args.SIZE, jitter=0.4,
             palette=sns.color_palette([col_pal[0], col_pal[1]])
         )
     else:

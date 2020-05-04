@@ -22,15 +22,9 @@ def get_argparser_common_profile_part(parser, requiredNamed):
 
     parser.add_argument("--size",
                         dest="SIZE",
-                        help="Radius of a dot, in points. (Default:6.0)",
+                        help="Radius of a dot, in points. (Default:5.0)",
                         type=float,
-                        default=6.0)
-
-    parser.add_argument("--alpha",
-                        dest="ALPHA",
-                        help="Transparency of dot. (Default:1.0, no transparency)",
-                        type=float,
-                        default=1.0)
+                        default=5.0)
 
     requiredNamed.add_argument("--ids",
                                dest="IDS",
