@@ -205,23 +205,51 @@ def get_design(args):
 
 def read_design_matrix(args):
     design = get_design(args)
-    data = pd.io.parsers.read_csv(args.MATRIX, sep="\t", index_col=0)
-    if sum(~design["sample"].isin(data.columns)) > 0:
+
+    f = open(args.MATRIX, "r")
+    lines = f.readlines()
+    matrix_samples = lines[0]
+    matrix_samples = matrix_samples.rstrip().split('\t')
+    matrix_samples = matrix_samples[1:]
+    matrix_num_samples = len(matrix_samples)
+    if sum(~design["sample"].isin(matrix_samples)) > 0:
         sys.stderr.write("WARNING: Some samples are present in the design, " +
                          "but not in the quantification matrix\n")
         sys.stderr.write("\t the analysis will be made without these " +
                          "samples:\n")
-        sys.stderr.write(str(design[~design["sample"].isin(data.columns)]) +
+        sys.stderr.write(str(design[~design["sample"].isin(matrix_samples)]) +
                          "\n")
-        design = design[design["sample"].isin(data.columns)]
+        design = design[design["sample"].isin(matrix_samples)]
 
-    data = data.reindex(design["sample"], axis=1)
+    list_ids = [x.split('\t')[0] for x in lines[1:]]
+    f.close()
 
-    data = data[(data.T != 0).any()]
+    data = np.loadtxt(
+        args.MATRIX,
+        usecols=range(1, matrix_num_samples+1, 1),
+        skiprows=1
+    )
 
-    list_ids = np.array(data.index)
+    row_ids_0 = ~np.all(data == 0, axis=1)
+    list_ids = [list_ids[x] for x in np.where(row_ids_0)[0]]
+    data = data[row_ids_0]
 
-    data = data.values
+    ids_sorted = [i for x in design["sample"] for i,y in enumerate(matrix_samples) if y == x]
+    data = data[:, ids_sorted]
+    #data = pd.io.parsers.read_csv(args.MATRIX, sep="\t", index_col=0)
+    #if sum(~design["sample"].isin(data.columns)) > 0:
+    #    sys.stderr.write("WARNING: Some samples are present in the design, " +
+    #                     "but not in the quantification matrix\n")
+    #    sys.stderr.write("\t the analysis will be made without these " +
+    #                     "samples:\n")
+    #    sys.stderr.write(str(design[~design["sample"].isin(data.columns)]) +
+    #                     "\n")
+    #    design = design[design["sample"].isin(data.columns)]
+    #data = data.reindex(design["sample"], axis=1)
+    #data = data[(data.T != 0).any()]
+    #list_ids = np.array(data.index)
+    #data = data.values
+
     if args.LOG:
         data = np.log2(data + args.C)
 
@@ -318,7 +346,6 @@ def bootstrapped_design(design, args):
 
     return(design)
 
-
 def read_design_matrix_rna(args, df_anno=None):
     design = get_design(args)
     if args.KAL:
@@ -332,46 +359,77 @@ def read_design_matrix_rna(args, df_anno=None):
         return(None, None, None)
 
     if hasattr(args, 'MATRIX') and args.MATRIX is not None:
-        data = pd.io.parsers.read_csv(args.MATRIX, sep="\t", index_col=0)
         if args.GENE:
             # TODO
             sys.stderr.write("ERROR: Sorry, switch transcript to gene " +
                              "quantification from a matrix file is not " +
                              "implemented!!!\n")
             return(None, None, None)
+        f = open(args.MATRIX, "r")
+        lines = f.readlines()
+        matrix_samples = lines[0]
+        matrix_samples = matrix_samples.rstrip().split('\t')
+        matrix_samples = matrix_samples[1:]
+        matrix_num_samples = len(matrix_samples)
+        if sum(~design["sample"].isin(matrix_samples)) > 0:
+            sys.stderr.write("WARNING: Some samples are present in the design, " +
+                             "but not in the quantification matrix\n")
+            sys.stderr.write("\t the analysis will be made without these " +
+                             "samples:\n")
+            sys.stderr.write(str(design[~design["sample"].isin(matrix_samples)]) +
+                             "\n")
+            design = design[design["sample"].isin(matrix_samples)]
+
+        list_ids = [x.split('\t')[0] for x in lines[1:]]
+        f.close()
+
+        data = np.loadtxt(
+            args.MATRIX,
+            usecols=range(1, matrix_num_samples+1, 1),
+            skiprows=1
+        )
+        if hasattr(args, 'REPLACE_NA') and args.REPLACE_NA is not None:
+            data = np.nan_to_num(data, nan=args.REPLACE_NA)
+
+        row_ids_0 = ~np.all(data == 0, axis=1)
+        list_ids = [list_ids[x] for x in np.where(row_ids_0)[0]]
+        data = data[row_ids_0]
+
+        ids_sorted = [i for x in design["sample"] for i,y in enumerate(matrix_samples) if y == x]
+        data = data[:, ids_sorted]
     else:
         if args.KAL:
             data = create_kal_mat(args, design, design_bootstrapped, df_anno)
+
+            if hasattr(args, 'REPLACE_NA') and args.REPLACE_NA is not None:
+                data = data.fillna(args.REPLACE_NA)
+
+            if args.KAL:
+                design = design_bootstrapped
+
+            if sum(~design["sample"].isin(data.columns)) > 0:
+                sys.stderr.write("WARNING: Some samples are present in the design, " +
+                                 "but not in the quantification matrix\n")
+                sys.stderr.write("\t the analysis will be made without these \
+                                 samples:\n")
+                sys.stderr.write(str(design[~design["sample"].isin(data.columns)]) +
+                                 "\n")
+                sys.stderr.write("Samples in matrix:\n")
+                sys.stderr.write(str(data.columns) + "\n")
+                design = design[design["sample"].isin(data.columns)]
+
+            # Select and order sample column in fonction of design
+            data = data.reindex(design["sample"], axis=1)
+
+            # delete rows with only 0 into it
+            data = data[(data.T != 0).any()]
+
+            list_ids = np.array(data.index)
+
+            data = data.values
         else:
             sys.stderr.write("ERROR: No quantification matrix can be find!\n")
             return(None, None, None)
-
-    if hasattr(args, 'REPLACE_NA') and args.REPLACE_NA is not None:
-        data = data.fillna(args.REPLACE_NA)
-
-    if args.KAL:
-        design = design_bootstrapped
-
-    if sum(~design["sample"].isin(data.columns)) > 0:
-        sys.stderr.write("WARNING: Some samples are present in the design, " +
-                         "but not in the quantification matrix\n")
-        sys.stderr.write("\t the analysis will be made without these \
-                         samples:\n")
-        sys.stderr.write(str(design[~design["sample"].isin(data.columns)]) +
-                         "\n")
-        sys.stderr.write("Samples in matrix:\n")
-        sys.stderr.write(str(data.columns) + "\n")
-        design = design[design["sample"].isin(data.columns)]
-
-    # Select and order sample column in fonction of design
-    data = data.reindex(design["sample"], axis=1)
-
-    # delete rows with only 0 into it
-    data = data[(data.T != 0).any()]
-
-    list_ids = np.array(data.index)
-
-    data = data.values
 
     if not args.TPM:
         if args.CPM:
