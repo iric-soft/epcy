@@ -34,6 +34,8 @@ Install:
 
   python3 -m venv $HOME/.virtualenvs/epcy
   source $HOME/.virtualenvs/epcy/bin/activate
+  pip install pip setuptools --upgrade
+  pip install wheel
   cd [your_epcy_folder]
   CFLAGS=-std=c99 pip3 install numpy==1.17.0
   python3 setup.py install
