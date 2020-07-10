@@ -442,7 +442,7 @@ def pred_feature(feature_data, num_query, num_ref, num_bs, args, random_state):
     if np.unique(feature_data).size == 1:
         return(dict_res)
 
-    if args.EXP is not None and sum_row >= args.EXP:
+    if args.EXP is not None and sum_row < args.EXP:
         return(dict_res)
 
     if abs(l2fc) < args.L2FC:
