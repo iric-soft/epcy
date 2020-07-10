@@ -227,7 +227,7 @@ def read_design_matrix(args):
     data = np.loadtxt(
         args.MATRIX,
         usecols=range(1, matrix_num_samples+1, 1),
-        skiprows=1, dtype=np.float32
+        skiprows=1 #, dtype=np.float32
     )
 
     row_ids_0 = ~np.all(data == 0, axis=1)
@@ -386,17 +386,13 @@ def read_design_matrix_rna(args, df_anno=None):
         data = np.loadtxt(
             args.MATRIX,
             usecols=range(1, matrix_num_samples+1, 1),
-            skiprows=1, dtype=np.float32
+            skiprows=1 #, dtype=np.float32
         )
         if hasattr(args, 'REPLACE_NA') and args.REPLACE_NA is not None:
             data = np.nan_to_num(data, nan=args.REPLACE_NA)
 
         row_ids_0 = ~np.all(data == 0, axis=1)
-        print(row_ids_0)
-
-        print(len(list_ids))
         list_ids = [list_ids[x] for x in np.where(row_ids_0)[0]]
-        print(len(list_ids))
         data = data[row_ids_0]
 
         ids_sorted = [i for x in design["sample"] for i,y in enumerate(matrix_samples) if y == x]

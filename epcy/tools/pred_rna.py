@@ -32,5 +32,5 @@ def main_pred_rna(args, argparser):
 
     num_pred = data.shape[0]
 
-    all_classifier = uo.compute_pred(args, num_pred, list_ids, data, design)
-    uo.save_pred_res(args, all_classifier)
+    uo.compute_pred(args, num_pred, list_ids, data, design)
+    #uo.save_pred_res(args, all_classifier)

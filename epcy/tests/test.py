@@ -36,7 +36,7 @@ class epcyTest(unittest.TestCase):
         args = Namespace(
             C=1,
             DESIGN=design,
-            EXP=0,
+            EXP=None,
             L2FC=0.3,
             MATRIX=mat,
             THREAD=1,
@@ -73,7 +73,7 @@ class epcyTest(unittest.TestCase):
 
         selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[1],
-                         "2.8047473",
+                         "2.8047472709397807",
                          "Test fail: test_pred -> L2FC")
 
         selected_line = all_lines[1].split("\t")
@@ -88,12 +88,12 @@ class epcyTest(unittest.TestCase):
 
         selected_line = all_lines[3].split("\t")
         self.assertEqual(selected_line[2],
-                         "0.7856584",
+                         "0.7856583920412332",
                          "Test fail: test_pred -> feature without missing value")
 
         selected_line = all_lines[4].split("\t")
         self.assertEqual(selected_line[2],
-                         "0.5833333",
+                         "0.5833333333333334",
                          "Test fail: test_pred -> feature with missing value")
 
         selected_line = all_lines[5].split("\t")
@@ -108,7 +108,7 @@ class epcyTest(unittest.TestCase):
         args = Namespace(
             C=1,
             DESIGN=design,
-            EXP=0,
+            EXP=None,
             L2FC=0.3,
             MATRIX=mat,
             THREAD=1,
@@ -145,7 +145,7 @@ class epcyTest(unittest.TestCase):
 
         selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[1],
-                         "2.7649796",
+                         "2.764979565971643",
                          "Test fail: test_pred_rna_cpm -> L2FC with CPM")
 
     def test_pred_rna_kall_gene_bagging(self):
@@ -155,7 +155,7 @@ class epcyTest(unittest.TestCase):
         args = Namespace(
             C=1,
             DESIGN=design,
-            EXP=0,
+            EXP=None,
             L2FC=0,
             THREAD=1,
             N_DRAW=10,
@@ -215,7 +215,7 @@ class epcyTest(unittest.TestCase):
         args = Namespace(
             C=1,
             DESIGN=design,
-            EXP=0,
+            EXP=None,
             L2FC=0,
             THREAD=1,
             N_DRAW=10,
@@ -260,7 +260,7 @@ class epcyTest(unittest.TestCase):
         args = Namespace(
             C=1,
             DESIGN=design,
-            EXP=0,
+            EXP=None,
             L2FC=0,
             THREAD=1,
             N_DRAW=100,
@@ -305,7 +305,7 @@ class epcyTest(unittest.TestCase):
 
         selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[9],
-                         "0.882861",
+                         "0.8828610287248029",
                          "Test fail: test_pred_rna_kall_gene -> MCC")
 
     def test_pred_rna_kall_trans(self):
@@ -315,7 +315,7 @@ class epcyTest(unittest.TestCase):
         args = Namespace(
             C=1,
             DESIGN=design,
-            EXP=0,
+            EXP=None,
             L2FC=0,
             THREAD=1,
             N_DRAW=10,
@@ -355,7 +355,7 @@ class epcyTest(unittest.TestCase):
 
         selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[2],
-                         "0.51592886",
+                         "0.5159288393581664",
                          "Test fail: test_pred_rna_kall_trans -> MCC")
 
     def test_pred_rna_kall_miss_anno(self):
@@ -365,7 +365,7 @@ class epcyTest(unittest.TestCase):
         args = Namespace(
             C=1,
             DESIGN=design,
-            EXP=0,
+            EXP=None,
             L2FC=0,
             THREAD=1,
             N_DRAW=10,
@@ -411,7 +411,7 @@ class epcyTest(unittest.TestCase):
         args = Namespace(
             C=1,
             DESIGN=design,
-            EXP=0,
+            EXP=None,
             L2FC=0.3,
             MATRIX=mat,
             THREAD=1,
@@ -457,10 +457,10 @@ class epcyTest(unittest.TestCase):
                          "1.0",
                          "Test fail: test_pred_pvalue -> AUC value l1")
         self.assertEqual(selected_line[10],
-                         "0.0047718217",
+                         "0.004771821713797114",
                          "Test fail: test_pred_pvalue -> UTEST value l1")
         self.assertEqual(selected_line[11],
-                         "1.9629755e-05",
+                         "1.9629755742218275e-05",
                          "Test fail: test_pred_pvalue -> TTEST value l1")
 
         selected_line = all_lines[8].split("\t")
@@ -481,7 +481,7 @@ class epcyTest(unittest.TestCase):
         args = Namespace(
             C=1,
             DESIGN=design,
-            EXP=0,
+            EXP=None,
             L2FC=0.3,
             MATRIX=mat,
             THREAD=2,
@@ -518,7 +518,7 @@ class epcyTest(unittest.TestCase):
 
         selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[1],
-                         "2.8047473",
+                         "2.8047472709397807",
                          "Test fail: test_pred -> L2FC")
 
 
