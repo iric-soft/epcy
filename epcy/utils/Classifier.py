@@ -732,6 +732,7 @@ class Classifier:
             raw_array = RawArray(cdtype, data_shape[0] * data_shape[1])
             raw_array_np = np.frombuffer(raw_array, dtype=dtype).reshape(data_shape)
             np.copyto(raw_array_np, self.data)
+            del self.data
 
             with Pool(
                 processes=self.args.THREAD, initializer=init_worker,
