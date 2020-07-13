@@ -521,11 +521,11 @@ def init_worker(raw_array, shape, dtype,
 
 def worker_func(i):
     # Simply computes the sum of the i-th row of the input matrix X
-    raw_array_np = np.frombuffer(
-        shared_arr['array'], dtype=shared_arr['dtype']
-    ).reshape(shared_arr['shape'])
-
-    feature_data = raw_array_np[i,:]
+    feature_data = np.frombuffer(
+        shared_arr['array'], dtype=shared_arr['dtype'],
+        offset=i * shared_arr['shape'][1] * 8,
+        count=shared_arr['shape'][1]
+    )
     return(
         pred_feature(
             feature_data,
