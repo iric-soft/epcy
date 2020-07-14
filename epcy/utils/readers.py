@@ -160,7 +160,7 @@ def read_kall_project(file_h5, num_features, transcripts_len, args,
     f = h5py.File(file_h5, 'r', libver='latest')
 
     if args.BS != 0:
-        sample_data = np.zeros([num_features, args.BS], dtype=np.float32)
+        sample_data = np.zeros([num_features, args.BS], dtype=np.float64)
         for cpt_bs in range(0, args.BS):
             counts = f["bootstrap/bs" + str(cpt_bs)][:]
 
@@ -172,7 +172,7 @@ def read_kall_project(file_h5, num_features, transcripts_len, args,
 
             sample_data[:, cpt_bs] = counts
     else:
-        sample_data = np.zeros([num_features, 1], dtype=np.float32)
+        sample_data = np.zeros([num_features, 1], dtype=np.float64)
         counts = f["est_counts"][:]
 
         if args.TPM:
@@ -227,7 +227,7 @@ def read_design_matrix(args):
     data = np.loadtxt(
         args.MATRIX,
         usecols=range(1, matrix_num_samples+1, 1),
-        skiprows=1 #, dtype=np.float32
+        skiprows=1, dtype=np.float64
     )
 
     row_ids_0 = ~np.all(data == 0, axis=1)
@@ -304,10 +304,10 @@ def create_kal_mat(args, design, design_bootstrapped, df_anno):
     sys.stderr.write(time.strftime('%X') + ":\tRead samples kallisto " +
                      "quantification from h5\n")
     if args.BS == 0:
-        kallisto = np.zeros((num_features, design.shape[0]), dtype=np.float32)
+        kallisto = np.zeros((num_features, design.shape[0]), dtype=np.float64)
     else:
         kallisto = np.zeros((num_features, design.shape[0]*args.BS),
-                            dtype=np.float32)
+                            dtype=np.float64)
 
     cpt = 0
     for index, row in design.iterrows():
@@ -345,6 +345,7 @@ def bootstrapped_design(design, args):
         return(design_bs)
 
     return(design)
+
 
 def read_design_matrix_rna(args, df_anno=None):
     design = get_design(args)
@@ -386,7 +387,7 @@ def read_design_matrix_rna(args, df_anno=None):
         data = np.loadtxt(
             args.MATRIX,
             usecols=range(1, matrix_num_samples+1, 1),
-            skiprows=1 #, dtype=np.float32
+            skiprows=1, dtype=np.float64
         )
         if hasattr(args, 'REPLACE_NA') and args.REPLACE_NA is not None:
             data = np.nan_to_num(data, nan=args.REPLACE_NA)

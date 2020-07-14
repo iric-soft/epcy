@@ -195,7 +195,7 @@ class epcyTest(unittest.TestCase):
 
         selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[1],
-                         "1.6704607",
+                         "1.670460712378178",
                          "Test fail: test_pred_rna_kall_gene_bagging -> L2FC")
 
         selected_line = all_lines[1].split("\t")
@@ -250,7 +250,7 @@ class epcyTest(unittest.TestCase):
 
         selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[1],
-                         "2.3213472",
+                         "2.3213466073037416",
                          "Test fail: test_pred_rna_kall_gene_bagging_tpm -> L2FC TPM")
 
     def test_pred_rna_kall_gene(self):

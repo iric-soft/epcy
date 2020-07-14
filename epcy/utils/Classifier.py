@@ -9,12 +9,16 @@ import pandas as pd
 from scipy.stats import mannwhitneyu, ttest_ind
 from statistics import median
 
-from multiprocessing import Pool, RawArray
+from multiprocessing import Pool, RawArray, shared_memory
 from collections import defaultdict
+
+from itertools import product
 
 import numexpr as ne
 ne.set_num_threads(1)
 
+#from guppy import hpy
+#hp = hpy()
 
 def print_memory(fn):
     def wrapper(*args, **kwargs):
@@ -131,10 +135,14 @@ def get_ct_using_fx_kernel(feature_data, num_query, N, min_bw, bw=None,
                             bw=bw, n_bagging=n_bagging, num_bs=num_bs,
                             random_state=random_state)
                         for x_ids in n_folds]
+    del n_folds
 
     k_bw_gen_by_bag = np.transpose(
                         np.asarray(k_bw_gen_by_fold),
                         (2, 0, 1, 3))
+
+    del k_bw_gen_by_fold
+
     k_bw_gen_by_bag = np.reshape(k_bw_gen_by_bag, (n_bagging, N, 2))
 
     # (1/(n*bw)) * sum k((x-xi) / bw)
@@ -143,7 +151,7 @@ def get_ct_using_fx_kernel(feature_data, num_query, N, min_bw, bw=None,
                                 num_bs, num_draw=num_draw,
                                 random_state=random_state)
                             for k_bw_nq_gen in k_bw_gen_by_bag])
-
+    del k_bw_gen_by_bag
     return(ct_by_bag)
 
 
@@ -162,9 +170,11 @@ def get_ct_using_fx_normal(feature_data, num_query, N, n_bagging=1, num_bs=0,
                     n_bagging=n_bagging, num_bs=num_bs,
                     random_state=random_state)
                   for x_ids in n_folds]
+    del n_folds
 
     fx_by_fold = np.asarray(fx_by_fold)
     fx_by_bag = np.transpose(fx_by_fold, (2, 0, 1))
+    del fx_by_fold
     fx_by_bag = np.reshape(fx_by_bag, (n_bagging, N))
 
     ct_by_bag = (fx_to_tables(
@@ -172,7 +182,7 @@ def get_ct_using_fx_normal(feature_data, num_query, N, n_bagging=1, num_bs=0,
                     num_draw=num_draw,
                     random_state=random_state)
                  for fx_by_sample in fx_by_bag)
-
+    del fx_by_bag
     return(ct_by_bag)
 
 
@@ -185,7 +195,7 @@ def fx_to_tables(fx_by_sample, num_query, N, num_draw=100,
     cont_tables = []
     pclass_by_sample = np.zeros(
         shape=(len(fx_by_sample)),
-        dtype=np.float16)
+        dtype=np.float64)
     for i in range(num_draw):
         pred_by_sample = np.array([random_state.random() < fx
                                   for fx in fx_by_sample])
@@ -315,8 +325,8 @@ def k_gaussian_kernel(x, other, min_bw, ids_split, bw, num_bs=0):
     norm_query = other_query.size * bw_query
     norm_ref = other_ref.size * bw_ref
 
-    res_query = ne.evaluate('(0.3989423 * exp(-1/2*(((x - other_query) / bw_query)**2)))/norm_query')
-    res_ref = ne.evaluate('(0.3989423 * exp(-1/2*(((x - other_ref) / bw_ref)**2)))/norm_ref')
+    res_query = ne.evaluate('(0.3989423 * exp(-1/2*(((x - other_query) / bw_query)**2)))/norm_query') #, out=other_query) #, casting='same_kind')
+    res_ref = ne.evaluate('(0.3989423 * exp(-1/2*(((x - other_ref) / bw_ref)**2)))/norm_ref') #, out=other_ref) #, casting='same_kind')
 
     return(np.concatenate((res_query, res_ref)), ids_split)
 
@@ -499,6 +509,11 @@ def pred_feature(feature_data, num_query, num_ref, num_bs, args, random_state):
                 pred_by_sample = np.insert(pred_by_sample, ids_na, np.nan)
             dict_res['normal_pred'].append(pred_by_sample)
 
+    #print("-------------")
+    #print(h.heap().byid[0].sp)
+    #print("*************")
+    #print(h.iso(1,[],{}))
+    #print("############")
     return(dict_res)
 
 
@@ -534,6 +549,28 @@ def worker_func(i):
             shared_arr['random_state']
         )
     )
+
+
+def worker_shared_func(i, shm_name, num_query, num_ref, num_bs,
+                       args, random_state):
+
+    existing_shm = shared_memory.SharedMemory(name=shm_name)
+    feature_data = np.ndarray(
+        (num_query+num_ref,),
+        dtype=np.float64,
+        buffer=existing_shm.buf,
+        offset=i * (num_query+num_ref) * 8
+    )
+
+    res = pred_feature(
+        feature_data, num_query, num_ref,
+        num_bs, args, random_state
+    )
+
+    del feature_data
+    existing_shm.close()
+
+    return(res)
 
 
 class Classifier:
@@ -726,20 +763,42 @@ class Classifier:
                     )
                 )
         else:
-            dtype = np.float64
-            cdtype = np.ctypeslib.as_ctypes_type(dtype)
-            data_shape = self.data.shape
-            raw_array = RawArray(cdtype, data_shape[0] * data_shape[1])
-            raw_array_np = np.frombuffer(raw_array, dtype=dtype).reshape(data_shape)
-            np.copyto(raw_array_np, self.data)
-            del self.data
+            # Use shared_memory
+            shm = shared_memory.SharedMemory(create=True, size=self.data.nbytes)
+            data_shared = np.ndarray(self.data.shape, dtype=self.data.dtype, buffer=shm.buf)
+            np.copyto(data_shared, self.data)
 
-            with Pool(
-                processes=self.args.THREAD, initializer=init_worker,
-                initargs=(
-                    raw_array, data_shape, dtype,
+            params = [(
+                    x, shm.name,
                     self.num_query, self.num_ref, num_bs,
                     self.args, self.random_state
                 )
-            ) as p:
-                self.result = p.map(worker_func, range(data_shape[0]))
+                for x in range(len(self.list_ids))
+            ]
+            with Pool(processes=self.args.THREAD) as p:
+                self.result = p.starmap(
+                    worker_shared_func,
+                    params
+                )
+
+            del data_shared
+            shm.close()
+            shm.unlink()
+
+            # Use RawArray
+            #dtype = np.float64
+            #cdtype = np.ctypeslib.as_ctypes_type(dtype)
+            #data_shape = self.data.shape
+            #raw_array = RawArray(cdtype, range(data_shape[0] * data_shape[1]))
+            #raw_array_np = np.frombuffer(raw_array, dtype=dtype).reshape(data_shape)
+            #np.copyto(raw_array_np, self.data)
+            #del self.data
+            #with Pool(
+            #    processes=self.args.THREAD, initializer=init_worker,
+            #    initargs=(
+            #        raw_array, data_shape, dtype,
+            #        self.num_query, self.num_ref, num_bs,
+            #        self.args, self.random_state
+            #    )
+            #) as p:
+            #    self.result = p.map(worker_func, range(data_shape[0]))
