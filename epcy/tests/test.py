@@ -50,6 +50,7 @@ class epcyTest(unittest.TestCase):
             CPM=False,
             CPMED=False,
             ANNO=None,
+            N_FOLD=None,
             PATH_OUT=None,
             SUBGROUP="subgroup",
             UTEST=False,
@@ -122,6 +123,7 @@ class epcyTest(unittest.TestCase):
             CPM=True,
             CPMED=False,
             ANNO=None,
+            N_FOLD=None,
             PATH_OUT=None,
             SUBGROUP="subgroup",
             UTEST=False,
@@ -159,7 +161,7 @@ class epcyTest(unittest.TestCase):
             L2FC=0,
             THREAD=1,
             N_DRAW=10,
-            N_BAGGING=2,
+            N_BAGGING=10,
             BY=-1,
             BS=0,
             LOG=True,
@@ -168,6 +170,7 @@ class epcyTest(unittest.TestCase):
             CPM=True,
             CPMED=False,
             ANNO=anno,
+            N_FOLD=None,
             PATH_OUT=None,
             SUBGROUP="subgroup",
             UTEST=False,
@@ -200,12 +203,12 @@ class epcyTest(unittest.TestCase):
 
         selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[2],
-                         "1.0",
+                         "0.9898053656070959",
                          "Test fail: test_pred_rna_kall_gene_bagging -> MCC")
 
         selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[9],
-                         "0.8",
+                         "0.8737925069701561",
                          "Test fail: test_pred_rna_kall_gene_bagging -> MCC")
 
     def test_pred_rna_kall_gene_bagging_tpm(self):
@@ -219,7 +222,7 @@ class epcyTest(unittest.TestCase):
             L2FC=0,
             THREAD=1,
             N_DRAW=10,
-            N_BAGGING=2,
+            N_BAGGING=10,
             BY=-1,
             BS=0,
             LOG=True,
@@ -228,6 +231,7 @@ class epcyTest(unittest.TestCase):
             CPM=False,
             CPMED=False,
             ANNO=anno,
+            N_FOLD=None,
             PATH_OUT=None,
             SUBGROUP="subgroup",
             UTEST=False,
@@ -273,6 +277,7 @@ class epcyTest(unittest.TestCase):
             CPM=True,
             CPMED=False,
             ANNO=anno,
+            N_FOLD=None,
             PATH_OUT=None,
             SUBGROUP="subgroup",
             UTEST=False,
@@ -305,7 +310,7 @@ class epcyTest(unittest.TestCase):
 
         selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[9],
-                         "0.8828610287248029",
+                         "0.884042439292508",
                          "Test fail: test_pred_rna_kall_gene -> MCC")
 
     def test_pred_rna_kall_trans(self):
@@ -328,6 +333,7 @@ class epcyTest(unittest.TestCase):
             CPM=True,
             CPMED=False,
             ANNO=anno,
+            N_FOLD=None,
             PATH_OUT=None,
             SUBGROUP="subgroup",
             UTEST=False,
@@ -355,7 +361,7 @@ class epcyTest(unittest.TestCase):
 
         selected_line = all_lines[1].split("\t")
         self.assertEqual(selected_line[2],
-                         "0.5159288393581664",
+                         "0.5827131783528432",
                          "Test fail: test_pred_rna_kall_trans -> MCC")
 
     def test_pred_rna_kall_miss_anno(self):
@@ -378,6 +384,7 @@ class epcyTest(unittest.TestCase):
             CPM=True,
             CPMED=False,
             ANNO=anno,
+            N_FOLD=None,
             PATH_OUT=None,
             SUBGROUP="subgroup",
             UTEST=False,
@@ -424,6 +431,7 @@ class epcyTest(unittest.TestCase):
             CPM=False,
             CPMED=False,
             ANNO=None,
+            N_FOLD=None,
             PATH_OUT=None,
             SUBGROUP="subgroup",
             UTEST=True,
@@ -495,6 +503,7 @@ class epcyTest(unittest.TestCase):
             CPM=False,
             CPMED=False,
             ANNO=None,
+            N_FOLD=None,
             PATH_OUT=None,
             SUBGROUP="subgroup",
             UTEST=False,

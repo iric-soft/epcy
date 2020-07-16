@@ -49,6 +49,12 @@ def get_argparser_common_pred_part(parser, requiredNamed):
                         help="enable full output files.",
                         action='store_true')
 
+    parser.add_argument("--nfold",
+                        dest="N_FOLD",
+                        help="Number of fold (default is None for Leave one out).",
+                        type=int,
+                        default=None)
+
     parser.add_argument("--ndraw",
                         dest="N_DRAW",
                         help="Number of time that EPCY will draw a " +
