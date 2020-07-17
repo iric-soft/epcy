@@ -43,6 +43,7 @@ def compute_pred(args, num_pred, list_ids, data, design):
 
     # Prepare n-fold (or LOO) used for each gene
     folds = []
+    folds_reorder = None
     N = design.shape[0]
     if args.N_FOLD is None:
         if num_bs > 0:
@@ -67,10 +68,19 @@ def compute_pred(args, num_pred, list_ids, data, design):
                 folds += [nfold_decomposition[i*length:(i+1)*length]]
             folds += [nfold_decomposition[(args.N_FOLD-1)*length:len(nfold_decomposition)]]
 
+        if len(folds) != N:
+            n_folds = np.ndarray(N, dtype=np.int)
+            cpt_sample = 0
+            for i, fold in enumerate(folds):
+                for j, id in enumerate(fold):
+                    n_folds[cpt_sample] = id
+                    cpt_sample += 1
+            folds_reorder = np.argsort(n_folds)
+
     # Prepare draws used for each gene
     draws = random_state.random(args.N_DRAW)
 
-    c = uc.Classifier(args, design, data, list_ids, folds, draws)
+    c = uc.Classifier(args, design, data, list_ids, folds, draws, folds_reorder)
     del design
     del data
     c.run()

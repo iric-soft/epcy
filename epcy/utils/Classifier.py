@@ -63,17 +63,6 @@ def t_test_welch(feature_data, num_query):
     return(p_value)
 
 
-def pred_fill_cont_table_kernel(feature_data, num_query, min_bw, n_folds,
-                                draws, bw=None, n_bagging=1, num_bs=0,
-                                random_seed=None):
-    # Compute sample assignation using kernel
-    N = len(feature_data)
-    return(get_ct_using_fx_kernel(
-        feature_data, num_query, N, min_bw, n_folds, draws,
-        bw=bw, n_bagging=n_bagging, num_bs=num_bs, random_seed=random_seed)
-    )
-
-
 def pred_fill_cont_table_normal(feature_data, num_query, n_folds, draws,
                                 n_bagging=1, num_bs=0, random_seed=None):
     # Compute sample assignation using normal dist
@@ -84,11 +73,8 @@ def pred_fill_cont_table_normal(feature_data, num_query, n_folds, draws,
     )
 
 
-def compute_kernel_fx(all_k, i, num_bs):
+def compute_kernel_fx(all_k, num_query):
     ''' return (1/(n*bw)) * sum k((x-xi) / bw) '''
-    # TODO: clean this
-    all_k, num_query = all_k
-
     k_query = all_k[:num_query]
     k_ref = all_k[num_query:]
 
@@ -101,103 +87,68 @@ def compute_kernel_fx(all_k, i, num_bs):
     return(res)
 
 
-def compute_kernel_fx_and_ct(k_bw_nq_gen, num_query, N, draws,
-                             num_bs=0, ids_reorder=None):
-    fx_by_sample = [compute_kernel_fx(k_bw_nq, i, num_bs=num_bs)
-                    for i, k_bw_nq in enumerate(k_bw_nq_gen)]
+def get_class_using_fx_kernel(feature_data, num_query, min_bw,
+                              n_folds, folds_reorder, draws,
+                              bw=None, n_bagging=1, num_bs=0,
+                              random_seed=None):
 
-    return(fx_to_tables(fx_by_sample, num_query, N, draws, ids_reorder))
-
-
-def get_ct_using_fx_kernel(feature_data, num_query, N, min_bw, n_folds, draws,
-                           bw=None, n_bagging=1, num_bs=0, random_seed=None):
-
-    # Compute k((x-xi) / bw) for each leave one out
-    k_bw_gen_by_fold = [get_k_gaussian_kernel_for_all_x(
-                            feature_data, x_ids, num_query, min_bw,
+    # get class [fold, sample_in_fold, bagging, draw]
+    lst_sample_class = [get_class_gaussian_kernel_for_all_x(
+                            feature_data, x_ids, num_query, draws, min_bw,
                             bw=bw, n_bagging=n_bagging, num_bs=num_bs,
                             random_seed=random_seed)
-                        for x_ids in n_folds]
+                    for x_ids in n_folds]
 
-    k_bw_gen_by_bag = np.transpose(
-                        np.asarray(k_bw_gen_by_fold),
-                        (2, 0, 1, 3))
+    n_sample = feature_data.shape[0]
+    n_draw = draws.shape[0]
+    # [sample, bagging, draw]
+    sample_class = np.ndarray((n_sample, n_bagging, n_draw), dtype=np.bool)
 
-    del k_bw_gen_by_fold
+    cpt_sample = 0
+    for i, x_ids in enumerate(n_folds):
+        for j, id in enumerate(x_ids):
+            sample_class[cpt_sample, :, :] = np.asarray(
+                lst_sample_class[i][j], dtype=np.bool)
+            cpt_sample += 1
 
-    k_bw_gen_by_bag = np.reshape(k_bw_gen_by_bag, (n_bagging, N, 2))
+    if folds_reorder is not None:
+        sample_class = sample_class[folds_reorder, :, :]
 
-    ids_reorder = None
-    if len(n_folds) != N:
-        n_folds = np.reshape(n_folds, (N))
-        ids_reorder = np.argsort(n_folds)
-
-    # (1/(n*bw)) * sum k((x-xi) / bw)
-    ct_by_bag = np.asarray([compute_kernel_fx_and_ct(
-                                k_bw_nq_gen, num_query, N, draws,
-                                num_bs=num_bs, ids_reorder=ids_reorder)
-                            for k_bw_nq_gen in k_bw_gen_by_bag])
-
-    del k_bw_gen_by_bag
-    return(ct_by_bag)
+    return(sample_class)
 
 
-def get_ct_using_fx_normal(feature_data, num_query, N, n_folds, draws,
+def get_class_fx_normal(feature_data, num_query, n_folds, folds_reorder, draws,
                            n_bagging=1, num_bs=0, random_seed=None):
 
-    fx_by_fold = [compute_normal_fx_for_all_x(
-                    feature_data, x_ids, num_query,
-                    n_bagging=n_bagging, num_bs=num_bs,
-                    random_seed=random_seed)
-                  for x_ids in n_folds]
+    # get class [fold, sample_in_fold, bagging]
+    lst_sample_class = [get_class_normal_for_all_x(
+                        feature_data, x_ids, num_query, draws,
+                        n_bagging=n_bagging, num_bs=num_bs,
+                        random_seed=random_seed)
+                    for x_ids in n_folds]
 
-    fx_by_fold = np.asarray(fx_by_fold)
-    fx_by_bag = np.transpose(fx_by_fold, (2, 0, 1))
-    del fx_by_fold
-    fx_by_bag = np.reshape(fx_by_bag, (n_bagging, N))
+    n_sample = feature_data.shape[0]
+    n_draw = draws.shape[0]
+    # [sample, bagging, draw]
+    sample_class = np.ndarray((n_sample, n_bagging, n_draw), dtype=np.bool)
 
-    ids_reoder = None
-    if len(n_folds) != N:
-        n_folds = np.reshape(n_folds, (N))
-        ids_reorder = np.argsort(n_folds)
+    cpt_sample = 0
+    for i, x_ids in enumerate(n_folds):
+        for j, id in enumerate(x_ids):
+            sample_class[cpt_sample, :, :] = np.asarray(
+                lst_sample_class[i][j], dtype=np.bool)
+            cpt_sample += 1
 
-    ct_by_bag = (fx_to_tables(fx_by_sample, num_query, N, draws, ids_reoder)
-                 for fx_by_sample in fx_by_bag)
-    del fx_by_bag
-    return(ct_by_bag)
+    if folds_reorder is not None:
+        sample_class = sample_class[folds_reorder, :, :]
+
+    return(sample_class)
 
 
-def fx_to_tables(fx_by_sample, num_query, N, draws, ids_reoder=None):
-    """return:
-       cont_table[tp, fp, fn, tn]
-       pred_by_sample: 1=tp, 2=fn, 3=fp, tn=4"""
+def get_classification(fx, draws):
+    """return: draw < fx"""
 
-    # In case of nfold we need reorder (no need for loo)
-    if ids_reoder is not None:
-        fx_by_sample = [fx_by_sample[x] for x in ids_reoder]
-
-    num_draw = len(draws)
-    cont_tables = []
-    pclass_by_sample = np.zeros(
-        shape=(len(fx_by_sample)),
-        dtype=np.float64)
-    for i in range(num_draw):
-        pred_by_sample = np.array([draws[i] < fx
-                                  for fx in fx_by_sample])
-        tp_fn = np.add.reduceat(pred_by_sample, [0, num_query])
-
-        cont_table = [tp_fn[0], num_query-tp_fn[0],
-                      tp_fn[1], N - num_query - tp_fn[1]]
-        cont_tables.append(cont_table)
-
-        pclass_by_sample[np.where(pred_by_sample[:num_query] == 1)] += 1
-        pclass_by_sample[np.array(
-                        np.where(pred_by_sample[num_query:] == 0)
-                     ) + num_query] -= 1
-
-    pclass_by_sample[:num_query] = pclass_by_sample[:num_query] / num_draw
-    pclass_by_sample[num_query:] = pclass_by_sample[num_query:] / num_draw
-    return(cont_tables, pclass_by_sample)
+    return([draw < fx for draw in draws])
 
 
 def bw_var(x):
@@ -257,21 +208,23 @@ def get_bagging_other(other, num_query, random_state=None):
     return(other[ids], bag_num_query)
 
 
-def get_k_gaussian_kernel_for_all_x(feature_data, x_ids, num_query, min_bw,
-                                    bw=None, n_bagging=1, num_bs=0,
-                                    random_seed=None):
+def get_class_gaussian_kernel_for_all_x(feature_data, x_ids, num_query, draws,
+                                        min_bw, bw=None, n_bagging=1, num_bs=0,
+                                        random_seed=None):
+
     x_values = feature_data[x_ids]
     other = np.delete(feature_data, x_ids)
     o_num_query = num_query - np.sum(x_ids < num_query)
 
-    return([get_k_gaussian_kernel(
-                x, other, o_num_query, min_bw,
-                bw, n_bagging, num_bs=num_bs, random_seed=random_seed)
+    return([get_class_gaussian_kernel(
+                    x, other, o_num_query, draws, min_bw,
+                    bw, n_bagging, num_bs=num_bs, random_seed=random_seed)
             for x in x_values])
 
 
-def get_k_gaussian_kernel(x, other, num_query, min_bw, bw, n_bagging,
-                          num_bs=0, random_seed=None):
+def get_class_gaussian_kernel(x, other, num_query, draws,
+                              min_bw, bw, n_bagging,
+                              num_bs=0, random_seed=None):
     if n_bagging > 1:
         random_state = np.random.RandomState()
         if random_state is not None:
@@ -280,15 +233,23 @@ def get_k_gaussian_kernel(x, other, num_query, min_bw, bw, n_bagging,
         bag_others = [get_bagging_other(other, num_query, random_state)
                       for j in range(n_bagging)]
 
-        return([k_gaussian_kernel(
-                    x, other, min_bw,
-                    b_num_query, bw,
-                    num_bs=num_bs)
+        return([get_classification(
+                    compute_kernel_fx(
+                        k_gaussian_kernel(
+                            x, other, min_bw,
+                            b_num_query, bw,
+                            num_bs=num_bs),
+                        b_num_query),
+                    draws)
                 for other, b_num_query in bag_others])
     else:
-        return([k_gaussian_kernel(
-                    x, other, min_bw,
-                    num_query, bw, num_bs=num_bs)
+        return([get_classification(
+                    compute_kernel_fx(
+                        k_gaussian_kernel(
+                            x, other, min_bw,
+                            num_query, bw, num_bs=num_bs),
+                        num_query),
+                    draws)
                 for j in range(1)])
 
 
@@ -313,25 +274,26 @@ def k_gaussian_kernel(x, other, min_bw, ids_split, bw, num_bs=0):
     norm_query = other_query.size * bw_query
     norm_ref = other_ref.size * bw_ref
 
-    res_query = ne.evaluate('(0.3989423 * exp(-1/2*(((x - other_query) / bw_query)**2)))/norm_query') #, out=other_query) #, casting='same_kind')
-    res_ref = ne.evaluate('(0.3989423 * exp(-1/2*(((x - other_ref) / bw_ref)**2)))/norm_ref') #, out=other_ref) #, casting='same_kind')
+    res_query = ne.evaluate('(0.3989423 * exp(-1/2*(((x - other_query) / bw_query)**2)))/norm_query')
+    res_ref = ne.evaluate('(0.3989423 * exp(-1/2*(((x - other_ref) / bw_ref)**2)))/norm_ref')
 
-    return(np.concatenate((res_query, res_ref)), ids_split)
+    return(np.concatenate((res_query, res_ref)))
 
 
-def compute_normal_fx_for_all_x(feature_data, x_ids, num_query, epsilon=0.001,
-                                n_bagging=1, num_bs=0, random_seed=None):
+def get_class_normal_for_all_x(feature_data, x_ids, num_query, draws,
+                                epsilon=0.001, n_bagging=1, num_bs=0,
+                                random_seed=None):
     x_values = feature_data[x_ids]
     other = np.delete(feature_data, x_ids)
     o_num_query = num_query - np.sum(x_ids < num_query)
 
-    return([compute_normal_fx(
-                x, other, o_num_query,
+    return([get_class_normal(
+                x, other, o_num_query, draws,
                 epsilon, n_bagging, num_bs=num_bs, random_seed=random_seed)
             for x in x_values])
 
 
-def compute_normal_fx(x, other, num_query, epsilon, n_bagging,
+def get_class_normal(x, other, num_query, draws, epsilon, n_bagging,
                       num_bs=0, random_seed=None):
     if n_bagging > 1:
         random_state = np.random.RandomState()
@@ -341,14 +303,18 @@ def compute_normal_fx(x, other, num_query, epsilon, n_bagging,
         bag_others = (get_bagging_other(other, num_query, random_state)
                       for j in range(n_bagging))
 
-        return([fx_normal(
-                    x, other, b_num_query,
-                    epsilon=epsilon, num_bs=num_bs)
+        return([get_classification(
+                    fx_normal(
+                        x, other, b_num_query,
+                        epsilon=epsilon, num_bs=num_bs),
+                    draws)
                 for other, b_num_query in bag_others])
     else:
-        return([fx_normal(
-                    x, other, num_query,
-                    epsilon=epsilon, num_bs=num_bs)
+        return([get_classification(
+                    fx_normal(
+                        x, other, num_query,
+                        epsilon=epsilon, num_bs=num_bs),
+                    draws)
                 for j in range(1)])
 
 
@@ -369,14 +335,39 @@ def fx_normal(x, other, id_split, epsilon, num_bs=0):
     return(fx_query / (fx_query + fx_ref))
 
 
-def get_mcc_ped_by_bagging(ct_by_bagging):
+def get_mcc_pred(sample_class, num_query):
+    # sample_class [sample_class, bagging, draw]
+
+    n_sample = sample_class.shape[0]
+    n_bag = sample_class.shape[1]
+    n_draw = sample_class.shape[2]
+
+    cont_tables = []
+    pclass_by_sample = np.zeros(
+        shape=(n_sample),
+        dtype=np.float64)
+
+    for i in range(n_bag):
+        for j in range(n_draw):
+            tp_fn = np.add.reduceat(sample_class[:, i, j], [0, num_query])
+
+            cont_table = [tp_fn[0], num_query-tp_fn[0],
+                          tp_fn[1], n_sample - num_query - tp_fn[1]]
+            cont_tables.append(cont_table)
+
+            pclass_by_sample[np.where(
+                                sample_class[:num_query, i, j] == 1
+                            )] += 1
+            pclass_by_sample[np.array(
+                                np.where(sample_class[num_query:, i, j] == 0)
+                            ) + num_query] -= 1
+
+    pclass_by_sample[:num_query] = pclass_by_sample[:num_query] / (n_draw * n_bag)
+    pclass_by_sample[num_query:] = pclass_by_sample[num_query:] / (n_draw * n_bag)
+
     all_mcc = []
-    all_pred = []
-    for cts, pred in ct_by_bagging:
-        for ct in cts:
-            all_mcc.append(get_mcc(ct))
-        all_pred.append(pred)
-    pred_by_sample = np.mean(np.asarray(all_pred), axis=0)
+    for ct in cont_tables:
+        all_mcc.append(get_mcc(ct))
 
     all_mcc = np.sort(all_mcc)
     num_value = all_mcc.size
@@ -388,7 +379,7 @@ def get_mcc_ped_by_bagging(ct_by_bagging):
     mean_mcc = np.mean(all_mcc[first_quantile:(last_quantile+1)])
 
     return([all_mcc[first_quantile], mean_mcc,
-            all_mcc[last_quantile]], pred_by_sample)
+            all_mcc[last_quantile]], pclass_by_sample)
 
 
 def get_mcc(ct):
@@ -405,14 +396,17 @@ def get_mcc(ct):
 
 
 def pred_feature(feature_data, num_query, num_ref,
-                 n_folds, draws, num_bs, args):
+                 n_folds, folds_reorder, draws, num_bs, args):
+
     dict_res = defaultdict(list)
     ids_na = None
     if np.isnan(feature_data).sum() > 0:
         num_ids = len(feature_data)
+        # remove missing values
         feature_data, num_query, ids_na = rm_missing(feature_data,
                                                           num_query)
-
+        # keep number of sample query and ref for the output
+        # (after removing sample with missing value)
         num_ref = feature_data.size - num_query
         dict_res['sample_query'].append(num_query)
         dict_res['sample_ref'].append(num_ref)
@@ -420,16 +414,18 @@ def pred_feature(feature_data, num_query, num_ref,
         if num_query <= 2 or num_ref <= 2:
             return(dict_res)
 
+        # update nfold decomposition
         ids2del = range(num_ids-len(ids_na), num_ids, 1)
         n_folds_saved = n_folds
         n_folds = []
-        cpt_rm = 0
         for fold in n_folds_saved:
             new_fold = np.setdiff1d(fold, ids2del)
-            cpt_rm += len(fold) - len(new_fold)
             if len(new_fold) > 0:
-                fold = fold - cpt_rm
-                n_folds.append(fold)
+                n_folds.append(new_fold)
+
+        # update folds_reorder
+        if folds_reorder is not None:
+            folds_reorder = np.setdiff1d(folds_reorder, ids2del)
 
     sum_row = sum(feature_data)
     res = get_foldchange(feature_data, num_query)
@@ -474,14 +470,12 @@ def pred_feature(feature_data, num_query, num_ref,
             )
         )
 
-    ct_by_bagging_and_pred_by_sample = pred_fill_cont_table_kernel(
-        feature_data, num_query, args.MIN_BW, n_folds, draws,
+    sample_class = get_class_using_fx_kernel(
+        feature_data, num_query, args.MIN_BW, n_folds, folds_reorder, draws,
         n_bagging=args.N_BAGGING, num_bs=num_bs, random_seed=args.RANDOM_SEED
     )
 
-    mcc, pred_by_sample = get_mcc_ped_by_bagging(
-        ct_by_bagging_and_pred_by_sample
-    )
+    mcc, pred_by_sample = get_mcc_pred(sample_class, num_query)
 
     dict_res['kernel_mcc'].append(mcc)
 
@@ -491,13 +485,14 @@ def pred_feature(feature_data, num_query, num_ref,
         dict_res['kernel_pred'].append(pred_by_sample)
 
     if args.NORMAL:
-        ct_by_bagging_and_pred_by_sample = pred_fill_cont_table_normal(
-            feature_data, num_query, n_folds, draws, n_bagging=args.N_BAGGING,
-            num_bs=num_bs, random_seed=args.RANDOM_SEED
+        sample_class = get_class_fx_normal(
+            feature_data, num_query, n_folds, folds_reorder, draws,
+            n_bagging=args.N_BAGGING, num_bs=num_bs,
+            random_seed=args.RANDOM_SEED
         )
 
-        mcc, pred_by_sample = get_mcc_ped_by_bagging(
-            ct_by_bagging_and_pred_by_sample
+        mcc, pred_by_sample = get_mcc_pred(
+            sample_class, num_query
         )
 
         dict_res['normal_mcc'].append(mcc)
@@ -515,7 +510,8 @@ def pred_feature(feature_data, num_query, num_ref,
 
 
 def init_worker(raw_array, shape, dtype,
-                num_query, num_ref, n_folds, draws, num_bs, args):
+                num_query, num_ref, n_folds, folds_reorder,
+                draws, num_bs, args):
 
     # The shared array pointer is a global variable so that it can be accessed by the
     # child processes. It is a tuple (pointer, dtype, shape).
@@ -527,6 +523,7 @@ def init_worker(raw_array, shape, dtype,
     shared_arr['num_query'] = num_query
     shared_arr['num_ref'] = num_ref
     shared_arr['n_folds'] = n_folds
+    shared_arr['folds_reorder'] = folds_reorder
     shared_arr['draws'] = draws
     shared_arr['num_bs'] = num_bs
     shared_arr['args'] = args
@@ -539,18 +536,20 @@ def worker_func(i):
         offset=i * shared_arr['shape'][1] * 8,
         count=shared_arr['shape'][1]
     )
+
     return(
         pred_feature(
             feature_data,
             shared_arr['num_query'], shared_arr['num_ref'],
-            shared_arr['n_folds'], shared_arr['draws'],
-            shared_arr['num_bs'], shared_arr['args']
+            shared_arr['n_folds'], shared_arr['folds_reorder'],
+            shared_arr['draws'], shared_arr['num_bs'],
+            shared_arr['args']
         )
     )
 
 
-def worker_shared_func(i, shm_name, num_query, num_ref, n_folds, draws,
-                       num_bs, args):
+def worker_shared_func(i, shm_name, num_query, num_ref, n_folds, folds_reorder,
+                       draws, num_bs, args):
 
     existing_shm = shared_memory.SharedMemory(name=shm_name)
     feature_data = np.ndarray(
@@ -562,7 +561,7 @@ def worker_shared_func(i, shm_name, num_query, num_ref, n_folds, draws,
 
     res = pred_feature(
         feature_data, num_query, num_ref,
-        n_folds, draws, num_bs, args
+        n_folds, folds_reorder, draws, num_bs, args
     )
 
     del feature_data
@@ -572,13 +571,14 @@ def worker_shared_func(i, shm_name, num_query, num_ref, n_folds, draws,
 
 
 class Classifier:
-    def __init__(self, args, design, data, list_ids, n_folds, draws):
+    def __init__(self, args, design, data, list_ids, n_folds, draws, folds_reorder):
         self.args = args
         self.design = design
         self.data = data
         self.list_ids = list_ids
         self.n_folds = n_folds
         self.draws = draws
+        self.folds_reorder = folds_reorder
 
         self.num_query = len(np.where(design[self.args.SUBGROUP] == 1)[0])
         self.num_ref = len(np.where(design[self.args.SUBGROUP] == 0)[0])
@@ -754,7 +754,8 @@ class Classifier:
                 self.result.append(
                     pred_feature(
                         feature_data, self.num_query, self.num_ref,
-                        self.n_folds, self.draws, num_bs, self.args
+                        self.n_folds, self.folds_reorder, self.draws,
+                        num_bs, self.args
                     )
                 )
         else:
@@ -794,8 +795,8 @@ class Classifier:
                 initargs=(
                     raw_array, data_shape, dtype,
                     self.num_query, self.num_ref,
-                    self.n_folds, self.draws, num_bs,
-                    self.args
+                    self.n_folds, self.folds_reorder, self.draws,
+                    num_bs, self.args
                 )
             ) as p:
                 self.result = p.map(worker_func, range(data_shape[0]))
