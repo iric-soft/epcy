@@ -7,7 +7,6 @@ import pandas as pd
 from .. utils import other as uo
 from .. utils import readers as ur
 from .. utils import plot as up
-from .. utils import Classifier as uc
 
 
 def main_explore(args, argparser):

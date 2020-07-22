@@ -394,6 +394,7 @@ def read_design_matrix_rna(args, df_anno=None):
 
         row_ids_0 = ~np.all(data == 0, axis=1)
         list_ids = [list_ids[x] for x in np.where(row_ids_0)[0]]
+        list_ids = np.asarray(list_ids)
         data = data[row_ids_0]
 
         ids_sorted = [i for x in design["sample"] for i,y in enumerate(matrix_samples) if y == x]

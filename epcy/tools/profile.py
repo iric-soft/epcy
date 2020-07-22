@@ -24,14 +24,14 @@ def main_profile(args, argparser):
         sys.stderr.write(time.strftime('%X') + ":\t" + id + "\n")
         pos = np.where(list_ids == id)[0]
         if pos.shape[0] == 1:
-            row_data, row_num_query, ids_na = uc.Classifier.rm_missing(
+            row_data, row_num_query, ids_na = uc.rm_missing(
                                                                data[pos, :][0],
                                                                num_query)
             row_query = row_data[:row_num_query]
             row_ref = row_data[row_num_query:]
 
-            bw_query = uc.Classifier.bw_nrd(row_query, num_bs)
-            bw_ref = uc.Classifier.bw_nrd(row_ref, num_bs)
+            bw_query = uc.bw_nrd(row_query, num_bs)
+            bw_ref = uc.bw_nrd(row_ref, num_bs)
 
             if bw_query < args.MIN_BW:
                 bw_query = args.MIN_BW
