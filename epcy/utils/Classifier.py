@@ -407,11 +407,13 @@ def get_mcc(ct):
     return((n1 - n2) / math.sqrt(d1 * d2 * d3 * d4)
            if d1 != 0 and d2 != 0 and d3 != 0 and d4 != 0 else 0)
 
+
 def get_ppv(ct):
-    return(ct[0] / (ct[0] + ct[2]))
+    return(ct[0] / (ct[0] + ct[2]) if ct[0] != 0 or ct[2] != 0 else 0)
+
 
 def get_npv(ct):
-    return(ct[3] / (ct[3] + ct[1]))
+    return(ct[3] / (ct[3] + ct[1]) if ct[1] != 0 or ct[3] != 0 else 0)
 
 
 def pred_feature(feature_data, num_query, num_ref,
