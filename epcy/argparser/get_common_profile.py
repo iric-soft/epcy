@@ -20,6 +20,16 @@ def get_argparser_common_profile_part(parser, requiredNamed):
                         help='To create a strip plot.',
                         action='store_true')
 
+    parser.add_argument("--violin",
+                        dest="VIOLIN",
+                        help='To create a violin plot.',
+                        action='store_true')
+
+    parser.add_argument("--no_density",
+                        dest="NO_DENSITY",
+                        help='remove density plot.',
+                        action='store_true')
+
     parser.add_argument("--size",
                         dest="SIZE",
                         help="Radius of a dot, in points. (Default:5.0)",
@@ -35,3 +45,4 @@ def get_argparser_common_profile_part(parser, requiredNamed):
                                default=[])
 
     parser.set_defaults(STRIP=False)
+    parser.set_defaults(NO_DENSITY=False)

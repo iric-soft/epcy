@@ -199,19 +199,25 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
     plt.setp(ax_swarm.yaxis.get_minorticklines(), visible=False)
     ax_swarm.yaxis.grid(False)
 
-    sns_plot = sns.kdeplot(query_exp, shade=True, bw=bw_query,
-                           color=col_pal[0], label=args.QUERY, ax=ax_kde)
-    # sns_plot = sns.rugplot(query_exp, color = "r")
-    sns_plot = sns.kdeplot(ref_exp, shade=True, bw=bw_ref, color=col_pal[1],
-                           label="Other", ax=ax_kde)
-    # sns_plot = sns.rugplot(ref_exp, color = "b")
-    sns_plot.set_title(str(id) + " " + args.QUERY + "\nbw_query=" +
-                       str(bw_query) + "\nbw_ref=" + str(bw_ref))
+    if not args.NO_DENSITY:
+        sns_plot = sns.kdeplot(query_exp, shade=True, bw=bw_query,
+                               color=col_pal[0], label=args.QUERY, ax=ax_kde)
+        # sns_plot = sns.rugplot(query_exp, color = "r")
+        sns_plot = sns.kdeplot(ref_exp, shade=True, bw=bw_ref,
+                               color=col_pal[1], label="Other", ax=ax_kde)
+        # sns_plot = sns.rugplot(ref_exp, color = "b")
 
     if args.STRIP:
         sns_plot = sns.stripplot(
             x="x", y="subgroup", data=df_swarn, ax=ax_swarm,
-            size=args.SIZE, jitter=0.4,
+            size=args.SIZE, jitter=0.4, hue="subgroup",
+            palette=sns.color_palette([col_pal[0], col_pal[1]]),
+            edgecolor="gray"
+        )
+    elif args.VIOLIN:
+        sns_plot = sns.violinplot(
+            x="x", y="subgroup", data=df_swarn, ax=ax_swarm,
+            inner=None, linewidth=None,
             palette=sns.color_palette([col_pal[0], col_pal[1]])
         )
     else:
@@ -220,18 +226,22 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
             palette=sns.color_palette([col_pal[0], col_pal[1]])
         )
 
+    sns_plot.set_title(str(id) + " " + args.QUERY + "\nbw_query=" +
+                       str(bw_query) + "\nbw_ref=" + str(bw_ref))
+
     # Change shape in function of subgroup
-    collections = sns_plot.collections
-    unique_colors = [list(col_pal[0]) + [1], list(col_pal[1]) + [1]]
-    markers = [circle_mk, square_mk]
-    for collection in collections:
-        paths = []
-        for current_color in collection.get_facecolors():
-            for possible_marker, possible_color in zip(markers, unique_colors):
-                if np.array_equal(current_color, possible_color):
-                    paths.append(possible_marker)
-                    break
-        collection.set_paths(paths)
+    if not args.VIOLIN:
+        collections = sns_plot.collections
+        unique_colors = [list(col_pal[0]) + [1], list(col_pal[1]) + [1]]
+        markers = [circle_mk, square_mk]
+        for collection in collections:
+            paths = []
+            for current_color in collection.get_facecolors():
+                for possible_marker, possible_color in zip(markers, unique_colors):
+                    if np.array_equal(current_color, possible_color):
+                        paths.append(possible_marker)
+                        break
+            collection.set_paths(paths)
     # sns_plot.legend(collections[-2:], pd.unique(df_swarn.subgroup))
 
     x_label = "x"
@@ -247,4 +257,4 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
         os.makedirs(fig_dir)
     fig_file = os.path.join(fig_dir, id + "_density.pdf")
     sns_plot.figure.savefig(fig_file)
-    plt.close()
+    plt.close('all')

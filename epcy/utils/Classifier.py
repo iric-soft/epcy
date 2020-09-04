@@ -366,20 +366,33 @@ def get_mcc_pred(sample_class, num_query):
     pclass_by_sample[num_query:] = pclass_by_sample[num_query:] / (n_draw * n_bag)
 
     all_mcc = []
+    all_ppv = []
+    all_npv = []
     for ct in cont_tables:
         all_mcc.append(get_mcc(ct))
+        all_ppv.append(get_ppv(ct))
+        all_npv.append(get_npv(ct))
 
     all_mcc = np.sort(all_mcc)
     num_value = all_mcc.size
     first_quantile = int(num_value * 0.05)
     last_quantile = int(num_value * 0.95)
-
     if last_quantile != 0:
         last_quantile = last_quantile - 1
     mean_mcc = np.mean(all_mcc[first_quantile:(last_quantile+1)])
 
-    return([all_mcc[first_quantile], mean_mcc,
-            all_mcc[last_quantile]], pclass_by_sample)
+    all_ppv = np.sort(all_ppv)
+    mean_ppv = np.mean(all_ppv[first_quantile:(last_quantile+1)])
+
+    all_npv = np.sort(all_npv)
+    mean_npv = np.mean(all_npv[first_quantile:(last_quantile+1)])
+
+    return({
+        "mcc": [all_mcc[first_quantile], mean_mcc, all_mcc[last_quantile]],
+        "ppv": [all_ppv[first_quantile], mean_ppv, all_ppv[last_quantile]],
+        "npv": [all_npv[first_quantile], mean_npv, all_mcc[last_quantile]],
+        "pred_by_sample": pclass_by_sample
+    })
 
 
 def get_mcc(ct):
@@ -393,6 +406,12 @@ def get_mcc(ct):
 
     return((n1 - n2) / math.sqrt(d1 * d2 * d3 * d4)
            if d1 != 0 and d2 != 0 and d3 != 0 and d4 != 0 else 0)
+
+def get_ppv(ct):
+    return(ct[0] / (ct[0] + ct[2]))
+
+def get_npv(ct):
+    return(ct[3] / (ct[3] + ct[1]))
 
 
 def pred_feature(feature_data, num_query, num_ref,
@@ -475,14 +494,16 @@ def pred_feature(feature_data, num_query, num_ref,
         n_bagging=args.N_BAGGING, num_bs=num_bs, random_seed=args.RANDOM_SEED
     )
 
-    mcc, pred_by_sample = get_mcc_pred(sample_class, num_query)
+    all_pred = get_mcc_pred(sample_class, num_query)
 
-    dict_res['kernel_mcc'].append(mcc)
+    dict_res['kernel_mcc'].append(all_pred['mcc'])
+    dict_res['kernel_ppv'].append(all_pred['ppv'])
+    dict_res['kernel_npv'].append(all_pred['npv'])
 
     if args.FULL:
         if ids_na is not None and len(ids_na) > 0:
-            pred_by_sample = np.insert(pred_by_sample, ids_na, np.nan)
-        dict_res['kernel_pred'].append(pred_by_sample)
+            all_pred['pred_by_sample'] = np.insert(all_pred['pred_by_sample'], ids_na, np.nan)
+        dict_res['kernel_pred'].append(all_pred['pred_by_sample'])
 
     if args.NORMAL:
         sample_class = get_class_fx_normal(
@@ -491,15 +512,15 @@ def pred_feature(feature_data, num_query, num_ref,
             random_seed=args.RANDOM_SEED
         )
 
-        mcc, pred_by_sample = get_mcc_pred(
-            sample_class, num_query
-        )
+        all_pred = get_mcc_pred(sample_class, num_query)
 
-        dict_res['normal_mcc'].append(mcc)
+        dict_res['normal_mcc'].append(all_pred['mcc'])
+        dict_res['normal_ppv'].append(all_pred['ppv'])
+        dict_res['normal_npv'].append(all_pred['npv'])
         if args.FULL:
             if ids_na is not None and len(ids_na) > 0:
-                pred_by_sample = np.insert(pred_by_sample, ids_na, np.nan)
-            dict_res['normal_pred'].append(pred_by_sample)
+                all_pred['pred_by_sample'] = np.insert(all_pred['pred_by_sample'], ids_na, np.nan)
+            dict_res['normal_pred'].append(all_pred['pred_by_sample'])
 
     #print("-------------")
     #print(h.heap().byid[0].sp)
@@ -634,6 +655,12 @@ class Classifier:
         header = "id\tl2fc\tkernel_mcc"
         header = header + "\tkernel_mcc_low"
         header = header + "\tkernel_mcc_high"
+        header = header + "\tkernel_ppv"
+        header = header + "\tkernel_ppv_low"
+        header = header + "\tkernel_ppv_high"
+        header = header + "\tkernel_npv"
+        header = header + "\tkernel_npv_low"
+        header = header + "\tkernel_npv_high"
         header = header + "\tmean_query\tmean_ref"
         header = header + "\tbw_query\tbw_ref"
         if args.NORMAL:
@@ -672,6 +699,22 @@ class Classifier:
             else:
                 line = line + "nan\tnan\tnan\t"
 
+            if 'kernel_ppv' in res:
+                k_ppv = res['kernel_ppv'][0]
+                line = line + str(k_ppv[1]) + "\t"
+                line = line + str(k_ppv[0]) + "\t"
+                line = line + str(k_ppv[2]) + "\t"
+            else:
+                line = line + "nan\tnan\tnan\t"
+
+            if 'kernel_npv' in res:
+                k_npv = res['kernel_npv'][0]
+                line = line + str(k_npv[1]) + "\t"
+                line = line + str(k_npv[0]) + "\t"
+                line = line + str(k_npv[2]) + "\t"
+            else:
+                line = line + "nan\tnan\tnan\t"
+
             if 'mean_query' in res:
                 line = line + str(res['mean_query'][0]) + "\t"
                 line = line + str(res['mean_ref'][0]) + "\t"
@@ -686,6 +729,28 @@ class Classifier:
                     if args.N_BAGGING > 1:
                         line = line + "\t" + str(n_mcc[0])
                         line = line + "\t" + str(n_mcc[2])
+                else:
+                    line = line + "nan\t"
+                    if args.N_BAGGING > 1:
+                        line = line + "nan\tnan\t"
+
+                if 'normal_ppv' in res:
+                    n_ppv = res['normal_ppv'][0]
+                    line = line + "\t" + str(n_ppv[1])
+                    if args.N_BAGGING > 1:
+                        line = line + "\t" + str(n_ppv[0])
+                        line = line + "\t" + str(n_ppv[2])
+                else:
+                    line = line + "nan\t"
+                    if args.N_BAGGING > 1:
+                        line = line + "nan\tnan\t"
+
+                if 'normal_npv' in res:
+                    n_npv = res['normal_npv'][0]
+                    line = line + "\t" + str(n_npv[1])
+                    if args.N_BAGGING > 1:
+                        line = line + "\t" + str(n_npv[0])
+                        line = line + "\t" + str(n_npv[2])
                 else:
                     line = line + "nan\t"
                     if args.N_BAGGING > 1:
@@ -783,6 +848,7 @@ class Classifier:
             #shm.unlink()
 
             # Use RawArray
+            # https://research.wmz.ninja/articles/2018/03/on-sharing-large-arrays-when-using-pythons-multiprocessing.html
             dtype = np.float64
             cdtype = np.ctypeslib.as_ctypes_type(dtype)
             data_shape = self.data.shape

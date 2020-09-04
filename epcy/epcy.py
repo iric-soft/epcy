@@ -7,6 +7,7 @@ from .argparser.profile_rna import *
 from .argparser.qc import *
 from .argparser.kal2mat import *
 from .argparser.explore import *
+from .argparser.ct import *
 
 from .tools.pred import main_pred
 from .tools.pred_rna import main_pred_rna
@@ -15,6 +16,7 @@ from .tools.profile_rna import main_profile_rna
 from .tools.qc import main_qc
 from .tools.kal2mat import main_kal2mat
 from .tools.explore import main_explore
+from .tools.ct import main_ct
 
 
 # ###########################################################################
@@ -82,6 +84,15 @@ def main():
     )
     explore.set_defaults(func=main_explore)
     get_argparser_explore(explore)
+
+    # create the argparser for the "ct" command
+    ct = subparsers.add_parser(
+        'ct',
+        help="Return a contingency table by feature, " +
+             "using subgroup_predicted.xls."
+    )
+    ct.set_defaults(func=main_ct)
+    get_argparser_ct(ct)
 
     # recover arguments
     args = argparser.parse_args()

@@ -207,7 +207,7 @@ class epcyTest(unittest.TestCase):
                          "Test fail: test_pred_rna_kall_gene_bagging -> MCC")
 
         selected_line = all_lines[1].split("\t")
-        self.assertEqual(selected_line[9],
+        self.assertEqual(selected_line[15],
                          "0.8737925069701561",
                          "Test fail: test_pred_rna_kall_gene_bagging -> MCC")
 
@@ -309,7 +309,7 @@ class epcyTest(unittest.TestCase):
                          "Test fail: test_pred_rna_kall_gene -> MCC")
 
         selected_line = all_lines[1].split("\t")
-        self.assertEqual(selected_line[9],
+        self.assertEqual(selected_line[15],
                          "0.884042439292508",
                          "Test fail: test_pred_rna_kall_gene -> MCC")
 
@@ -450,35 +450,35 @@ class epcyTest(unittest.TestCase):
         all_lines = output.split("\n")
 
         selected_line = all_lines[0].split("\t")
-        self.assertEqual(selected_line[9],
+        self.assertEqual(selected_line[15],
                          "auc",
                          "Test fail: test_pred_pvalue -> AUC")
-        self.assertEqual(selected_line[10],
+        self.assertEqual(selected_line[16],
                          "u_pv",
                          "Test fail: test_pred_pvalue -> UTEST")
-        self.assertEqual(selected_line[11],
+        self.assertEqual(selected_line[17],
                          "t_pv",
                          "Test fail: test_pred_pvalue -> TTEST")
 
         selected_line = all_lines[1].split("\t")
-        self.assertEqual(selected_line[9],
+        self.assertEqual(selected_line[15],
                          "1.0",
                          "Test fail: test_pred_pvalue -> AUC value l1")
-        self.assertEqual(selected_line[10],
+        self.assertEqual(selected_line[16],
                          "0.004771821713797114",
                          "Test fail: test_pred_pvalue -> UTEST value l1")
-        self.assertEqual(selected_line[11],
+        self.assertEqual(selected_line[17],
                          "1.9629755742218275e-05",
                          "Test fail: test_pred_pvalue -> TTEST value l1")
 
         selected_line = all_lines[8].split("\t")
-        self.assertEqual(selected_line[9],
+        self.assertEqual(selected_line[15],
                          "nan",
                          "Test fail: test_pred_pvalue -> AUC value l4")
-        self.assertEqual(selected_line[10],
+        self.assertEqual(selected_line[16],
                          "nan",
                          "Test fail: test_pred_pvalue -> UTEST value l4")
-        self.assertEqual(selected_line[11],
+        self.assertEqual(selected_line[17],
                          "nan",
                          "Test fail: test_pred_pvalue -> TTEST value l4")
 
