@@ -20,7 +20,7 @@ def main_ct(args, argparser):
     tp = df_ct.iloc[:, :num_query].sum(axis=1)
     tn = df_ct.iloc[:, num_query:].sum(axis=1)
 
-    df_ct = {'TP': tp, 'FP': num_query-tp, 'FN': num_ref-tn, 'TN': tn}
+    df_ct = {'TP': tp, 'FN': num_query-tp, 'FP': num_ref-tn, 'TN': tn}
     df_ct = pd.DataFrame(df_ct)
     df_ct.reset_index(drop=False, inplace=True)
 
