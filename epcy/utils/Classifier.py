@@ -396,6 +396,7 @@ def get_mcc_pred(sample_class, num_query):
 
 
 def get_mcc(ct):
+    # 0: TP, 1:FP, 2:FN, 3:TN
     d1 = ct[0] + ct[1]
     d2 = ct[0] + ct[2]
     d3 = ct[3] + ct[1]
@@ -409,11 +410,11 @@ def get_mcc(ct):
 
 
 def get_ppv(ct):
-    return(ct[0] / (ct[0] + ct[2]) if ct[0] != 0 or ct[2] != 0 else 0)
+    return(ct[0] / (ct[0] + ct[1]) if ct[0] != 0 or ct[1] != 0 else 0)
 
 
 def get_npv(ct):
-    return(ct[3] / (ct[3] + ct[1]) if ct[1] != 0 or ct[3] != 0 else 0)
+    return(ct[3] / (ct[3] + ct[2]) if ct[2] != 0 or ct[3] != 0 else 0)
 
 
 def pred_feature(feature_data, num_query, num_ref,
