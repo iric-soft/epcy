@@ -9,7 +9,7 @@ import pandas as pd
 from scipy.stats import mannwhitneyu, ttest_ind
 from statistics import median
 
-from multiprocessing import Pool, RawArray, shared_memory
+from multiprocessing import Pool, RawArray
 from collections import defaultdict
 
 from itertools import product
@@ -390,7 +390,7 @@ def get_mcc_pred(sample_class, num_query):
     return({
         "mcc": [all_mcc[first_quantile], mean_mcc, all_mcc[last_quantile]],
         "ppv": [all_ppv[first_quantile], mean_ppv, all_ppv[last_quantile]],
-        "npv": [all_npv[first_quantile], mean_npv, all_mcc[last_quantile]],
+        "npv": [all_npv[first_quantile], mean_npv, all_npv[last_quantile]],
         "pred_by_sample": pclass_by_sample
     })
 
@@ -572,26 +572,26 @@ def worker_func(i):
     )
 
 
-def worker_shared_func(i, shm_name, num_query, num_ref, n_folds, folds_reorder,
-                       draws, num_bs, args):
+#def worker_shared_func(i, shm_name, num_query, num_ref, n_folds, folds_reorder,
+#                       draws, num_bs, args):
 
-    existing_shm = shared_memory.SharedMemory(name=shm_name)
-    feature_data = np.ndarray(
-        (num_query+num_ref,),
-        dtype=np.float64,
-        buffer=existing_shm.buf,
-        offset=i * (num_query+num_ref) * 8
-    )
+#    existing_shm = shared_memory.SharedMemory(name=shm_name)
+#    feature_data = np.ndarray(
+#        (num_query+num_ref,),
+#        dtype=np.float64,
+#        buffer=existing_shm.buf,
+#        offset=i * (num_query+num_ref) * 8
+#    )
 
-    res = pred_feature(
-        feature_data, num_query, num_ref,
-        n_folds, folds_reorder, draws, num_bs, args
-    )
+#    res = pred_feature(
+#        feature_data, num_query, num_ref,
+#        n_folds, folds_reorder, draws, num_bs, args
+#    )
 
-    del feature_data
-    existing_shm.close()
+#    del feature_data
+#    existing_shm.close()
 
-    return(res)
+#    return(res)
 
 
 class Classifier:

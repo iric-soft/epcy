@@ -166,6 +166,7 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
         }
     )
 
+    df_swarn.x = df_swarn.x + np.random.normal(0, 0.01, df_swarn.shape[0])
     # dummy plots, just to get the Path objects
     fig, ax = plt.subplots(1, 1)
     a = ax.scatter([1, 2], [3, 4], marker='s')
@@ -201,10 +202,12 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
 
     if not args.NO_DENSITY:
         sns_plot = sns.kdeplot(query_exp, shade=True, bw=bw_query,
-                               color=col_pal[0], label=args.QUERY, ax=ax_kde)
+                               color=col_pal[0], label=args.QUERY,
+                               ax=ax_kde)
         # sns_plot = sns.rugplot(query_exp, color = "r")
         sns_plot = sns.kdeplot(ref_exp, shade=True, bw=bw_ref,
-                               color=col_pal[1], label="Other", ax=ax_kde)
+                               color=col_pal[1], label="Other",
+                               ax=ax_kde)
         # sns_plot = sns.rugplot(ref_exp, color = "b")
 
     if args.STRIP:
@@ -215,9 +218,10 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
             edgecolor="gray"
         )
     elif args.VIOLIN:
+        bw = (bw_query + bw_ref) / 2
         sns_plot = sns.violinplot(
             x="x", y="subgroup", data=df_swarn, ax=ax_swarm,
-            inner=None, linewidth=None,
+            inner=None, linewidth=None, bw=bw,
             palette=sns.color_palette([col_pal[0], col_pal[1]])
         )
     else:
