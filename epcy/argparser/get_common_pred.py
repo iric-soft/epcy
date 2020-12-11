@@ -20,7 +20,7 @@ def get_argparser_common_pred_part(parser, requiredNamed):
     parser.add_argument("-b",
                         dest="N_BAGGING",
                         help="Number of bagging performed for each " +
-                             "prediction (Default: 1 = no bagging).",
+                             "prediction (Default: 1, for no bagging).",
                         type=int,
                         default=1)
 
@@ -30,19 +30,20 @@ def get_argparser_common_pred_part(parser, requiredNamed):
                         type=int,
                         default=1)
 
-    parser.add_argument("--auc",
-                        dest="AUC",
-                        help="Compute sample assignation using normal dist.",
+    parser.add_argument("--npv",
+                        dest="NPV",
+                        help="Compute and NPV score for each features (e.g. genes).",
                         action='store_true')
 
-    parser.add_argument("--by",
-                        dest="BY",
-                        help="Number of feature by thread. By default this " +
-                             "number is automaticaly set " +
-                             "(#features/#thread). If you encounter memory " +
-                             "issues, you can try using lower values.",
-                        type=int,
-                        default=-1)
+    parser.add_argument("--ppv",
+                        dest="PPV",
+                        help="Compute and PPV score for each features (e.g. genes).",
+                        action='store_true')
+
+    parser.add_argument("--auc",
+                        dest="AUC",
+                        help="Compute and AUC for each features (e.g. genes).",
+                        action='store_true')
 
     parser.add_argument("--full",
                         dest="FULL",
@@ -51,27 +52,27 @@ def get_argparser_common_pred_part(parser, requiredNamed):
 
     parser.add_argument("--nfold",
                         dest="N_FOLD",
-                        help="Number of fold (default is None for Leave one out).",
+                        help="Number of fold (default is None, to perform a Leave-one-out cross validation).",
                         type=int,
                         default=None)
 
     parser.add_argument("--ndraw",
                         dest="N_DRAW",
                         help="Number of time that EPCY will draw a " +
-                             "predicted class (default 100).",
+                             "predicted class (Default: 100).",
                         type=int,
                         default=100)
 
     parser.add_argument("--normal",
                         dest="NORMAL",
-                        help="Compute sample assignation using normal dist.",
+                        help="Compute sample assignation using normal distributions",
                         action='store_true')
 
     parser.add_argument("--randomseed",
                         dest="RANDOM_SEED",
                         help="To specify a random seed (Int). If None, the " +
                              "random number generator is the RandomState " +
-                             "instance used by np.random.",
+                             "instance used by numpyp.random. (Default: None)",
                         type=int,
                         default=None)
 

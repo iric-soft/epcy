@@ -115,8 +115,10 @@ def plot_qc_histo(df_pred, quantiles, legend_quantile, mcc_bins, args):
         plt.title("QC histogram of kernel_mcc colored by abs_l2fc",
                   fontsize=22)
     else:
-        plt.title("QC histogram of kernel_mcc colored by max of mean \
-                   expression", fontsize=22)
+        plt.title(
+            "QC histogram of kernel_mcc colored by max of mean expression",
+            fontsize=22
+        )
     plt.xlabel(x_var)
     plt.ylabel("# features")
 

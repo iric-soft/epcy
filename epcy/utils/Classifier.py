@@ -500,8 +500,11 @@ def pred_feature(feature_data, num_query, num_ref,
     all_pred = get_mcc_pred(sample_class, num_query)
 
     dict_res['kernel_mcc'].append(all_pred['mcc'])
-    dict_res['kernel_ppv'].append(all_pred['ppv'])
-    dict_res['kernel_npv'].append(all_pred['npv'])
+
+    if args.PPV:
+        dict_res['kernel_ppv'].append(all_pred['ppv'])
+    if args.NPV:
+        dict_res['kernel_npv'].append(all_pred['npv'])
 
     if args.FULL:
         if ids_na is not None and len(ids_na) > 0:
@@ -658,12 +661,14 @@ class Classifier:
         header = "id\tl2fc\tkernel_mcc"
         header = header + "\tkernel_mcc_low"
         header = header + "\tkernel_mcc_high"
-        header = header + "\tkernel_ppv"
-        header = header + "\tkernel_ppv_low"
-        header = header + "\tkernel_ppv_high"
-        header = header + "\tkernel_npv"
-        header = header + "\tkernel_npv_low"
-        header = header + "\tkernel_npv_high"
+        if args.PPV:
+            header = header + "\tkernel_ppv"
+            header = header + "\tkernel_ppv_low"
+            header = header + "\tkernel_ppv_high"
+        if args.NPV:
+            header = header + "\tkernel_npv"
+            header = header + "\tkernel_npv_low"
+            header = header + "\tkernel_npv_high"
         header = header + "\tmean_query\tmean_ref"
         header = header + "\tbw_query\tbw_ref"
         if args.NORMAL:
@@ -702,21 +707,23 @@ class Classifier:
             else:
                 line = line + "nan\tnan\tnan\t"
 
-            if 'kernel_ppv' in res:
-                k_ppv = res['kernel_ppv'][0]
-                line = line + str(k_ppv[1]) + "\t"
-                line = line + str(k_ppv[0]) + "\t"
-                line = line + str(k_ppv[2]) + "\t"
-            else:
-                line = line + "nan\tnan\tnan\t"
+            if args.PPV:
+                if 'kernel_ppv' in res:
+                    k_ppv = res['kernel_ppv'][0]
+                    line = line + str(k_ppv[1]) + "\t"
+                    line = line + str(k_ppv[0]) + "\t"
+                    line = line + str(k_ppv[2]) + "\t"
+                else:
+                    line = line + "nan\tnan\tnan\t"
 
-            if 'kernel_npv' in res:
-                k_npv = res['kernel_npv'][0]
-                line = line + str(k_npv[1]) + "\t"
-                line = line + str(k_npv[0]) + "\t"
-                line = line + str(k_npv[2]) + "\t"
-            else:
-                line = line + "nan\tnan\tnan\t"
+            if args.NPV:
+                if 'kernel_npv' in res:
+                    k_npv = res['kernel_npv'][0]
+                    line = line + str(k_npv[1]) + "\t"
+                    line = line + str(k_npv[0]) + "\t"
+                    line = line + str(k_npv[2]) + "\t"
+                else:
+                    line = line + "nan\tnan\tnan\t"
 
             if 'mean_query' in res:
                 line = line + str(res['mean_query'][0]) + "\t"
