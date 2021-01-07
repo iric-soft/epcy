@@ -229,13 +229,17 @@ def read_design_matrix(args):
         usecols=range(1, matrix_num_samples+1, 1),
         skiprows=1, dtype=np.float64
     )
+    if hasattr(args, 'REPLACE_NA') and args.REPLACE_NA is not None:
+        data = np.nan_to_num(data, nan=args.REPLACE_NA)
 
     row_ids_0 = ~np.all(data == 0, axis=1)
     list_ids = [list_ids[x] for x in np.where(row_ids_0)[0]]
+    list_ids = np.asarray(list_ids)
     data = data[row_ids_0]
 
     ids_sorted = [i for x in design["sample"] for i,y in enumerate(matrix_samples) if y == x]
     data = data[:, ids_sorted]
+
     #data = pd.io.parsers.read_csv(args.MATRIX, sep="\t", index_col=0)
     #if sum(~design["sample"].isin(data.columns)) > 0:
     #    sys.stderr.write("WARNING: Some samples are present in the design, " +

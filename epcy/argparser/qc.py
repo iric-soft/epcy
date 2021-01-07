@@ -14,10 +14,14 @@ def get_argparser_qc(parser):
                         help="Path to EPCY predictive_capability output file.",
                         type=lambda x: is_valid_file(parser, x))
 
+    parser.add_argument("--exp",
+                        dest="EXP",
+                        help="Filled in fonction of expression value. ",
+                        action='store_true')
+
     parser.add_argument("--l2fc",
                         dest="L2FC",
-                        help="Filled in foction of log2(FoldChange). " +
-                             "(Default: max of mean expression)",
+                        help="Filled in fonction of log2(FoldChange).",
                         action='store_true')
 
     parser.add_argument("--ylog",
@@ -25,6 +29,7 @@ def get_argparser_qc(parser):
                         help="To set yscale to log",
                         action='store_true')
 
+    parser.set_defaults(EXP=False)
     parser.set_defaults(L2FC=False)
     parser.set_defaults(YLOG=False)
 

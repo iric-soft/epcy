@@ -117,7 +117,7 @@ def get_class_using_fx_kernel(feature_data, num_query, min_bw,
     return(sample_class)
 
 
-def get_class_fx_normal(feature_data, num_query, n_folds, folds_reorder, draws,
+def get_class_using_fx_normal(feature_data, num_query, n_folds, folds_reorder, draws,
                            n_bagging=1, num_bs=0, random_seed=None):
 
     # get class [fold, sample_in_fold, bagging]
@@ -335,7 +335,7 @@ def fx_normal(x, other, id_split, epsilon, num_bs=0):
     return(fx_query / (fx_query + fx_ref))
 
 
-def get_mcc_pred(sample_class, num_query):
+def get_mcc_pred(sample_class, num_query, args):
     # sample_class [sample_class, bagging, draw]
 
     n_sample = sample_class.shape[0]
@@ -365,34 +365,54 @@ def get_mcc_pred(sample_class, num_query):
     pclass_by_sample[:num_query] = pclass_by_sample[:num_query] / (n_draw * n_bag)
     pclass_by_sample[num_query:] = pclass_by_sample[num_query:] / (n_draw * n_bag)
 
-    all_mcc = []
-    all_ppv = []
-    all_npv = []
+    all_score = defaultdict(list)
     for ct in cont_tables:
-        all_mcc.append(get_mcc(ct))
-        all_ppv.append(get_ppv(ct))
-        all_npv.append(get_npv(ct))
+        all_score['mcc'].append(get_mcc(ct))
+        if args.PPV:
+            all_score['ppv'].append(get_ppv(ct))
+        if args.NPV:
+            all_score['npv'].append(get_npv(ct))
+        if args.TPR:
+            all_score['tpr'].append(get_tpr(ct))
+        if args.TNR:
+            all_score['tnr'].append(get_tnr(ct))
+        if args.FNR:
+            all_score['fnr'].append(get_fnr(ct))
+        if args.FPR:
+            all_score['fpr'].append(get_fpr(ct))
+        if args.FDR:
+            all_score['fdr'].append(get_fdr(ct))
+        if args.FOR:
+            all_score['for'].append(get_for(ct))
+        if args.TS:
+            all_score['ts'].append(get_ts(ct))
+        if args.ACC:
+            all_score['acc'].append(get_acc(ct))
+        if args.F1:
+            all_score['f1'].append(get_f1(ct))
 
-    all_mcc = np.sort(all_mcc)
-    num_value = all_mcc.size
+    dict_res = defaultdict(list)
+    all_score['mcc'] = np.sort(all_score['mcc'])
+    num_value = all_score['mcc'].size
     first_quantile = int(num_value * 0.05)
     last_quantile = int(num_value * 0.95)
     if last_quantile != 0:
         last_quantile = last_quantile - 1
-    mean_mcc = np.mean(all_mcc[first_quantile:(last_quantile+1)])
 
-    all_ppv = np.sort(all_ppv)
-    mean_ppv = np.mean(all_ppv[first_quantile:(last_quantile+1)])
+    # set score name prefix
+    score_name = "kernel_"
+    if args.NORMAL:
+        score_name = "normal_"
 
-    all_npv = np.sort(all_npv)
-    mean_npv = np.mean(all_npv[first_quantile:(last_quantile+1)])
+    for key, value in all_score.items():
+        tmp = np.sort(all_score[key])
+        mean_score = np.mean(tmp[first_quantile:(last_quantile+1)])
+        dict_res[score_name + key] = [
+            tmp[first_quantile],
+            mean_score, tmp[last_quantile]
+        ]
 
-    return({
-        "mcc": [all_mcc[first_quantile], mean_mcc, all_mcc[last_quantile]],
-        "ppv": [all_ppv[first_quantile], mean_ppv, all_ppv[last_quantile]],
-        "npv": [all_npv[first_quantile], mean_npv, all_npv[last_quantile]],
-        "pred_by_sample": pclass_by_sample
-    })
+    return(dict_res, pclass_by_sample)
 
 
 def get_mcc(ct):
@@ -410,11 +430,80 @@ def get_mcc(ct):
 
 
 def get_ppv(ct):
-    return(ct[0] / (ct[0] + ct[2]) if ct[0] != 0 or ct[2] != 0 else 0)
+    # 0: TP, 1:FN, 2:FP, 3:TN
+    # PPV = TP / (TP + FP)
+    deno = ct[0] + ct[2]
+    return(ct[0] / deno if deno != 0 else 0)
 
 
 def get_npv(ct):
-    return(ct[3] / (ct[3] + ct[1]) if ct[3] != 0 or ct[1] != 0 else 0)
+    # 0: TP, 1:FN, 2:FP, 3:TN
+    # NPV = TN / (TN + FN)
+    deno = ct[3] + ct[1]
+    return(ct[3] / deno if deno != 0 else 0)
+
+
+def get_tpr(ct):
+    # 0: TP, 1:FN, 2:FP, 3:TN
+    # TPR = TP / (TP + FN)
+    deno = ct[0] + ct[1]
+    return(ct[0] / deno if deno != 0 else 0)
+
+
+def get_tnr(ct):
+    # 0: TP, 1:FN, 2:FP, 3:TN
+    # TNR = TN / (TN + FP)
+    deno = ct[3] + ct[2]
+    return(ct[3] / deno if deno != 0 else 0)
+
+
+def get_fnr(ct):
+    # 0: TP, 1:FN, 2:FP, 3:TN
+    # FNR = FN / (FN + TP)
+    deno = ct[1] + ct[0]
+    return(ct[1] / deno if deno != 0 else 0)
+
+
+def get_fpr(ct):
+    # 0: TP, 1:FN, 2:FP, 3:TN
+    # FPR = FP / (FP + TN)
+    deno = (ct[2] + ct[3])
+    return(ct[2] / deno if deno != 0 else 0)
+
+
+def get_fdr(ct):
+    # 0: TP, 1:FN, 2:FP, 3:TN
+    # FDR = FP / (FP + TP)
+    deno = ct[2] + ct[0]
+    return(ct[2] / deno if deno != 0 else 0)
+
+
+def get_for(ct):
+    # 0: TP, 1:FN, 2:FP, 3:TN
+    # FOR = FN / (FN + TN)
+    deno = ct[1] + ct[3]
+    return(ct[1] / deno if deno != 0 else 0)
+
+
+def get_ts(ct):
+    # 0: TP, 1:FN, 2:FP, 3:TN
+    # TS = TP / (TP + FN + FP)
+    deno = ct[0] + ct[1] + ct[2]
+    return(ct[0] / deno if deno != 0 else 0)
+
+
+def get_acc(ct):
+    # 0: TP, 1:FN, 2:FP, 3:TN
+    # ACC = (TP + TN) / (TP + TN + FP + FN)
+    deno = ct[0] + ct[1] + ct[2] + ct[3]
+    return((ct[0] + ct[3]) / deno if deno != 0 else 0)
+
+
+def get_f1(ct):
+    # 0: TP, 1:FN, 2:FP, 3:TN
+    # F1 = 2TP / (2TP + FP + FN)
+    deno = (2 * ct[0] + ct[2] + ct[1])
+    return((2 * ct[0]) / deno if deno != 0 else 0)
 
 
 def pred_feature(feature_data, num_query, num_ref,
@@ -492,47 +581,30 @@ def pred_feature(feature_data, num_query, num_ref,
             )
         )
 
-    sample_class = get_class_using_fx_kernel(
-        feature_data, num_query, args.MIN_BW, n_folds, folds_reorder, draws,
-        n_bagging=args.N_BAGGING, num_bs=num_bs, random_seed=args.RANDOM_SEED
-    )
-
-    all_pred = get_mcc_pred(sample_class, num_query)
-
-    dict_res['kernel_mcc'].append(all_pred['mcc'])
-
-    if args.PPV:
-        dict_res['kernel_ppv'].append(all_pred['ppv'])
-    if args.NPV:
-        dict_res['kernel_npv'].append(all_pred['npv'])
-
-    if args.FULL:
-        if ids_na is not None and len(ids_na) > 0:
-            all_pred['pred_by_sample'] = np.insert(all_pred['pred_by_sample'], ids_na, np.nan)
-        dict_res['kernel_pred'].append(all_pred['pred_by_sample'])
-
-    if args.NORMAL:
-        sample_class = get_class_fx_normal(
+    if not args.NORMAL:
+        sample_class = get_class_using_fx_kernel(
+            feature_data, num_query, args.MIN_BW,
+            n_folds, folds_reorder, draws,
+            n_bagging=args.N_BAGGING, num_bs=num_bs,
+            random_seed=args.RANDOM_SEED
+        )
+    else:
+        sample_class = get_class_using_fx_normal(
             feature_data, num_query, n_folds, folds_reorder, draws,
             n_bagging=args.N_BAGGING, num_bs=num_bs,
             random_seed=args.RANDOM_SEED
         )
 
-        all_pred = get_mcc_pred(sample_class, num_query)
+    dict_score, pred_by_sample = get_mcc_pred(sample_class, num_query, args)
 
-        dict_res['normal_mcc'].append(all_pred['mcc'])
-        dict_res['normal_ppv'].append(all_pred['ppv'])
-        dict_res['normal_npv'].append(all_pred['npv'])
-        if args.FULL:
-            if ids_na is not None and len(ids_na) > 0:
-                all_pred['pred_by_sample'] = np.insert(all_pred['pred_by_sample'], ids_na, np.nan)
-            dict_res['normal_pred'].append(all_pred['pred_by_sample'])
+    for key, value in dict_score.items():
+        dict_res[key] = dict_score[key]
 
-    #print("-------------")
-    #print(h.heap().byid[0].sp)
-    #print("*************")
-    #print(h.iso(1,[],{}))
-    #print("############")
+    if args.FULL:
+        if ids_na is not None and len(ids_na) > 0:
+            pred_by_sample = np.insert(pred_by_sample, ids_na, np.nan)
+        dict_res['pred_by_sample'] = pred_by_sample
+
     return(dict_res)
 
 
@@ -658,24 +730,61 @@ class Classifier:
 
     @staticmethod
     def print_feature_header(w_csv, args, with_na=False):
-        header = "id\tl2fc\tkernel_mcc"
-        header = header + "\tkernel_mcc_low"
-        header = header + "\tkernel_mcc_high"
+        score_prefix = "kernel_"
+        if args.NORMAL:
+            score_prefix = "normal_"
+
+        header = "id\tl2fc"
+        header = header + "\t" + score_prefix + "mcc"
+        header = header + "\t" + score_prefix + "mcc_low"
+        header = header + "\t" + score_prefix + "mcc_high"
         if args.PPV:
-            header = header + "\tkernel_ppv"
-            header = header + "\tkernel_ppv_low"
-            header = header + "\tkernel_ppv_high"
+            header = header + "\t" + score_prefix + "ppv"
+            header = header + "\t" + score_prefix + "ppv_low"
+            header = header + "\t" + score_prefix + "ppv_high"
         if args.NPV:
-            header = header + "\tkernel_npv"
-            header = header + "\tkernel_npv_low"
-            header = header + "\tkernel_npv_high"
+            header = header + "\t" + score_prefix + "npv"
+            header = header + "\t" + score_prefix + "npv_low"
+            header = header + "\t" + score_prefix + "npv_high"
+        if args.TPR:
+            header = header + "\t" + score_prefix + "tpr"
+            header = header + "\t" + score_prefix + "tpr_low"
+            header = header + "\t" + score_prefix + "tpr_high"
+        if args.TNR:
+            header = header + "\t" + score_prefix + "tnr"
+            header = header + "\t" + score_prefix + "tnr_low"
+            header = header + "\t" + score_prefix + "tnr_high"
+        if args.FNR:
+            header = header + "\t" + score_prefix + "fnr"
+            header = header + "\t" + score_prefix + "fnr_low"
+            header = header + "\t" + score_prefix + "fnr_high"
+        if args.FPR:
+            header = header + "\t" + score_prefix + "fpr"
+            header = header + "\t" + score_prefix + "fpr_low"
+            header = header + "\t" + score_prefix + "fpr_high"
+        if args.FDR:
+            header = header + "\t" + score_prefix + "fdr"
+            header = header + "\t" + score_prefix + "fdr_low"
+            header = header + "\t" + score_prefix + "fdr_high"
+        if args.FOR:
+            header = header + "\t" + score_prefix + "for"
+            header = header + "\t" + score_prefix + "for_low"
+            header = header + "\t" + score_prefix + "for_high"
+        if args.TS:
+            header = header + "\t" + score_prefix + "ts"
+            header = header + "\t" + score_prefix + "ts_low"
+            header = header + "\t" + score_prefix + "ts_high"
+        if args.ACC:
+            header = header + "\t" + score_prefix + "acc"
+            header = header + "\t" + score_prefix + "acc_low"
+            header = header + "\t" + score_prefix + "acc_high"
+        if args.F1:
+            header = header + "\t" + score_prefix + "f1"
+            header = header + "\t" + score_prefix + "f1_low"
+            header = header + "\t" + score_prefix + "f1_high"
         header = header + "\tmean_query\tmean_ref"
         header = header + "\tbw_query\tbw_ref"
-        if args.NORMAL:
-            header = header + "\tnormal_mcc"
-            if args.N_BAGGING > 1:
-                header = header + "\tnormal_mcc_low"
-                header = header + "\tnormal_mcc_high"
+
         if args.AUC:
             header = header + "\tauc"
             if args.UTEST:
@@ -692,6 +801,22 @@ class Classifier:
     def print_feature_pred(results, list_ids, num_query,
                            num_ref, w_csv, args, with_na=False):
         cpt_id = 0
+
+        def print_score(score_name, res):
+            if score_name in res:
+                scores = res[score_name]
+                line = str(scores[1]) + "\t"
+                line = line + str(scores[0]) + "\t"
+                line = line + str(scores[2]) + "\t"
+            else:
+                line = "nan\tnan\tnan\t"
+
+            return(line)
+
+        score_prefix = "kernel_"
+        if args.NORMAL:
+            score_prefix = "normal_"
+
         for res in results:
             line = str(list_ids[cpt_id]) + "\t"
             if "l2fc" in res:
@@ -699,31 +824,42 @@ class Classifier:
             else:
                 line = line + "nan\t"
 
-            if 'kernel_mcc' in res:
-                k_mcc = res['kernel_mcc'][0]
-                line = line + str(k_mcc[1]) + "\t"
-                line = line + str(k_mcc[0]) + "\t"
-                line = line + str(k_mcc[2]) + "\t"
-            else:
-                line = line + "nan\tnan\tnan\t"
+            score_name = score_prefix + "mcc"
+            line = line + print_score(score_name, res)
 
             if args.PPV:
-                if 'kernel_ppv' in res:
-                    k_ppv = res['kernel_ppv'][0]
-                    line = line + str(k_ppv[1]) + "\t"
-                    line = line + str(k_ppv[0]) + "\t"
-                    line = line + str(k_ppv[2]) + "\t"
-                else:
-                    line = line + "nan\tnan\tnan\t"
-
+                score_name = score_prefix + "ppv"
+                line = line + print_score(score_name, res)
             if args.NPV:
-                if 'kernel_npv' in res:
-                    k_npv = res['kernel_npv'][0]
-                    line = line + str(k_npv[1]) + "\t"
-                    line = line + str(k_npv[0]) + "\t"
-                    line = line + str(k_npv[2]) + "\t"
-                else:
-                    line = line + "nan\tnan\tnan\t"
+                score_name = score_prefix + "npv"
+                line = line + print_score(score_name, res)
+            if args.TPR:
+                score_name = score_prefix + "tpr"
+                line = line + print_score(score_name, res)
+            if args.TNR:
+                score_name = score_prefix + "tnr"
+                line = line + print_score(score_name, res)
+            if args.FNR:
+                score_name = score_prefix + "fnr"
+                line = line + print_score(score_name, res)
+            if args.FPR:
+                score_name = score_prefix + "fpr"
+                line = line + print_score(score_name, res)
+            if args.FDR:
+                score_name = score_prefix + "fdr"
+                line = line + print_score(score_name, res)
+            if args.FOR:
+                score_name = score_prefix + "for"
+                line = line + print_score(score_name, res)
+            if args.TS:
+                score_name = score_prefix + "ts"
+                line = line + print_score(score_name, res)
+            if args.ACC:
+                score_name = score_prefix + "acc"
+                line = line + print_score(score_name, res)
+            if args.F1:
+                score_name = score_prefix + "f1"
+                line = line + print_score(score_name, res)
 
             if 'mean_query' in res:
                 line = line + str(res['mean_query'][0]) + "\t"
@@ -732,39 +868,6 @@ class Classifier:
                 line = line + str(res['bw_ref'][0])
             else:
                 line = line + "nan\tnan\tnan\tnan"
-            if args.NORMAL:
-                if 'normal_mcc' in res:
-                    n_mcc = res['normal_mcc'][0]
-                    line = line + "\t" + str(n_mcc[1])
-                    if args.N_BAGGING > 1:
-                        line = line + "\t" + str(n_mcc[0])
-                        line = line + "\t" + str(n_mcc[2])
-                else:
-                    line = line + "nan\t"
-                    if args.N_BAGGING > 1:
-                        line = line + "nan\tnan\t"
-
-                if 'normal_ppv' in res:
-                    n_ppv = res['normal_ppv'][0]
-                    line = line + "\t" + str(n_ppv[1])
-                    if args.N_BAGGING > 1:
-                        line = line + "\t" + str(n_ppv[0])
-                        line = line + "\t" + str(n_ppv[2])
-                else:
-                    line = line + "nan\t"
-                    if args.N_BAGGING > 1:
-                        line = line + "nan\tnan\t"
-
-                if 'normal_npv' in res:
-                    n_npv = res['normal_npv'][0]
-                    line = line + "\t" + str(n_npv[1])
-                    if args.N_BAGGING > 1:
-                        line = line + "\t" + str(n_npv[0])
-                        line = line + "\t" + str(n_npv[2])
-                else:
-                    line = line + "nan\t"
-                    if args.N_BAGGING > 1:
-                        line = line + "nan\tnan\t"
 
             if args.AUC:
                 if 'auc' in res:

@@ -10,6 +10,8 @@ import seaborn as sns
 mpl.rcParams['font.family'] = 'sans-serif'
 mpl.rcParams['font.sans-serif'] = 'DejaVu Sans'
 mpl.rcParams['pdf.fonttype'] = 42
+mpl.rcParams['xtick.labelsize'] = 18
+mpl.rcParams['ytick.labelsize'] = 18
 
 col_pal = [
     mpl.colors.hex2color('#D21417'),
@@ -99,44 +101,59 @@ def plot_qc_histo(df_pred, quantiles, legend_quantile, mcc_bins, args):
 
     x_var = 'kernel_mcc'
     groupby_var = 'color_legend'
-    df_pred_agg = df_pred.loc[:, [x_var, groupby_var]].groupby(groupby_var)
-    vals = [df[x_var].values.tolist() for i, df in df_pred_agg]
+
+    if args.EXP or args.L2FC:
+        df_pred_agg = df_pred.loc[:, [x_var, groupby_var]].groupby(groupby_var)
+        vals = [df[x_var].values.tolist() for i, df in df_pred_agg]
+    else:
+        vals = df_pred[x_var].values.tolist()
 
     # Draw
     plt.figure(figsize=(16, 9), dpi=150)
     colors = [plt.cm.copper(i/float(len(vals)-1)) for i in range(len(vals))]
-    n, bins, patches = plt.hist(vals, mcc_bins, stacked=True, density=False,
-                                color=colors[:len(vals)])
 
-    # Decoration
-    plt.legend({group: col
-                for group, col in zip(legend_quantile, colors[:len(vals)])})
+    if args.EXP or args.L2FC:
+        n, bins, patches = plt.hist(vals, mcc_bins, stacked=True, density=False,
+                                    color=colors[:len(vals)])
+        # Decoration
+        plt.legend({group: col
+                    for group, col in zip(legend_quantile, colors[:len(vals)])})
+    else:
+        n, bins, patches = plt.hist(vals, mcc_bins, stacked=True, density=False)
+
+    plt.title("QC histogram of kernel_mcc",
+              fontsize=28)
+              
     if args.L2FC:
         plt.title("QC histogram of kernel_mcc colored by abs_l2fc",
-                  fontsize=22)
-    else:
+                  fontsize=28)
+    if args.EXP:
         plt.title(
             "QC histogram of kernel_mcc colored by max of mean expression",
-            fontsize=22
+            fontsize=28
         )
-    plt.xlabel(x_var)
-    plt.ylabel("# features")
+    plt.xlabel(x_var, fontsize=20)
+    plt.ylabel("# features", fontsize=20)
 
     # add xlimit
     plt.axvline(x=0, color='r', linestyle='--')
 
-    file_out = os.path.join(args.PATH_OUT, "qc_histogram_exp.pdf")
+    file_out = os.path.join(args.PATH_OUT, "qc_mcc.pdf")
+
+    if args.EXP:
+        file_out = os.path.join(args.PATH_OUT, "qc_mcc_exp.pdf")
+
     if args.YLOG:
         plt.yscale("log")
         if args.L2FC:
             file_out = os.path.join(args.PATH_OUT,
-                                    "qc_histogram_l2fc_ylog.pdf")
+                                    "qc_mcc_l2fc_ylog.pdf")
         else:
             file_out = os.path.join(args.PATH_OUT,
-                                    "qc_histogram_exp_ylog.pdf")
+                                    "qc_mcc_exp_ylog.pdf")
     else:
         if args.L2FC:
-            file_out = os.path.join(args.PATH_OUT, "qc_histogram_l2fc.pdf")
+            file_out = os.path.join(args.PATH_OUT, "qc_mcc_l2fc.pdf")
 
     plt.savefig(file_out)
 
@@ -146,14 +163,15 @@ def plot_qc_histo(df_pred, quantiles, legend_quantile, mcc_bins, args):
     n, bins, patches = plt.hist([df_pred['bw_query'], df_pred['bw_ref']],
                                 bins=100, color=['r', 'b'],
                                 label=['Query', 'Ref'])
-    plt.title("QC histogram of bandwidth", fontsize=22)
-    plt.xlabel("bandwidth")
-    plt.ylabel("# features")
-    plt.legend()
+    plt.title("QC histogram of bandwidth", fontsize=28)
+    plt.xlabel("bandwidth", fontsize=20)
+    plt.ylabel("# features", fontsize=20)
 
     # add xlimit
-    plt.axvline(x=args.MIN_BW, color='black', linestyle='--')
-    file_out = os.path.join(args.PATH_OUT, "qc_histogram_bw.pdf")
+    plt.axvline(x=args.MIN_BW, color='black', linestyle='--', label="min_bw")
+
+    plt.legend()
+    file_out = os.path.join(args.PATH_OUT, "qc_bw.pdf")
     plt.savefig(file_out)
 
 
@@ -176,7 +194,7 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
     square_mk, = a.get_paths()
     circle_mk, = b.get_paths()
 
-    fig = plt.figure(figsize=(5, 5))
+    fig = plt.figure(figsize=(5, 5.9))
     gs = plt.GridSpec(4, 1)
 
     ax_kde = fig.add_subplot(gs[0, 0])
@@ -206,11 +224,12 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
         sns_plot = sns.kdeplot(query_exp, shade=True, bw=bw_query,
                                color=col_pal[0], label=args.QUERY,
                                ax=ax_kde)
-        # sns_plot = sns.rugplot(query_exp, color = "r")
         sns_plot = sns.kdeplot(ref_exp, shade=True, bw=bw_ref,
                                color=col_pal[1], label="Other",
                                ax=ax_kde)
-        # sns_plot = sns.rugplot(ref_exp, color = "b")
+        sns_plot.set_title(str(id) + " " + args.QUERY + "\nbw_query=" +
+                           str(round(bw_query,2)) + ", bw_ref=" +
+                           str(round(bw_ref,2)))
 
     if args.STRIP:
         sns_plot = sns.stripplot(
@@ -231,9 +250,12 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
             x="x", y="subgroup", data=df_swarn, ax=ax_swarm, size=args.SIZE,
             palette=sns.color_palette([col_pal[0], col_pal[1]])
         )
+        ax_swarm.set_ylabel('')
 
-    sns_plot.set_title(str(id) + " " + args.QUERY + "\nbw_query=" +
-                       str(bw_query) + "\nbw_ref=" + str(bw_ref))
+    if args.NO_DENSITY:
+        sns_plot.set_title(str(id) + " " + args.QUERY + "\nbw_query=" +
+                           str(round(bw_query,2)) + ", bw_ref=" +
+                           str(round(bw_ref,2)))
 
     # Change shape in function of subgroup
     if not args.VIOLIN:
@@ -256,7 +278,7 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
     if hasattr(args, 'LOG') and args.LOG:
         x_label = 'log2(' + x_label + "+" + str(args.C) + ')'
 
-    sns_plot.set(xlabel=x_label)
+    sns_plot.set_xlabel(x_label, fontsize=18)
 
     fig_dir = os.path.join(args.PATH_OUT)
     if not os.path.exists(fig_dir):

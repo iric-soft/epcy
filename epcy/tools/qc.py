@@ -1,3 +1,4 @@
+import sys
 
 import pandas as pd
 import numpy as np
@@ -36,6 +37,13 @@ def set_color_legend():
 
 
 def main_qc(args, argparser):
+    #Check param
+    if args.EXP and args.L2FC:
+        sys.stderr.write("We can't fill histogram on EXP and L2FC.\n" +
+                         "You need choose one of these options.\n")
+        exit()
+
+
     # Import Data
     df_pred = pd.read_csv(args.PRED, sep="\t")
     df_pred = df_pred.dropna()

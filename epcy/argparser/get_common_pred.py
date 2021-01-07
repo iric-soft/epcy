@@ -32,22 +32,67 @@ def get_argparser_common_pred_part(parser, requiredNamed):
 
     parser.add_argument("--npv",
                         dest="NPV",
-                        help="Compute and NPV score for each features (e.g. genes).",
+                        help="Compute NPV (Negative Predictive Value) for each features (e.g. genes).",
                         action='store_true')
 
     parser.add_argument("--ppv",
                         dest="PPV",
-                        help="Compute and PPV score for each features (e.g. genes).",
+                        help="Compute PPV (Positive Predictive Value, or precision) for each features (e.g. genes).",
+                        action='store_true')
+
+    parser.add_argument("--tpr",
+                        dest="TPR",
+                        help="Compute TPR (True Positive Rate or sensitivity) for each features (e.g. genes).",
+                        action='store_true')
+
+    parser.add_argument("--tnr",
+                        dest="TNR",
+                        help="Compute TNR (True Negative Rate or specificity) for each features (e.g. genes).",
+                        action='store_true')
+
+    parser.add_argument("--fnr",
+                        dest="FNR",
+                        help="Compute FNR (False Negative Rate or miss rate) for each features (e.g. genes).",
+                        action='store_true')
+
+    parser.add_argument("--fpr",
+                        dest="FPR",
+                        help="Compute FPR (False Positive Rate, or fall-out) for each features (e.g. genes).",
+                        action='store_true')
+
+    parser.add_argument("--fdr",
+                        dest="FDR",
+                        help="Compute FDR (False Discovery Rate) for each features (e.g. genes).",
+                        action='store_true')
+
+    parser.add_argument("--for",
+                        dest="FOR",
+                        help="Compute FOR (False Omission Rate) for each features (e.g. genes).",
+                        action='store_true')
+
+    parser.add_argument("--ts",
+                        dest="TS",
+                        help="Compute TS (Treat Score or critical success index) for each features (e.g. genes).",
+                        action='store_true')
+
+    parser.add_argument("--acc",
+                        dest="ACC",
+                        help="Compute ACC scores (Accuracy) for each features (e.g. genes).",
+                        action='store_true')
+
+    parser.add_argument("--f1",
+                        dest="F1",
+                        help="Compute F1 scores for each features (e.g. genes).",
                         action='store_true')
 
     parser.add_argument("--auc",
                         dest="AUC",
-                        help="Compute and AUC for each features (e.g. genes).",
+                        help="Compute AUC for each features (e.g. genes).",
                         action='store_true')
 
     parser.add_argument("--full",
                         dest="FULL",
-                        help="enable full output files.",
+                        help="Enable full output files.",
                         action='store_true')
 
     parser.add_argument("--nfold",
@@ -65,7 +110,7 @@ def get_argparser_common_pred_part(parser, requiredNamed):
 
     parser.add_argument("--normal",
                         dest="NORMAL",
-                        help="Compute sample assignation using normal distributions",
+                        help="Compute sample assignation using normal distributions predictor (to replace KDE).",
                         action='store_true')
 
     parser.add_argument("--randomseed",
