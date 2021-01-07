@@ -32,14 +32,58 @@ these parameters will add new columns to the default output, as:
 
 * -\-ppv:
 
-  - **kernel\_ppv**: Positive Predictive Value (`PPV`_) compute by a predictor using `KDE`_.
+  - **kernel\_ppv**: Positive Predictive value (`PPV`_, precision) compute by a predictor using `KDE`_.
   - **kernel\_ppv\_low**, **kernel\_ppv\_high**: boundaries of confidence interval (90%).
 
 * -\-npv:
 
-  - **kernel\_npv**: Negative Predictive Value (`NPV`_) compute by a predictor using `KDE`_.
+  - **kernel\_npv**: Negative Predictive value (`NPV`_) compute by a predictor using `KDE`_.
   - **kernel\_npv\_low**, **kernel\_ppv\_high**: boundaries of confidence interval (90%).
 
+* -\-tpr:
+
+  - **kernel\_tpr**: True Positive Rate value (`TPR`_, sensitivity) compute by a predictor using `KDE`_.
+  - **kernel\_tpr\_low**, **kernel\_tpr\_high**: boundaries of confidence interval (90%).
+
+* -\-tnr:
+
+  - **kernel\_tnr**: True Negative Rate value (`TNR`_, specificity) compute by a predictor using `KDE`_.
+  - **kernel\_tnr\_low**, **kernel\_tnr\_high**: boundaries of confidence interval (90%).
+
+* -\-fnr:
+
+  - **kernel\_fnr**: False Negative Rate value (`FNR`_, miss rate) compute by a predictor using `KDE`_.
+  - **kernel\_fnr\_low**, **kernel\_fnr\_high**: boundaries of confidence interval (90%).
+
+* -\-fpr:
+
+  - **kernel\_fpr**: False Positive Rate Rate value (`FPR`_, fall-out) compute by a predictor using `KDE`_.
+  - **kernel\_fpr\_low**, **kernel\_fpr\_high**: boundaries of confidence interval (90%).
+
+* -\-fdr:
+
+  - **kernel\_fdr**: False Discovery Rate value (`FDR`_) compute by a predictor using `KDE`_.
+  - **kernel\_fdr\_low**, **kernel\_fdr\_high**: boundaries of confidence interval (90%).
+
+* -\-for:
+
+  - **kernel\_for**: False Omission Rate value (`FOR`_) compute by a predictor using `KDE`_.
+  - **kernel\_for\_low**, **kernel\_for\_high**: boundaries of confidence interval (90%).
+
+* -\-ts:
+
+  - **kernel\_ts**: Threat Score value (`TS`_, critical sucess index) compute by a predictor using `KDE`_.
+  - **kernel\_ts\_low**, **kernel\_ts\_high**: boundaries of confidence interval (90%).
+
+* -\-acc:
+
+  - **kernel\_acc**: Accuracy value (`ACC`_) compute by a predictor using `KDE`_.
+  - **kernel\_acc\_low**, **kernel\_acc\_high**: boundaries of confidence interval (90%).
+
+* -\-f1:
+
+- **kernel\_f1**: F1 score value (`F1`_) compute by a predictor using `KDE`_.
+- **kernel\_f1\_low**, **kernel\_f1\_high**: boundaries of confidence interval (90%).
 
 * -\-auc:
 
@@ -63,16 +107,25 @@ Normal distribution
 -------------------
 
 EPCY is able to evaluate predictive capacity using a normal distribution
-(in place of `KDE`_), using:
+(in place of `KDE`_), using -\-normal.
 
-* -\-normal:
-
-  - **normal\_mcc**: `MCC`_ compute a predictor using `normal`_ distributions.
+All predictive scores listed above are available with a small variation
+on columns names, which start by *normal* in place to *kernel* (as example:
+normal\_mcc in place to kernel\_mcc)
 
 .. _KDE: https://en.wikipedia.org/wiki/Kernel_density_estimation
 .. _MCC: https://en.wikipedia.org/wiki/Matthews_correlation_coefficient
 .. _PPV: https://en.wikipedia.org/wiki/Positive_and_negative_predictive_values
 .. _NPV: https://en.wikipedia.org/wiki/Positive_and_negative_predictive_values
+.. _TPR: https://en.wikipedia.org/wiki/Sensitivity_and_specificity
+.. _TNR: https://en.wikipedia.org/wiki/Sensitivity_and_specificity
+.. _FNR: https://en.wikipedia.org/wiki/Type_I_and_type_II_errors#False_positive_and_false_negative_rates
+.. _FPR: https://en.wikipedia.org/wiki/False_positive_rate
+.. _FDR: https://en.wikipedia.org/wiki/False_discovery_rate
+.. _FOR: https://en.wikipedia.org/wiki/Positive_and_negative_predictive_values
+.. _ACC: https://en.wikipedia.org/wiki/Accuracy_and_precision
+.. _TS: https://en.wikipedia.org/wiki/Matthews_correlation_coefficient
+.. _F1: https://en.wikipedia.org/wiki/F-score
 .. _normal: https://en.wikipedia.org/wiki/Normal_distribution
 .. _MannWhitney: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.mannwhitneyu.html
 .. _ttest\_ind: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html

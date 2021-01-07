@@ -53,9 +53,9 @@ PyPI install
 
 .. toctree::
    :maxdepth: 2
-   :caption: User guide / Tutorial:
+   :caption: Documentation index
 
    basic_usage
-   quality_control
-   reproducibility
+   rna_tools
    predictive_capability_columns
+   small_dataset

@@ -6,9 +6,9 @@ To generate the documentation, you need to install
   pip install sphinx
   pip install sphinx-rtd-theme
 
-and then execute
+and then execute in doc folder
 
 .. code:: bash
 
-  # in doc folder
+  # make clean
   make html
