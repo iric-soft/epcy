@@ -82,8 +82,8 @@ these parameters will add new columns to the default output, as:
 
 * -\-f1:
 
-- **kernel\_f1**: F1 score value (`F1`_) compute by a predictor using `KDE`_.
-- **kernel\_f1\_low**, **kernel\_f1\_high**: boundaries of confidence interval (90%).
+  - **kernel\_f1**: F1 score value (`F1`_) compute by a predictor using `KDE`_.
+  - **kernel\_f1\_low**, **kernel\_f1\_high**: boundaries of confidence interval (90%).
 
 * -\-auc:
 
@@ -106,12 +106,38 @@ EPCY is able to perform statistical tests, using:
 Normal distribution
 -------------------
 
-EPCY is able to evaluate predictive capacity using a normal distribution
-(in place of `KDE`_), using -\-normal.
+The type of classifier used to evaluate the predictive score of each gene
+(feature), is a parameter of EPCY. By default, EPCY will use a `KDE`_
+classifier. However, it is possible to replace the `KDE`_ classifier by
+a normal classifier, using -\-normal.
 
-All predictive scores listed above are available with a small variation
-on columns names, which start by *normal* in place to *kernel* (as example:
-normal\_mcc in place to kernel\_mcc)
+Using normal classifiers, all predictive scores (listed above) stay
+available. Just, the column name of each predictive score, will be change
+to start by *normal* in place of *kernel* (**normal\_mcc** vs **kernel\_mcc**),
+to be consistant.
+
+Missing values
+--------------
+
+On some dataset (as in proteomic or single-cell), quantitative matrix can have
+some missing values (*nan*). In that case you have different way to manage
+these missing values with EPCY:
+* Impute missing value before to run EPCY.
+* Replace missing value by a constant, using -\-replacena.
+* For each gene (or feature), remove samples with missing values.
+
+If you choose to remove samples with missing values, EPCY will return
+a *predictive_capability.xls* with two new columns,
+**sample_query** and **sample_ref**, to report for each gene (feature),
+the number of query and ref samples used (without missing values).
+
+If you have download the source code or data on `git`_,
+you can make a test using:
+
+ .. code:: bash
+
+    epcy pred --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
+    epcy pred --replacena 0 --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/replacena
 
 .. _KDE: https://en.wikipedia.org/wiki/Kernel_density_estimation
 .. _MCC: https://en.wikipedia.org/wiki/Matthews_correlation_coefficient
@@ -129,3 +155,4 @@ normal\_mcc in place to kernel\_mcc)
 .. _normal: https://en.wikipedia.org/wiki/Normal_distribution
 .. _MannWhitney: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.mannwhitneyu.html
 .. _ttest\_ind: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html
+.. _git: https://github.com/iric-soft/epcy/tree/master/data/small_for_test

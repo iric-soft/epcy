@@ -93,7 +93,7 @@ Generic case:
 Working on RNA sequencing readcounts:
 -------------------------------------
 
-* To run EPCY on readcounts not mormalized use **pred_rna** tool as follow:
+* To run EPCY on readcounts not normalized use **pred_rna** tool as follow:
 
 .. code:: shell
 
@@ -103,7 +103,7 @@ Working on RNA sequencing readcounts:
 Working on kallisto quantification:
 -----------------------------------
 
-* EPCY allow to work directly on kallisto quantificaion using h5 files, to have access to bootstrapped samples. To do so, a `kallisto` column need to be add to the design file (to specify the directory path where to find *abundant.h5* file for each sample) and **epcy pred_rna** need to run as follow:
+* EPCY allow to work directly on kallisto quantificaion using h5 files and have access to bootstrapped samples. To do so, a `kallisto` column need to be add to the design file (to specify the directory path where to find *abundant.h5* file for each sample) and **epcy pred_rna** need to run as follow:
 
 .. code:: shell
 

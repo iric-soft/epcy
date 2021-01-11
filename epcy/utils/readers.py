@@ -294,7 +294,7 @@ def create_kal_mat(args, design, design_bootstrapped, df_anno):
         sys.stderr.write(time.strftime('%X') + ":\t\tfound genes ids for " +
                          "each trans\n")
         ids_genes = [np.where(parents == gene)[0] for gene in uniq_genes]
-        ids_genes = np.array(ids_genes)
+        ids_genes = np.array(ids_genes, dtype=object)
 
     transcripts_len = f["aux/eff_lengths"][:]
     f.close()
@@ -353,7 +353,8 @@ def bootstrapped_design(design, args):
 
 def read_design_matrix_rna(args, df_anno=None):
     design = get_design(args)
-    if args.KAL:
+    design_bootstrapped = design
+    if args.BS is not None and args.BS > 0:
         design_bootstrapped = bootstrapped_design(design, args)
 
     num_query = len(np.where(design[args.SUBGROUP] == 1)[0])
@@ -364,6 +365,9 @@ def read_design_matrix_rna(args, df_anno=None):
         return(None, None, None)
 
     if hasattr(args, 'MATRIX') and args.MATRIX is not None:
+        if args.BS is not None and args.BS > 0:
+            design = design_bootstrapped
+
         if args.GENE:
             # TODO
             sys.stderr.write("ERROR: Sorry, switch transcript to gene " +

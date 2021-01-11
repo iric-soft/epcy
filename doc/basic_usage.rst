@@ -81,7 +81,7 @@ These input file are available in EPCY source code, using *git*:
    git clone
    cd epcy/data/leucegene3
 
-If you take a look of *design.txt*, you can see an *AML_subtype* column which
+If you take a look of *design.txt*, you can see an *AML* column which
 classify each samples in one of these 3 subtypes of AML:
 *t15_17*, *inv16* and *other*.
 
@@ -90,7 +90,7 @@ classify each samples in one of these 3 subtypes of AML:
      :header-rows: 1
 
      * - Sample
-       - AML_subtype
+       - AML
      * - 01H001
        - Other
      * - 01H002
@@ -120,16 +120,16 @@ comparative predictive analysis, as follow:
 
 .. code:: bash
 
-   epcy pred --log -t 4 -m cpm.xls  -d design.txt --subgroup AML_subtype --query t15_17 -o ./30_t15_17_vs_70/
+   epcy pred --log -t 4 -m cpm.xls  -d design.txt --subgroup AML --query t15_17 -o ./30_t15_17_vs_70/
 
 Which:
   * **-\-log**: specify that quantitative data need to to be log transformed
-    before to be analyzed (mainly, to manage outlier values).
+    before to be analyzed.
   * **-t 4**: to allow to run run on 4 threads and divide the execution time by 4.
   * **-m cpm.xls**: to get the path of quantitative matrix file.
   * **-d design.txt**: to get the path of the design table.
-  * **-\-subgroup AML_subtype**: to specify the condition column we want use.
-  * **-\-query t15_17**: to specify which type of samples we want to compare to each other samples.
+  * **-\-subgroup AML**: to specify the condition column we want use.
+  * **-\-query t15_17**: to specify which type of AML subgroup, we want to compare to each other samples.
   * **-o ./30_t15_17_vs_70/**: to specify the output directory.
 
 More information can be found, using *epcy pred -h*.
@@ -160,7 +160,7 @@ using 9 columns:
 * **bw\_query**: Estimate bandwidth used by `KDE`_, to calculate the density of query samples.
 * **bw\_ref**: Estimate bandwidth used by `KDE`_, to calculate the density of ref samples.
 
-It remains to order this table *kernel_mcc*, to rank most predictive genes.
+It remains to order this table using *kernel_mcc*, to rank most predictive genes.
 
 .. list-table:: ./30_t15_17_vs_70/predictive_capability.xls ordered on kernel_mcc
    :widths: 30 10 15 20 20 15 15 15 15
@@ -213,20 +213,22 @@ It remains to order this table *kernel_mcc*, to rank most predictive genes.
      - ...
 
 Notice: As EPCY have some random step, you can have small variation in your
-results. Add *-/- randomseed 42*, to get same results (see Reproductibility
+results. Add *-\- randomseed 42*, to get same results (see Reproductibility
 section).
 
 Quality control
 ---------------
 
-The classifier used by EPCY, need to have enough data to evaluate the predictive
-capacity of each genes (features) accurately. Without enough samples, EPCY
-will `overfit`_ and return a large number of negative MCC.
+EPCY need to have enough data to train the KDE classifier and evaluate
+the predictive capacity of each genes (features) accurately.
+Without enough samples, EPCY will `overfit`_ and return a large number
+of negative MCC.
 
-Naturally, fixing *a priori* a low boundary of the number samples is difficult,
-as this boundary will depend to the dataset analyzed. However, EPCY have some
-quality control tool (*epcy qc*), to verify the distribution of MCC and
-`bandwidth`_ to verify if EPCY have have `overfit`_ or not.
+Unfortunately, it's difficult to fix *a priori* a low boundary of the number
+samples needed, as this boundary will depend to the dataset analyzed.
+However, EPCY have some quality control tool (*epcy qc*), to verify if
+EPCY have `overfit`_ or not, by checking the distribution of
+MCC and `bandwidth`_ to verify.
 
 Using *epcy qc*, we can plot two quality control figures, as follow:
 
@@ -249,7 +251,7 @@ An example with bad quality control, can be made using a smallest design:
 
 .. code:: bash
 
-   epcy pred --log -t 4 -m cpm.xls  -d design_10_samples.txt --subgroup AML_subtype --query t15_17 -o ./5_t15_17_vs_5/
+   epcy pred --log -t 4 -m cpm.xls  -d design_10_samples.txt --subgroup AML --query t15_17 -o ./5_t15_17_vs_5/
    epcy qc -p ./5_t15_17_vs_5/predictive_capability.xls -o ./5_t15_17_vs_5/qc
 
 .. image:: images/qc_overfit.png
@@ -257,8 +259,8 @@ An example with bad quality control, can be made using a smallest design:
   :alt: gene profiles
   :align: center
 
-Plot KDE learned and gene expression
-------------------------------------
+Plot a KDE learned on gene expression
+-------------------------------------
 
 EPCY have also some visual tools, which can help you to explore your dataset.
 Using *epcy profile*, we can plot the gene expression with learned KDE
@@ -277,8 +279,8 @@ classifier.
 Reproducibility
 ---------------
 
-EPCY draw a random value to assign a class according probabilities learn by
-the KDE classifier, to fill a contingency table (see algorithme section).
+EPCY draw a random value to assign a class according to probabilities learned
+by the KDE classifier, to fill a contingency table (see algorithme section).
 This means that different runs of EPCY can produce different results.
 
 However, EPCY output is relatively stable, as each predictive score returned
@@ -304,7 +306,7 @@ can analyse *inv16* samples vs all others samples (*t15_17* and
 
 .. code:: bash
 
-   epcy pred --log -t 4 -m cpm.xls  -d design.txt --subgroup AML_subtype --query inv16 -o ./30_inv16_vs_70/
+   epcy pred --log -t 4 -m cpm.xls  -d design.txt --subgroup AML --query inv16 -o ./30_inv16_vs_70/
 
 
 Moreover, it is possible to add a column in **design.txt** for each conditions
@@ -321,7 +323,7 @@ samples from the analysis, using **None** in cells which correspond.
      :header-rows: 1
 
      * - Sample
-       - AML_subtype
+       - AML
        - Gender
      * - Sample1
        - t15_17
@@ -333,10 +335,9 @@ samples from the analysis, using **None** in cells which correspond.
        - None
        - F
 
-Using all these variations, you should be able to create a unique *design.txt*
-to performed all *1 vs all* analyses linked to a dataset.
-
-
+With all these variations, you should be able to performed all comparisons
+you want using an unique design file, or create a new design file
+for each comparison.
 
 .. _MCC: https://en.wikipedia.org/wiki/Matthews_correlation_coefficient
 .. _KDE: https://en.wikipedia.org/wiki/Kernel_density_estimation
