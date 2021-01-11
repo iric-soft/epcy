@@ -12,7 +12,7 @@ data/small_leucegene/5_inv16_vs_5/*/
 
 #Doc
 *.html
-doc/_*
+doc/_build
 
 #Mac
 .DS_store
