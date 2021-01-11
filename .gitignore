@@ -7,6 +7,8 @@ __pycache__/
 
 # Data
 data/small_for_test/*subgroup*
+data/small_leucegene/5_inv16_vs_5_*
+data/small_leucegene/5_inv16_vs_5/*/
 
 #Doc
 *.html
@@ -33,6 +35,7 @@ lib64/
 parts/
 sdist/
 var/
+__pycache__/
 *.egg-info/
 .installed.cfg
 *.egg
