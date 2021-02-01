@@ -192,6 +192,25 @@ def get_design(args):
     """ Read and format design.
     """
     design = pd.read_csv(args.DESIGN, sep="\t")
+
+    if "sample" not in design.columns.values:
+        sys.stderr.write("ERROR: The design file need to have a " +
+                         "column 'sample'.\n")
+        exit(-1)
+
+    if args.SUBGROUP not in design.columns.values:
+        sys.stderr.write("ERROR: The design file need to have a " +
+                         "column '" + args.SUBGROUP + "' or specify a " +
+                         "column name using --subgroup.\n")
+        exit(-1)
+
+    if args.QUERY not in design[args.SUBGROUP].values:
+        sys.stderr.write("ERROR: " + args.QUERY + " is not present in the  " +
+                         "column '" + args.SUBGROUP + "' of the design " +
+                         "file.\n")
+        exit(-1)
+
+
     design['sample'] = design['sample'].apply(str)
     drop_ids = design[design[args.SUBGROUP] == 'None'].index
     design.drop(drop_ids, inplace=True)
@@ -233,6 +252,11 @@ def read_design_matrix(args):
         data = np.nan_to_num(data, nan=args.REPLACE_NA)
 
     row_ids_0 = ~np.all(data == 0, axis=1)
+    num_removed = len(row_ids_0) - sum(row_ids_0)
+    if num_removed != 0:
+        sys.stderr.write(time.strftime('%X') + ": " + str(num_removed) +
+                         " features with sum==0 have been removed.\n")
+
     list_ids = [list_ids[x] for x in np.where(row_ids_0)[0]]
     list_ids = np.asarray(list_ids)
     data = data[row_ids_0]
@@ -401,6 +425,11 @@ def read_design_matrix_rna(args, df_anno=None):
             data = np.nan_to_num(data, nan=args.REPLACE_NA)
 
         row_ids_0 = ~np.all(data == 0, axis=1)
+        num_removed = len(row_ids_0) - sum(row_ids_0)
+        if num_removed != 0:
+            sys.stderr.write(time.strftime('%X') + ": " + str(num_removed) +
+                             " features with sum==0 have been removed.\n")
+
         list_ids = [list_ids[x] for x in np.where(row_ids_0)[0]]
         list_ids = np.asarray(list_ids)
         data = data[row_ids_0]

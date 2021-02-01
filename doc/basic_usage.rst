@@ -27,7 +27,7 @@ To run EPCY, we need two **tabulated** files, as input:
        :widths: 30 20 20 20
        :header-rows: 1
 
-       * - ID
+       * - id
          - Sample1
          - ...
          - SampleX
@@ -53,7 +53,7 @@ To run EPCY, we need two **tabulated** files, as input:
      :widths: 30 20 20
      :header-rows: 1
 
-     * - Sample
+     * - sample
        - Condition1
        - Gender
      * - Sample1

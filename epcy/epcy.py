@@ -18,6 +18,7 @@ from .tools.kal2mat import main_kal2mat
 from .tools.explore import main_explore
 from .tools.ct import main_ct
 
+import sys
 
 # ###########################################################################
 # Main function
@@ -96,6 +97,10 @@ def main():
 
     # recover arguments
     args = argparser.parse_args()
+
+    if not len(sys.argv) > 1:
+        sys.stderr.write("WARNING: use epcy -h, if you need help\n")
+        exit(0)
 
     # execute the command
     args.func(args, argparser)
