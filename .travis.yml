@@ -15,4 +15,6 @@ install:
   scipy matplotlib pandas statsmodels
 - python setup.py install
 script: coverage run -m unittest discover epcy/tests/
-after_success: bash <(curl -s https://codecov.io/bash)
+after_success: 
+- bash <(curl -s https://codecov.io/bash)
+- env
