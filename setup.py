@@ -76,26 +76,26 @@ setup(
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
     setup_requires=[
-        'cython==0.29.14',
-        'numpy==1.18.1',
-        'pandas==0.25.3',
-        'h5py==2.10.0',
-        'scipy==1.4.1',
-        'scikit-learn==0.22.1',
-        'matplotlib==3.1.2',
-        'numexpr==2.7.1',
-        'seaborn==0.9.0'
+        'cython>=0.29.14',
+        'numpy>=1.18.1',
+        'pandas>=0.25.3',
+        'h5py>=2.10.0',
+        'scipy>=1.4.1',
+        'scikit-learn>=0.22.1',
+        'matplotlib>=3.1.2',
+        'numexpr>=2.7.1',
+        'seaborn>=0.9.0'
     ],
     install_requires=[
-        'cython==0.29.14',
-        'numpy==1.18.1',
-        'pandas==0.25.3',
-        'h5py==2.10.0',
-        'scipy==1.4.1',
-        'scikit-learn==0.22.1',
-        'matplotlib==3.1.2',
-        'numexpr==2.7.1',
-        'seaborn==0.9.0'
+        'cython>=0.29.14',
+        'numpy>=1.18.1',
+        'pandas>=0.25.3',
+        'h5py>=2.10.0',
+        'scipy>=1.4.1',
+        'scikit-learn>=0.22.1',
+        'matplotlib>=3.1.2',
+        'numexpr>=2.7.1',
+        'seaborn>=0.9.0'
     ],
     python_requires='>3.6',
 

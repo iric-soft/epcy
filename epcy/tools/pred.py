@@ -18,4 +18,4 @@ def main_pred(args, argparser):
 
     all_classifier = uo.compute_pred(args, num_pred, list_ids, data, design)
 
-    uo.save_pred_res(args, all_classifier)
+    #uo.save_pred_res(args, all_classifier)

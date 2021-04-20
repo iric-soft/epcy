@@ -10,6 +10,8 @@ import seaborn as sns
 mpl.rcParams['font.family'] = 'sans-serif'
 mpl.rcParams['font.sans-serif'] = 'DejaVu Sans'
 mpl.rcParams['pdf.fonttype'] = 42
+mpl.rcParams['xtick.labelsize'] = 18
+mpl.rcParams['ytick.labelsize'] = 18
 
 col_pal = [
     mpl.colors.hex2color('#D21417'),
@@ -99,42 +101,59 @@ def plot_qc_histo(df_pred, quantiles, legend_quantile, mcc_bins, args):
 
     x_var = 'kernel_mcc'
     groupby_var = 'color_legend'
-    df_pred_agg = df_pred.loc[:, [x_var, groupby_var]].groupby(groupby_var)
-    vals = [df[x_var].values.tolist() for i, df in df_pred_agg]
+
+    if args.EXP or args.L2FC:
+        df_pred_agg = df_pred.loc[:, [x_var, groupby_var]].groupby(groupby_var)
+        vals = [df[x_var].values.tolist() for i, df in df_pred_agg]
+    else:
+        vals = df_pred[x_var].values.tolist()
 
     # Draw
     plt.figure(figsize=(16, 9), dpi=150)
     colors = [plt.cm.copper(i/float(len(vals)-1)) for i in range(len(vals))]
-    n, bins, patches = plt.hist(vals, mcc_bins, stacked=True, density=False,
-                                color=colors[:len(vals)])
 
-    # Decoration
-    plt.legend({group: col
-                for group, col in zip(legend_quantile, colors[:len(vals)])})
+    if args.EXP or args.L2FC:
+        n, bins, patches = plt.hist(vals, mcc_bins, stacked=True, density=False,
+                                    color=colors[:len(vals)])
+        # Decoration
+        plt.legend({group: col
+                    for group, col in zip(legend_quantile, colors[:len(vals)])})
+    else:
+        n, bins, patches = plt.hist(vals, mcc_bins, stacked=True, density=False)
+
+    plt.title("QC histogram of kernel_mcc",
+              fontsize=28)
+              
     if args.L2FC:
         plt.title("QC histogram of kernel_mcc colored by abs_l2fc",
-                  fontsize=22)
-    else:
-        plt.title("QC histogram of kernel_mcc colored by max of mean \
-                   expression", fontsize=22)
-    plt.xlabel(x_var)
-    plt.ylabel("# features")
+                  fontsize=28)
+    if args.EXP:
+        plt.title(
+            "QC histogram of kernel_mcc colored by max of mean expression",
+            fontsize=28
+        )
+    plt.xlabel(x_var, fontsize=20)
+    plt.ylabel("# features", fontsize=20)
 
     # add xlimit
     plt.axvline(x=0, color='r', linestyle='--')
 
-    file_out = os.path.join(args.PATH_OUT, "qc_histogram_exp.pdf")
+    file_out = os.path.join(args.PATH_OUT, "qc_mcc.pdf")
+
+    if args.EXP:
+        file_out = os.path.join(args.PATH_OUT, "qc_mcc_exp.pdf")
+
     if args.YLOG:
         plt.yscale("log")
         if args.L2FC:
             file_out = os.path.join(args.PATH_OUT,
-                                    "qc_histogram_l2fc_ylog.pdf")
+                                    "qc_mcc_l2fc_ylog.pdf")
         else:
             file_out = os.path.join(args.PATH_OUT,
-                                    "qc_histogram_exp_ylog.pdf")
+                                    "qc_mcc_exp_ylog.pdf")
     else:
         if args.L2FC:
-            file_out = os.path.join(args.PATH_OUT, "qc_histogram_l2fc.pdf")
+            file_out = os.path.join(args.PATH_OUT, "qc_mcc_l2fc.pdf")
 
     plt.savefig(file_out)
 
@@ -144,14 +163,15 @@ def plot_qc_histo(df_pred, quantiles, legend_quantile, mcc_bins, args):
     n, bins, patches = plt.hist([df_pred['bw_query'], df_pred['bw_ref']],
                                 bins=100, color=['r', 'b'],
                                 label=['Query', 'Ref'])
-    plt.title("QC histogram of bandwidth", fontsize=22)
-    plt.xlabel("bandwidth")
-    plt.ylabel("# features")
-    plt.legend()
+    plt.title("QC histogram of bandwidth", fontsize=28)
+    plt.xlabel("bandwidth", fontsize=20)
+    plt.ylabel("# features", fontsize=20)
 
     # add xlimit
-    plt.axvline(x=args.MIN_BW, color='black', linestyle='--')
-    file_out = os.path.join(args.PATH_OUT, "qc_histogram_bw.pdf")
+    plt.axvline(x=args.MIN_BW, color='black', linestyle='--', label="min_bw")
+
+    plt.legend()
+    file_out = os.path.join(args.PATH_OUT, "qc_bw.pdf")
     plt.savefig(file_out)
 
 
@@ -166,6 +186,7 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
         }
     )
 
+    df_swarn.x = df_swarn.x + np.random.normal(0, 0.01, df_swarn.shape[0])
     # dummy plots, just to get the Path objects
     fig, ax = plt.subplots(1, 1)
     a = ax.scatter([1, 2], [3, 4], marker='s')
@@ -173,7 +194,7 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
     square_mk, = a.get_paths()
     circle_mk, = b.get_paths()
 
-    fig = plt.figure(figsize=(5, 5))
+    fig = plt.figure(figsize=(5, 5.9))
     gs = plt.GridSpec(4, 1)
 
     ax_kde = fig.add_subplot(gs[0, 0])
@@ -199,32 +220,56 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
     plt.setp(ax_swarm.yaxis.get_minorticklines(), visible=False)
     ax_swarm.yaxis.grid(False)
 
-    sns_plot = sns.kdeplot(query_exp, shade=True, bw=bw_query,
-                           color=col_pal[0], label=args.QUERY, ax=ax_kde)
-    # sns_plot = sns.rugplot(query_exp, color = "r")
-    sns_plot = sns.kdeplot(ref_exp, shade=True, bw=bw_ref, color=col_pal[1],
-                           label="Other", ax=ax_kde)
-    # sns_plot = sns.rugplot(ref_exp, color = "b")
-    sns_plot.set_title(str(id) + " " + args.QUERY + "\nbw_query=" +
-                       str(bw_query) + "\nbw_ref=" + str(bw_ref))
+    if not args.NO_DENSITY:
+        sns_plot = sns.kdeplot(query_exp, shade=True, bw=bw_query,
+                               color=col_pal[0], label=args.QUERY,
+                               ax=ax_kde)
+        sns_plot = sns.kdeplot(ref_exp, shade=True, bw=bw_ref,
+                               color=col_pal[1], label="Other",
+                               ax=ax_kde)
+        sns_plot.set_title(str(id) + " " + args.QUERY + "\nbw_query=" +
+                           str(round(bw_query,2)) + ", bw_ref=" +
+                           str(round(bw_ref,2)))
 
-    sns_plot = sns.swarmplot(
-        x="x", y="subgroup", data=df_swarn, ax=ax_swarm,
-        palette=sns.color_palette([col_pal[0], col_pal[1]])
-    )
+    if args.STRIP:
+        sns_plot = sns.stripplot(
+            x="x", y="subgroup", data=df_swarn, ax=ax_swarm,
+            size=args.SIZE, jitter=0.4, hue="subgroup",
+            palette=sns.color_palette([col_pal[0], col_pal[1]]),
+            edgecolor="gray"
+        )
+    elif args.VIOLIN:
+        bw = (bw_query + bw_ref) / 2
+        sns_plot = sns.violinplot(
+            x="x", y="subgroup", data=df_swarn, ax=ax_swarm,
+            inner=None, linewidth=None, bw=bw,
+            palette=sns.color_palette([col_pal[0], col_pal[1]])
+        )
+    else:
+        sns_plot = sns.swarmplot(
+            x="x", y="subgroup", data=df_swarn, ax=ax_swarm, size=args.SIZE,
+            palette=sns.color_palette([col_pal[0], col_pal[1]])
+        )
+        ax_swarm.set_ylabel('')
+
+    if args.NO_DENSITY:
+        sns_plot.set_title(str(id) + " " + args.QUERY + "\nbw_query=" +
+                           str(round(bw_query,2)) + ", bw_ref=" +
+                           str(round(bw_ref,2)))
 
     # Change shape in function of subgroup
-    collections = sns_plot.collections
-    unique_colors = [list(col_pal[0]) + [1], list(col_pal[1]) + [1]]
-    markers = [circle_mk, square_mk]
-    for collection in collections:
-        paths = []
-        for current_color in collection.get_facecolors():
-            for possible_marker, possible_color in zip(markers, unique_colors):
-                if np.array_equal(current_color, possible_color):
-                    paths.append(possible_marker)
-                    break
-        collection.set_paths(paths)
+    if not args.VIOLIN:
+        collections = sns_plot.collections
+        unique_colors = [list(col_pal[0]) + [1], list(col_pal[1]) + [1]]
+        markers = [circle_mk, square_mk]
+        for collection in collections:
+            paths = []
+            for current_color in collection.get_facecolors():
+                for possible_marker, possible_color in zip(markers, unique_colors):
+                    if np.array_equal(current_color, possible_color):
+                        paths.append(possible_marker)
+                        break
+            collection.set_paths(paths)
     # sns_plot.legend(collections[-2:], pd.unique(df_swarn.subgroup))
 
     x_label = "x"
@@ -233,11 +278,11 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
     if hasattr(args, 'LOG') and args.LOG:
         x_label = 'log2(' + x_label + "+" + str(args.C) + ')'
 
-    sns_plot.set(xlabel=x_label)
+    sns_plot.set_xlabel(x_label, fontsize=18)
 
     fig_dir = os.path.join(args.PATH_OUT)
     if not os.path.exists(fig_dir):
         os.makedirs(fig_dir)
     fig_file = os.path.join(fig_dir, id + "_density.pdf")
     sns_plot.figure.savefig(fig_file)
-    plt.close()
+    plt.close('all')

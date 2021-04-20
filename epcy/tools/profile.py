@@ -3,7 +3,6 @@ import sys
 
 import numpy as np
 
-from .. utils import other as uo
 from .. utils import readers as ur
 from .. utils import plot as up
 from .. utils import Classifier as uc
@@ -13,6 +12,7 @@ def main_profile(args, argparser):
     sys.stderr.write(time.strftime('%X') + ": Read design and matrix " +
                      "features\n")
     (design, data, list_ids) = ur.read_design_matrix(args)
+    
     num_query = len(np.where(design[args.SUBGROUP] == 1)[0])
 
     num_bs = 0
@@ -24,14 +24,14 @@ def main_profile(args, argparser):
         sys.stderr.write(time.strftime('%X') + ":\t" + id + "\n")
         pos = np.where(list_ids == id)[0]
         if pos.shape[0] == 1:
-            row_data, row_num_query, ids_na = uc.Classifier.rm_missing(
+            row_data, row_num_query, ids_na = uc.rm_missing(
                                                                data[pos, :][0],
                                                                num_query)
             row_query = row_data[:row_num_query]
             row_ref = row_data[row_num_query:]
 
-            bw_query = uc.Classifier.bw_nrd(row_query, num_bs)
-            bw_ref = uc.Classifier.bw_nrd(row_ref, num_bs)
+            bw_query = uc.bw_nrd(row_query, num_bs)
+            bw_ref = uc.bw_nrd(row_ref, num_bs)
 
             if bw_query < args.MIN_BW:
                 bw_query = args.MIN_BW
