@@ -7,6 +7,17 @@ from os import path
 
 import epcy
 
+epcy_version = (
+    subprocess.run(["git", "describe", "--tags"], stdout=subprocess.PIPE)
+    .stdout.decode("utf-8")
+    .strip()
+)
+assert "." in epcy_version
+
+assert os.path.isfile("epcy/version.py")
+with open("epcy/VERSION", "w", encoding="utf-8") as fh:
+    fh.write(f"{epcy_version}\n")
+    
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the README file
@@ -19,7 +30,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.0.1',
+    version=epcy_version,
 
     description='Evaluattion of Predictive CapabilitY for ranking biomarker candidates.',
     long_description=long_description,
@@ -66,6 +77,8 @@ setup(
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
+    package_data={"epcy": ["VERSION"]},
+    include_package_data=True,
 
     # Alternatively, if you want to distribute just a my_module.py, uncomment
     # this:
