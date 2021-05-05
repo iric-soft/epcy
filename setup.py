@@ -6,6 +6,7 @@ from codecs import open
 from os import path
 
 import subprocess
+import os
 import epcy
 
 epcy_version = (
