@@ -1,7 +1,7 @@
 Details of predictive capability columns
 ========================================
 
-By default, *epcy pred* and *epcy pred_rna* will retun an output file
+By default, *epcy pred* and *epcy pred_rna* will return an output file
 *predictive_capability.xls* of 9 columns:
 
 * Default columns:
@@ -9,14 +9,14 @@ By default, *epcy pred* and *epcy pred_rna* will retun an output file
   - **id**: the id of each feature.
   - **l2fc**: log2 fold change.
   - **kernel\_mcc**: Matthews Correlation Coefficient (`MCC`_) compute by a predictor using `KDE`_.
-  - **kernel\_mcc\_low**, **kernel\_mcc\_high**: boundaries of confidence interval (90%).
-  - **mean\_query**: mean(values) of samples specify as Query in design.tsv
-  - **mean\_ref**: mean(values) of samples specify as Ref in design.ts
-  - **bw\_query**: Estimate bandwidth used by `KDE`_, to calculate the density of query samples
-  - **bw\_ref**: Estimate bandwidth used by `KDE`_, to calculate the density of ref samples
+  - **kernel\_mcc\_low**, **kernel\_mcc\_high**: lower and upper bounds of confidence interval (90%).
+  - **mean\_query**: average values of this feature for samples in the subgroup of interest defined using the --query parameter.
+  - **mean\_ref**: average values of this feature for samples in the reference group (not in the query subset).
+  - **bw\_query**: estimated bandwidth used by `KDE`_, to calculate the density of query samples.
+  - **bw\_ref**: estimated bandwidth used by `KDE`_, to calculate the density of ref samples.
 
-However, epcy can expand or modify this default output using several options,
-see:
+However, epcy can expand or modify this default output using several
+options, see:
 
 .. code:: bash
 
@@ -27,8 +27,8 @@ Predictive scores
 -----------------
 
 By default we decide to return `MCC`_ scores. However, it's possible to compute
-other predictive scores, in case they are more suitable for your needs. Use
-these parameters will add new columns to the default output, as:
+other predictive scores, in case they are more suitable for your needs. Using the following 
+parameters will add new columns to the default output, as:
 
 * -\-ppv:
 
@@ -111,28 +111,28 @@ The type of classifier used to evaluate the predictive score of each gene
 classifier. However, it is possible to replace the `KDE`_ classifier by
 a normal classifier, using -\-normal.
 
-Using normal classifiers, all predictive scores (listed above) stay
-available. Just, the column name of each predictive score, will be change
-to start by *normal* in place of *kernel* (**normal\_mcc** vs **kernel\_mcc**),
+Using the normal classifier, all predictive scores (listed above) remain
+available. However, the column name of each predictive score, will be changed
+to start with *normal* instead of *kernel* (**normal\_mcc** vs **kernel\_mcc**),
 to be consistant.
 
 Missing values
 --------------
 
-On some dataset (as in proteomic or single-cell), quantitative matrix can have
-some missing values (*nan*). In that case you have different way to manage
-these missing values with EPCY:
-* Impute missing value before to run EPCY.
-* Replace missing value by a constant, using -\-replacena.
+On some dataset (as in proteomics or single-cell), quantitative matrix can have
+some missing values (*nan*). In that case there are different alternatives to manage
+these missing values within EPCY:
+* Impute missing values before running EPCY.
+* Replace missing values by a constant, using -\-replacena.
 * For each gene (or feature), remove samples with missing values.
 
 If you choose to remove samples with missing values, EPCY will return
 a *predictive_capability.xls* with two new columns,
 **sample_query** and **sample_ref**, to report for each gene (feature),
-the number of query and ref samples used (without missing values).
+the number of query and reference samples used (without missing values).
 
-If you have download the source code or data on `git`_,
-you can make a test using:
+If you have downloaded the source code or data on `git`_,
+you can test these procedures using:
 
  .. code:: bash
 
