@@ -30,6 +30,15 @@ Requirements:
 Install:
 --------
 
+Using pypi:
+-----------
+
+.. code:: shell
+
+  pip install epcy
+
+From source:
+------------
 .. code:: shell
 
   python3 -m venv $HOME/.virtualenvs/epcy
@@ -84,11 +93,11 @@ Generic case:
   epcy pred --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
 
 * Result will be saved in prediction\_capability.xls file, which is detail below.
-* You can personalize the design file using **--subgroup --query**
+* You can personalize the design file using **--condition --query**
 
 .. code:: shell
 
-  epcy pred_rna -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/subgroup2 --subgroup subgroup2 --query A
+  epcy pred_rna -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/subgroup2 --condition subgroup2 --query A
 
 
 Working on RNA sequencing readcounts:
