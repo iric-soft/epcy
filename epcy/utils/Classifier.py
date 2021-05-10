@@ -679,8 +679,8 @@ class Classifier:
         self.draws = draws
         self.folds_reorder = folds_reorder
 
-        self.num_query = len(np.where(design[self.args.SUBGROUP] == 1)[0])
-        self.num_ref = len(np.where(design[self.args.SUBGROUP] == 0)[0])
+        self.num_query = len(np.where(design[self.args.CONDITION] == 1)[0])
+        self.num_ref = len(np.where(design[self.args.CONDITION] == 0)[0])
 
         self.with_na = np.isnan(data).sum()
         self.done = False

@@ -12,19 +12,29 @@ def get_argparser_design_part(parser, requiredNamed):
     )
 
     parser.add_argument(
-        "--subgroup",
-        dest="SUBGROUP",
+        "--condition",
+        dest="CONDITION",
         help="In design file, the column name use for this analysis " +
-             "(Default: subgroup).",
+             "(Default: condition).",
         type=str,
-        default="subgroup"
+        default="condition"
     )
 
     parser.add_argument(
         "--query",
         dest="QUERY",
-        help="Value of queried subgroup to compare to all other samples " +
-             "(Default: Query).",
+        help="To specify a query condition to compare to a reference " +
+             "condition (Default: Query).",
         type=str,
         default="Query"
+    )
+
+    parser.add_argument(
+        "--ref",
+        dest="REF",
+        help="To specify a reference condition to compare to a query " +
+             "condition. Without all other samples will be use as reference " +
+             "condition. (Default: None).",
+        type=str,
+        default=None
     )

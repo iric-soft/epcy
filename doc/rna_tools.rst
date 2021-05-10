@@ -47,7 +47,7 @@ More help can be found using:
 Kallisto quantification
 -----------------------
 
-EPCY allows to work directly on kallisto (**PG: ref**) transcript
+EPCY allows to work directly on `kallisto`_ [#]_ transcript
 quantifications using the HDF5 files to take into consideration the
 expression values of bootsrapped samples computed by this software.
 To do so, a `kallisto` column needs to be added to the design file
@@ -78,7 +78,7 @@ quantified using Ensembl annotatiosn, this file can be downloaded from
   epcy profile_rna --kal --cpm --log --gene --anno ./data/small_genome/Homo_sapiens.GRCh38.84.reduce.gff3 -d ./data/small_leucegene/5_inv16_vs_5/design.tsv -o ./data/small_leucegene/5_inv16_vs_5/gene/figures --ids ENSG00000100345
   # If you prefer analyse your data on tpm, replace --cpm by --tpm
 
-To take account the inferential variance (introduced by `sleuth`_), EPCY can use
+To take account the inferential variance (introduced by `sleuth`_ [#]_), EPCY can use
 bootstrapped samples, using -\-bs:
 
 .. code:: shell
@@ -118,7 +118,16 @@ counts according to median depth of the dataset.
 
   epcy pred_rna --cpmed --log ...
 
+.. [#] Nicolas L Bray, Harold Pimentel, Páll Melsted and Lior Pachter, |kallisto_title|_, Nature Biotechnology **34**, 525–527 (2016), doi:10.1038/nbt.3519
+.. [#] Harold J. Pimentel, Nicolas Bray, Suzette Puente, Páll Melsted and Lior Pachter, |sleuth_title|_, Nature Methods (2017), advanced access http://dx.doi.org/10.1038/nmeth.4324
 
+.. |kallisto_title| replace:: Near-optimal probabilistic RNA-seq quantification
+.. _kallisto_title : https://www.nature.com/articles/nbt.3519
+
+.. |sleuth_title| replace::  Differential analysis of RNA-Seq incorporating quantification uncertainty
+.. _sleuth_title : https://www.nature.com/articles/nmeth.4324
+
+.. _kallisto: https://pachterlab.github.io/kallisto
 .. _git: https://github.com/iric-soft/epcy/tree/master/data/small_leucegene/5_inv16_vs_5/
 .. _ensembl: https://useast.ensembl.org/info/data/ftp/index.html
-.. _sleuth: https://www.nature.com/articles/nmeth.4324?WT.feed_name=subjects_gene-expression#Sec1
+.. _sleuth: https://pachterlab.github.io/sleuth

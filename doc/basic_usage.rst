@@ -17,10 +17,10 @@ Input files
 EPCY is designed to work on several quantitative data (like genes
 expression), provided that this data is normalized, that is
 quantitative values for each genes (features) need to be comparable
-between each samples.  **PG: For RNA-seq data, TPM, FPKM or even counts per
+between each samples. For RNA-seq data, TPM, FPKM or even counts per
 million reads (CPM) values would be appropriate (normalization per
 transcript length is not critical since we will be comparing
-quantities between samples, not within samples).**
+quantities between samples, not within samples).
 
 To run EPCY, you need two **tabulated** files, as input:
 
@@ -56,21 +56,25 @@ To run EPCY, you need two **tabulated** files, as input:
     would indicate which samples are wild-type and which is knock-out.
 
   .. list-table:: Example of a design table
-     :widths: 30 20 20
+     :widths: 30 20 20 20
      :header-rows: 1
 
      * - sample
-       - Condition1
+       - Condition
+       - Knockout_exp
        - Gender
      * - Sample1
-       - WT
-       - M
+       - Query
+       - KO
+       - F
      * - ...
        - ...
        - ...
+       - ...
      * - SampleX
-       - KO
-       - F
+       - Ref
+       - WT
+       - M
 
 
 Download input files
@@ -79,15 +83,15 @@ Download input files
 For this tutorial, we propose to download a part of the Leucegene
 cohort composed by 100 Acute Myeloid Leukemia (AML) individual
 samples. To reduce the execution time, we are going to only analyze
-coding genes (19,892 genes).  These input files are available within the EPCY
-source code, and can be downloaded using *git*:
+coding genes (19,892 genes).  These input files are available in a specific
+git repo named *epcy_tuto*, and can be downloaded using *git*:
 
-**PG: ilmanquerait le repo dans le code qui suit:**
+(The git repo *epcy_tuto* will coming soon)
 
 .. code:: bash
 
-   git clone 
-   cd epcy/data/leucegene3
+   git clone
+   cd epcy_tuto/data/leucegene3
 
 If you examine the *design.txt* file, you can see that an *AML* column
 is used to classify each sample into one of these 3 subtypes of AML:
@@ -130,7 +134,9 @@ comparative predictive analysis.  In our current case, we would write:
 
 .. code:: bash
 
-   epcy pred --log -t 4 -m cpm.xls  -d design.txt --subgroup AML --query t15_17 -o ./30_t15_17_vs_70/
+   epcy pred --log -t 4 -m cpm.xls  -d design.txt --condition AML --query t15_17 -o ./30_t15_17_vs_70/
+   # Or if you only want compare versus inv16 subgroup
+   epcy pred --log -t 4 -m cpm.xls  -d design.txt --condition AML --query t15_17 --ref inv16 -o ./30_t15_17_vs_30_inv16/
 
 where:
   * **-\-log**: specifies that quantitative data needs to to be log transformed
@@ -138,9 +144,7 @@ where:
   * **-t 4**: allows to use 4 threads for the analysis.
   * **-m cpm.xls**: specifies the quantitative matrix file.
   * **-d design.txt**: specifies the design table.
-  * **-\-subgroup AML**: determines the condition column we want use.
-    **PG: c'est la première fois qu'on réfère à la colonne condition
-    comme un subgroup...**
+  * **-\-condition AML**: determines the condition column we want use.
   * **-\-query t15_17**: specifies which subgroup of AML samples we want to compare to all the other.
   * **-o ./30_t15_17_vs_70/**: specifies the output directory.
 
@@ -168,7 +172,7 @@ genes (features) for its predictive value, using 9 columns:
 * **kernel\_mcc\_low**: lower bound of the confidence interval (90%).
 * **kernel\_mcc\_high**: upper bound of the confidence interval (90%).
 * **mean\_query**: average values of this feature for samples in the subgroup of interest defined using the --query parameter.
-* **mean\_ref**: average values of this feature for samples in the reference group (not in the query subset).
+* **mean\_ref**: average values of this feature for samples in the reference group.
 * **bw\_query**: estimated bandwidth used by `KDE`_, to calculate the density of query samples.
 * **bw\_ref**: estimated bandwidth used by `KDE`_, to calculate the density of ref samples.
 
@@ -267,7 +271,7 @@ An example of bad quality control results can be made by simulating a dataset th
 
 .. code:: bash
 
-   epcy pred --log -t 4 -m cpm.xls  -d design_10_samples.txt --subgroup AML --query t15_17 -o ./5_t15_17_vs_5/
+   epcy pred --log -t 4 -m cpm.xls  -d design_10_samples.txt --condition AML --query t15_17 -o ./5_t15_17_vs_5/
    epcy qc -p ./5_t15_17_vs_5/predictive_capability.xls -o ./5_t15_17_vs_5/qc
 
 .. image:: images/qc_overfit.png
@@ -275,7 +279,7 @@ An example of bad quality control results can be made by simulating a dataset th
   :alt: gene profiles
   :align: center
 
-	  
+
 Plot a KDE trained on gene expression
 -------------------------------------
 
@@ -287,7 +291,7 @@ that represents each condition.
 .. code:: bash
 
    # ENSG00000162493.16 (PDPN, MCC=0.87), ENSG00000227268.4 (KLLN, MCC=0.33)
-   epcy profile --log -m cpm.xls -d design.txt --subgroup AML --query t15_17 -o ./30_t15_17_vs_70/figures/ --ids ENSG00000162493.16 ENSG00000227268.4
+   epcy profile --log -m cpm.xls -d design.txt --condition AML --query t15_17 -o ./30_t15_17_vs_70/figures/ --ids ENSG00000162493.16 ENSG00000227268.4
 
 .. image:: images/profile.png
    :width: 400px
@@ -312,7 +316,7 @@ Here is an example on the dataset used for the tutorial (see, How to use EPCY).
 
 .. code:: bash
 
-  epcy pred --randomseed 42 --log -t 4 -m cpm.xls  -d design.txt --subgroup AML --query inv16 -o ./30_inv16_vs_70/
+  epcy pred --randomseed 42 --log -t 4 -m cpm.xls  -d design.txt --condition AML --query inv16 -o ./30_inv16_vs_70/
 
 
 Some details on the design table
@@ -325,13 +329,13 @@ can analyse *inv16* samples vs all others samples (*t15_17* and
 
 .. code:: bash
 
-   epcy pred --log -t 4 -m cpm.xls  -d design.txt --subgroup AML --query inv16 -o ./30_inv16_vs_70/
+   epcy pred --log -t 4 -m cpm.xls  -d design.txt --condition AML --query inv16 -o ./30_inv16_vs_70/
 
 
 Moreover, it is possible to add more columns in **design.txt**, each
 one representing conditions you want to compare. Indeed, with the
 design table given as example (in introduction), we could perform an
-analysis on **Gender**, using *-\-subgroup Gender -\-query M -o
+analysis on **Gender**, using *-\-condition Gender -\-query M -o
 ./gender*.
 
 Also, if some annotations are unknown for some samples, we can remove these

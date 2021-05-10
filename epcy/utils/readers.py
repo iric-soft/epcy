@@ -198,25 +198,31 @@ def get_design(args):
                          "column 'sample'.\n")
         exit(-1)
 
-    if args.SUBGROUP not in design.columns.values:
+    if args.CONDITION not in design.columns.values:
         sys.stderr.write("ERROR: The design file need to have a " +
-                         "column '" + args.SUBGROUP + "' or specify a " +
+                         "column '" + args.CONDITION + "' or specify a " +
                          "column name using --subgroup.\n")
         exit(-1)
 
-    if args.QUERY not in design[args.SUBGROUP].values:
+    if args.QUERY not in design[args.CONDITION].values:
         sys.stderr.write("ERROR: " + args.QUERY + " is not present in the  " +
-                         "column '" + args.SUBGROUP + "' of the design " +
+                         "column '" + args.CONDITION + "' of the design " +
                          "file.\n")
         exit(-1)
 
-
     design['sample'] = design['sample'].apply(str)
-    drop_ids = design[design[args.SUBGROUP] == 'None'].index
+    drop_ids = design[design[args.CONDITION] == 'None'].index
     design.drop(drop_ids, inplace=True)
-    design[args.SUBGROUP] = [1 if condition == args.QUERY else 0
-                             for condition in design[args.SUBGROUP]]
-    design = design.sort_values(by=[args.SUBGROUP, 'sample'],
+    if args.REF is not None:
+        design.drop(
+            design[~design[args.CONDITION].isin([args.REF, args.QUERY])].index,
+            inplace=True
+        )
+
+    design[args.CONDITION] = [1 if condition == args.QUERY else 0
+                              for condition in design[args.CONDITION]]
+
+    design = design.sort_values(by=[args.CONDITION, 'sample'],
                                 ascending=[False, True])
 
     return(design)
@@ -381,7 +387,7 @@ def read_design_matrix_rna(args, df_anno=None):
     if args.BS is not None and args.BS > 0:
         design_bootstrapped = bootstrapped_design(design, args)
 
-    num_query = len(np.where(design[args.SUBGROUP] == 1)[0])
+    num_query = len(np.where(design[args.CONDITION] == 1)[0])
     if num_query == 0:
         sys.stderr.write("ERROR: EPCY havn't found Query samples in your " +
                          "design!\n\tCheck your design file and --subgroup, " +
