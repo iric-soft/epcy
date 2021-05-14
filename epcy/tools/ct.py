@@ -11,8 +11,8 @@ from .. utils import readers as ur
 def main_ct(args, argparser):
     sys.stderr.write(time.strftime('%X') + ": Read input files\n")
     design = ur.get_design(args)
-    num_query = len(np.where(design[args.SUBGROUP] == 1)[0])
-    num_ref = len(np.where(design[args.SUBGROUP] == 0)[0])
+    num_query = len(np.where(design[args.CONDITION] == 1)[0])
+    num_ref = len(np.where(design[args.CONDITION] == 0)[0])
 
     df_subg = pd.read_csv(args.SUBG, sep="\t", index_col=0)
     df_subg.rename(str.upper, axis='columns', inplace=True)

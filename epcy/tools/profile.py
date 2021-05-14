@@ -12,8 +12,8 @@ def main_profile(args, argparser):
     sys.stderr.write(time.strftime('%X') + ": Read design and matrix " +
                      "features\n")
     (design, data, list_ids) = ur.read_design_matrix(args)
-    
-    num_query = len(np.where(design[args.SUBGROUP] == 1)[0])
+
+    num_query = len(np.where(design[args.CONDITION] == 1)[0])
 
     num_bs = 0
     if hasattr(args, 'BS') and args.BS is not None:

@@ -29,13 +29,14 @@ default_args = Namespace(
     BS=0,
     LOG=False,
     QUERY="Query",
+    REF=None,
     MIN_BW=0.1,
     CPM=False,
     CPMED=False,
     ANNO=None,
     N_FOLD=None,
     PATH_OUT=None,
-    SUBGROUP="subgroup",
+    CONDITION="condition",
     PPV=False,
     NPV=False,
     TPR=False,
@@ -57,7 +58,6 @@ default_args = Namespace(
     KAL=False,
     RANDOM_SEED=42
 )
-
 
 
 @contextmanager

@@ -37,7 +37,7 @@ def main_profile_rna(args, argparser):
     if design is None or data is None or list_ids is None:
         exit()
 
-    num_query = len(np.where(design[args.SUBGROUP] == 1)[0])
+    num_query = len(np.where(design[args.CONDITION] == 1)[0])
 
     num_bs = 0
     if hasattr(args, 'BS') and args.BS is not None:

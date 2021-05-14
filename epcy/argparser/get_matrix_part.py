@@ -12,7 +12,7 @@ def get_argparser_matrix(parser):
              "without samples with missing value, for each " +
              "feature. In that case, EPCY output will " +
              "report the number of samples used in each " +
-             "subgroup and each features.",
+             "condition and each features.",
         type=float,
         default=None
     )

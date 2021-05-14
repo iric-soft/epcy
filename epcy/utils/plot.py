@@ -51,7 +51,7 @@ def plot_explore_heatmap(df_heatmap, df_pred, args):
         row_colors=mcc_colors,
         cmap="vlag"
     )
-    sns_plot.fig.suptitle("Heatmap of predicted subgroup using top " + str(args.TOP) + " features")
+    sns_plot.fig.suptitle("Heatmap of predicted condition using top " + str(args.TOP) + " features")
     sns_plot.ax_heatmap.set_xticklabels(sns_plot.ax_heatmap.get_xmajorticklabels(), fontsize = 4)
     sns_plot.ax_heatmap.set_yticklabels(sns_plot.ax_heatmap.get_ymajorticklabels(), fontsize = 4)
 
@@ -82,7 +82,7 @@ def plot_explore_heatmap(df_heatmap, df_pred, args):
         row_colors=mcc_colors,
         cmap="vlag"
     )
-    sns_plot.fig.suptitle("Heatmap of predicted subgroup using top " +
+    sns_plot.fig.suptitle("Heatmap of predicted condition using top " +
                           str(args.TOP) + " features")
     sns_plot.ax_heatmap.set_xticklabels(
         sns_plot.ax_heatmap.get_xmajorticklabels(),
@@ -123,7 +123,7 @@ def plot_qc_histo(df_pred, quantiles, legend_quantile, mcc_bins, args):
 
     plt.title("QC histogram of kernel_mcc",
               fontsize=28)
-              
+
     if args.L2FC:
         plt.title("QC histogram of kernel_mcc colored by abs_l2fc",
                   fontsize=28)
@@ -179,7 +179,7 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
     df_swarn = pd.DataFrame(
         data={
             'x': np.append(query_exp, ref_exp),
-            'subgroup': np.append(
+            'condition': np.append(
                 np.repeat(args.QUERY, len(query_exp)),
                 np.repeat("Other", len(ref_exp))
             )
@@ -233,21 +233,21 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
 
     if args.STRIP:
         sns_plot = sns.stripplot(
-            x="x", y="subgroup", data=df_swarn, ax=ax_swarm,
-            size=args.SIZE, jitter=0.4, hue="subgroup",
+            x="x", y="condition", data=df_swarn, ax=ax_swarm,
+            size=args.SIZE, jitter=0.4, hue="condition",
             palette=sns.color_palette([col_pal[0], col_pal[1]]),
             edgecolor="gray"
         )
     elif args.VIOLIN:
         bw = (bw_query + bw_ref) / 2
         sns_plot = sns.violinplot(
-            x="x", y="subgroup", data=df_swarn, ax=ax_swarm,
+            x="x", y="condition", data=df_swarn, ax=ax_swarm,
             inner=None, linewidth=None, bw=bw,
             palette=sns.color_palette([col_pal[0], col_pal[1]])
         )
     else:
         sns_plot = sns.swarmplot(
-            x="x", y="subgroup", data=df_swarn, ax=ax_swarm, size=args.SIZE,
+            x="x", y="condition", data=df_swarn, ax=ax_swarm, size=args.SIZE,
             palette=sns.color_palette([col_pal[0], col_pal[1]])
         )
         ax_swarm.set_ylabel('')
@@ -257,7 +257,7 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
                            str(round(bw_query,2)) + ", bw_ref=" +
                            str(round(bw_ref,2)))
 
-    # Change shape in function of subgroup
+    # Change shape in function of condition
     if not args.VIOLIN:
         collections = sns_plot.collections
         unique_colors = [list(col_pal[0]) + [1], list(col_pal[1]) + [1]]
@@ -270,7 +270,7 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
                         paths.append(possible_marker)
                         break
             collection.set_paths(paths)
-    # sns_plot.legend(collections[-2:], pd.unique(df_swarn.subgroup))
+    # sns_plot.legend(collections[-2:], pd.unique(df_swarn.condition))
 
     x_label = "x"
     if hasattr(args, 'CPM') and args.CPM:

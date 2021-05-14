@@ -1,11 +1,11 @@
 Working on RNA quantification
 =============================
 
-EPCY is a generic method, which can be used to analyse several types of
-quantification data like statistical tests, compare to Differential Expression
-methods specifically design to analyse RNA quantification data. However, EPCY
-have specific tools, *pred_rna* and *profile_rna*, to simplify the analysis
-of RNA data.
+In contrast to most Differential Expression methods specifically
+designed to analyse RNA quantification data, EPCY is a generic method
+that can be used to analyse several types of quantification data,
+similarly to statistical tests. However, EPCY provides specific tools,
+*pred_rna* and *profile_rna*, to streamline the analysis of RNA data.
 
 bulk RNA
 --------
@@ -20,8 +20,8 @@ data. However, EPCY can work directly on read counts, using *pred_rna* tool:
    # Equivalent analysis using read counts quantification and pred_rna
    epcy pred_rna --cpm --log -t 4 -m readcounts.xls  -d design.txt --subgroup AML --query t15_17 -o ./30_t15_17_vs_70_readcounts/ --randomseed 42
 
-Similarly, you can use *profile_rna* to plot a learned KDE with his
-gene expression, directly from read counts:
+Similarly, you can use *profile_rna* to plot a trained KDE with its
+gene expression distribution, directly from read counts:
 
 .. code:: bash
 
@@ -47,10 +47,12 @@ More help can be found using:
 Kallisto quantification
 -----------------------
 
-EPCY allow to work directly on kallisto quantificaion using h5 files and have
-access to bootstrapped samples. To do so, a `kallisto` column need to be added
-to the design file (to specify the directory path of *abundant.h5*
-file for each sample).
+EPCY allows to work directly on `kallisto`_ [#]_ transcript
+quantifications using the HDF5 files to take into consideration the
+expression values of bootsrapped samples computed by this software.
+To do so, a `kallisto` column needs to be added to the design file
+(which specifies the directory path of the *abundant.h5* file for each
+sample).
 
 Using data available on `git`_ and **epcy pred_rna**, you can run EPCY
 as follow:
@@ -59,13 +61,15 @@ as follow:
 
   # To run on kallisto quantification, add --kall --cpm --log
   epcy pred_rna --kal --cpm --log -d ./data/small_leucegene/5_inv16_vs_5/design.tsv -o ./data/small_leucegene/5_inv16_vs_5/trans/
-  # Take care:
+  # Note that:
   # - kallisto quantification is on transcript, not on gene
   # - On real (complet) dataset, it is recommended to add some threads (-t)
 
-To run on gene level, a gff3 file of the genome annotation need to be specify,
-to have the correspondence between transcript and gene. This file can be
-download on `ensembl`_ and added in the command, as follow:
+To analyse gene level expression, a gff3 file of the genome annotation
+needs to be specified, to provide the correspondence between
+transcript and gene ids. For the Leucegene toy dataset, which was
+quantified using Ensembl annotatiosn, this file can be downloaded from
+`ensembl`_ and added in the command, as follow:
 
 .. code:: shell
 
@@ -74,7 +78,7 @@ download on `ensembl`_ and added in the command, as follow:
   epcy profile_rna --kal --cpm --log --gene --anno ./data/small_genome/Homo_sapiens.GRCh38.84.reduce.gff3 -d ./data/small_leucegene/5_inv16_vs_5/design.tsv -o ./data/small_leucegene/5_inv16_vs_5/gene/figures --ids ENSG00000100345
   # If you prefer analyse your data on tpm, replace --cpm by --tpm
 
-To take account of inferential variance (introduce by `sleuth`_), EPCY can use
+To take account the inferential variance (introduced by `sleuth`_ [#]_), EPCY can use
 bootstrapped samples, using -\-bs:
 
 .. code:: shell
@@ -100,10 +104,11 @@ tool, to create a quantification matrix file and use EPCY, as before:
 Single-cell
 -----------
 
-Several developments are planned, to get EPCY more user friendly on
-single-cell data (to manage parse matrix, run on GPU, ...). Pending, you can
-analyses your single-cell data with *epcy pred* and *epcy profile*, on
-normalized expression data (like in first steps).
+Several developments are planned in order to facilitate the use of
+EPCY for single-cell data (to manage sparse matrix and run on GPU for
+instance). In the meantime, you can analyse your single-cell data with
+*epcy pred* and *epcy profile* using the RNA-seq pipeline described in
+the first steps section on normalized expression data.
 
 On read counts (not normalized), you can use *epcy pred_rna* and
 *epcy profile_rna* with -\-cpmed (in place of -\-cpm) to normalized read
@@ -113,7 +118,16 @@ counts according to median depth of the dataset.
 
   epcy pred_rna --cpmed --log ...
 
+.. [#] Nicolas L Bray, Harold Pimentel, Páll Melsted and Lior Pachter, |kallisto_title|_, Nature Biotechnology **34**, 525–527 (2016), doi:10.1038/nbt.3519
+.. [#] Harold J. Pimentel, Nicolas Bray, Suzette Puente, Páll Melsted and Lior Pachter, |sleuth_title|_, Nature Methods (2017), advanced access http://dx.doi.org/10.1038/nmeth.4324
 
+.. |kallisto_title| replace:: Near-optimal probabilistic RNA-seq quantification
+.. _kallisto_title : https://www.nature.com/articles/nbt.3519
+
+.. |sleuth_title| replace::  Differential analysis of RNA-Seq incorporating quantification uncertainty
+.. _sleuth_title : https://www.nature.com/articles/nmeth.4324
+
+.. _kallisto: https://pachterlab.github.io/kallisto
 .. _git: https://github.com/iric-soft/epcy/tree/master/data/small_leucegene/5_inv16_vs_5/
 .. _ensembl: https://useast.ensembl.org/info/data/ftp/index.html
-.. _sleuth: https://www.nature.com/articles/nmeth.4324?WT.feed_name=subjects_gene-expression#Sec1
+.. _sleuth: https://pachterlab.github.io/sleuth

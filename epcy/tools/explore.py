@@ -12,7 +12,7 @@ from .. utils import plot as up
 def main_explore(args, argparser):
     sys.stderr.write(time.strftime('%X') + ": Read input files\n")
     design = ur.get_design(args)
-    num_query = len(np.where(design[args.SUBGROUP] == 1)[0])
+    num_query = len(np.where(design[args.CONDITION] == 1)[0])
 
     df_pred = pd.read_csv(args.PRED, sep="\t")
     df_pred.rename(str.upper, axis='columns', inplace=True)

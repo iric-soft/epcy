@@ -17,7 +17,8 @@ Citing:
 Introduction:
 -------------
 
-This tool was developed to Evaluate Predictive CapabilitY of each feature to become a biomarker candidates.
+This tool was developed to Evaluate Predictive CapabilitY of each gene (feature) to become a predictive (bio)marker candidates.
+Documentation is available via Read the Docs.
 
 -------------
 Requirements:
@@ -30,6 +31,15 @@ Requirements:
 Install:
 --------
 
+Using pypi:
+-----------
+
+.. code:: shell
+
+  pip install epcy
+
+From source:
+------------
 .. code:: shell
 
   python3 -m venv $HOME/.virtualenvs/epcy
@@ -37,7 +47,8 @@ Install:
   pip install pip setuptools --upgrade
   pip install wheel
   cd [your_epcy_folder]
-  CFLAGS=-std=c99 pip3 install numpy==1.17.0
+  # If need it
+  # CFLAGS=-std=c99 pip3 install numpy==1.17.0
   python3 setup.py install
   epcy -h
 
@@ -48,6 +59,13 @@ Usage:
 General:
 --------
 
+After install:
+********************
+
+.. code:: shell
+
+  epcy -h
+
 From source:
 ****************
 
@@ -55,13 +73,6 @@ From source:
 
   cd [your_epcy_folder]
   python3 -m epcy -h
-
-After setup install:
-********************
-
-.. code:: shell
-
-  epcy -h
 
 Generic case:
 --------------
@@ -78,16 +89,16 @@ Generic case:
 .. code:: shell
 
   # Run epcy on any normalized quantification data
-  epcy pred -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
+  epcy pred -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_condition
   # If your data require a log2 transforamtion, add --log
-  epcy pred --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
+  epcy pred --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_condition
 
 * Result will be saved in prediction\_capability.xls file, which is detail below.
-* You can personalize the design file using **--subgroup --query**
+* You can personalize the design file using **--condition --query**
 
 .. code:: shell
 
-  epcy pred_rna -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/subgroup2 --subgroup subgroup2 --query A
+  epcy pred_rna -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/condition2 --condition condition2 --query A
 
 
 Working on RNA sequencing readcounts:
@@ -98,7 +109,7 @@ Working on RNA sequencing readcounts:
 .. code:: shell
 
   # To run on read count not normalized, add --cpm --log
-  epcy pred_rna --cpm --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
+  epcy pred_rna --cpm --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_condition
 
 Working on kallisto quantification:
 -----------------------------------
@@ -162,10 +173,10 @@ This file is the main output which contain the evaluation of each features (gene
   - t\_pv: pvalue compute by `ttest\_ind`_
 
 
-subgroup\_predicted.xls
+condition\_predicted.xls
 -----------------------
 
-Using --full a secondary output file (subgroup\_predicted.xls) specify for each features if the sample as been correctly predicted. Build an heatmap with this output could help you to explore your data.
+Using --full a secondary output file (condition\_predicted.xls) specify for each features if the sample as been correctly predicted. Build an heatmap with this output could help you to explore your data.
 More details coming soon.
 
   .. _MCC: https://en.wikipedia.org/wiki/Matthews_correlation_coefficient
@@ -184,7 +195,7 @@ To improve the stability and accuracy of MCC computed, you can add n `bagging`_ 
 .. code:: shell
 
   #Take care, it's take n time more longer!!!, use multiprocess (-t) seems a good idea :).
-  epcy pred_rna -b 4 -t 4 --cpm --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
+  epcy pred_rna -b 4 -t 4 --cpm --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_condition
 
 
 .. _bagging: https://en.wikipedia.org/wiki/Bootstrap_aggregating
