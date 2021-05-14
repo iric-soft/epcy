@@ -210,6 +210,12 @@ def get_design(args):
                          "file.\n")
         exit(-1)
 
+    if args.REF is not None and args.REF not in design[args.CONDITION].values:
+        sys.stderr.write("ERROR: " + args.REF + " is not present in the  " +
+                         "column '" + args.CONDITION + "' of the design " +
+                         "file.\n")
+        exit(-1)
+
     design['sample'] = design['sample'].apply(str)
     drop_ids = design[design[args.CONDITION] == 'None'].index
     design.drop(drop_ids, inplace=True)

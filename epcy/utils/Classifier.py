@@ -7,7 +7,6 @@ import numpy as np
 import pandas as pd
 
 from scipy.stats import mannwhitneyu, ttest_ind
-from statistics import median
 
 from multiprocessing import Pool, RawArray
 from collections import defaultdict

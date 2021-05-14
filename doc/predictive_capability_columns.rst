@@ -27,7 +27,7 @@ Predictive scores
 -----------------
 
 By default we decide to return `MCC`_ scores. However, it's possible to compute
-other predictive scores, in case they are more suitable for your needs. Using the following 
+other predictive scores, in case they are more suitable for your needs. Using the following
 parameters will add new columns to the default output, as:
 
 * -\-ppv:
