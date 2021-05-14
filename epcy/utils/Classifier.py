@@ -698,8 +698,8 @@ class Classifier:
                 os.makedirs(self.args.PATH_OUT)
 
             file_out = self.args.PATH_OUT + "/predictive_capability.xls"
-            file_pred_out = self.args.PATH_OUT + "/subgroup_predicted.xls"
-            file_pred_normal_out = self.args.PATH_OUT + "/subgroup_predicted_normal.xls"
+            file_pred_out = self.args.PATH_OUT + "/condition_predicted.xls"
+            file_pred_normal_out = self.args.PATH_OUT + "/condition_predicted_normal.xls"
 
             with open(file_out, 'w') as w_csv:
                 self.print_feature_header(w_csv, self.args, self.with_na > 0)
@@ -711,13 +711,13 @@ class Classifier:
 
             if self.args.FULL:
                 with open(file_pred_out, 'w') as w_csv:
-                    self.print_subgroup_header(w_csv, self.design)
-                    self.print_subgroup_predicted(
+                    self.print_condition_header(w_csv, self.design)
+                    self.print_condition_predicted(
                         self.result, self.list_ids, w_csv, "kernel")
                 if self.args.NORMAL:
                     with open(file_pred_normal_out, 'w') as w_csv:
-                        self.print_subgroup_header(w_csv,  self.design)
-                        self.print_subgroup_predicted(
+                        self.print_condition_header(w_csv,  self.design)
+                        self.print_condition_predicted(
                             self.result, self.list_ids, w_csv, "normal")
 
         else:
@@ -898,14 +898,14 @@ class Classifier:
             cpt_id += 1
 
     @staticmethod
-    def print_subgroup_header(w_csv, design):
+    def print_condition_header(w_csv, design):
         line = "id" + '\t'
         line = line + '\t'.join(design['sample'])
         line = line + "\n"
         w_csv.write(line)
 
     @staticmethod
-    def print_subgroup_predicted(results, list_ids, w_csv, pred):
+    def print_condition_predicted(results, list_ids, w_csv, pred):
         key = 'kernel_pred'
         if pred == "normal":
             key = 'normal_pred'

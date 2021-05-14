@@ -81,17 +81,15 @@ Download input files
 --------------------
 
 For this tutorial, we propose to download a part of the Leucegene
-cohort composed by 100 Acute Myeloid Leukemia (AML) individual
+cohort composed by 88 Acute Myeloid Leukemia (AML) individual
 samples. To reduce the execution time, we are going to only analyze
 coding genes (19,892 genes).  These input files are available in a specific
 git repo named *epcy_tuto*, and can be downloaded using *git*:
 
-(The git repo *epcy_tuto* will coming soon)
-
 .. code:: bash
 
-   git clone
-   cd epcy_tuto/data/leucegene3
+   git clone git@github.com:iric-soft/epcy_tuto.git
+   cd epcy_tuto/data/leucegene
 
 If you examine the *design.txt* file, you can see that an *AML* column
 is used to classify each sample into one of these 3 subtypes of AML:
@@ -111,14 +109,16 @@ other defect respectively.
        - t15_17
      * - ...
        - ...
-     * - 14H103
+     * - 13H120
        - inv16
+     * - ...
+       - ...
      * - 14H133
        - t15_17
 
 We will start by comparing *t15_17* samples versus all other samples (*inv16* and
 *other*). On a macbook pro 2 GHz Dual-Core Intel Core i5, this analysis takes
-8 min, using 4 thread.
+10 min, using 4 thread.
 
 Run your first EPCY analysis
 ----------------------------
@@ -134,9 +134,9 @@ comparative predictive analysis.  In our current case, we would write:
 
 .. code:: bash
 
-   epcy pred --log -t 4 -m cpm.xls  -d design.txt --condition AML --query t15_17 -o ./30_t15_17_vs_70/
+   epcy pred --log -t 4 -m cpm.xls  -d design.txt --condition AML --query t15_17 -o ./29_t15_17_vs_59/
    # Or if you only want compare versus inv16 subgroup
-   epcy pred --log -t 4 -m cpm.xls  -d design.txt --condition AML --query t15_17 --ref inv16 -o ./30_t15_17_vs_30_inv16/
+   epcy pred --log -t 4 -m cpm.xls  -d design.txt --condition AML --query t15_17 --ref inv16 -o ./29_t15_17_vs_27_inv16/
 
 where:
   * **-\-log**: specifies that quantitative data needs to to be log transformed
@@ -146,7 +146,7 @@ where:
   * **-d design.txt**: specifies the design table.
   * **-\-condition AML**: determines the condition column we want use.
   * **-\-query t15_17**: specifies which subgroup of AML samples we want to compare to all the other.
-  * **-o ./30_t15_17_vs_70/**: specifies the output directory.
+  * **-o ./29_t15_17_vs_59/**: specifies the output directory.
 
 More information can be found, using *epcy pred -h*.
 
@@ -154,10 +154,11 @@ If everything is correct, the analysis will complete by displaying the following
 
 .. code:: bash
 
-   16:31:24: Read design and matrix features
-   16:31:34: Start epcy analysis of 19892 features
-   16:39:48: Save epcy results
-   16:39:49: End
+    15:43:02: Read design and matrix features
+    15:43:04: 181 features with sum==0 have been removed.
+    15:43:04: Start epcy analysis of 19766 features
+    15:52:22: Save epcy results
+    15:52:22: End
 
 Results
 -------
@@ -181,7 +182,7 @@ Genes (features) with the highest *kernel_mcc* values correspond to
 the most prodictive ones. The file may then be sorted on that column
 to obtain the following:
 
-.. list-table:: ./30_t15_17_vs_70/predictive_capability.xls ordered on kernel_mcc
+.. list-table:: ./29_t15_17_vs_59/predictive_capability.xls ordered on kernel_mcc
    :widths: 30 10 15 20 20 15 15 15 15
    :header-rows: 1
 
@@ -194,33 +195,33 @@ to obtain the following:
      - mean_ref
      - bw_query
      - bw_ref
-   * - ENSG00000089820.15
-     - -4.30
-     - 0.96
-     - 0.51
-     - 0.97
-     - 4.23
-     - 8.53
-     - 0.43
-     - 0.22
-   * - ENSG00000168004.9
-     - 3.64
-     - 0.91
-     - 0.82
+   * - ENSG00000183570.16
+     - 3.97
+     - 0.98
      - 0.95
-     - 3.90
-     - 0.26
-     - 0.29
-     - 0.10
-   * - ENSG00000173531.15
-     - 3.23
-     - 0.90
-     - 0.59
+     - 1
+     - 4.84
+     - 0.87
+     - 0.24
+     - 0.42
+   * - ENSG00000168004.9
+     - 3.75
      - 0.97
-     - 6.22
-     - 2.99
-     - 0.52
-     - 0.21
+     - 0.97
+     - 0.97
+     - 4.00
+     - 0.24
+     - 0.28
+     - 0.10
+   * - ENSG00000089820.15
+     - -4.25
+     - 0.97
+     - 0.62
+     - 0.97
+     - 4.21
+     - 8.47
+     - 0.34
+     - 0.23
    * - ...
      - ...
      - ...
@@ -254,7 +255,7 @@ Using *epcy qc*, we can plot two quality control figures, as follow:
 
 .. code:: bash
 
-   epcy qc -p ./30_t15_17_vs_70/predictive_capability.xls -o ./30_t15_17_vs_70/qc
+   epcy qc -p ./29_t15_17_vs_59/predictive_capability.xls -o ./29_t15_17_vs_59/qc
 
 .. image:: images/qc.png
   :width: 800px
@@ -291,7 +292,7 @@ that represents each condition.
 .. code:: bash
 
    # ENSG00000162493.16 (PDPN, MCC=0.87), ENSG00000227268.4 (KLLN, MCC=0.33)
-   epcy profile --log -m cpm.xls -d design.txt --condition AML --query t15_17 -o ./30_t15_17_vs_70/figures/ --ids ENSG00000162493.16 ENSG00000227268.4
+   epcy profile --log -m cpm.xls -d design.txt --condition AML --query t15_17 -o ./29_t15_17_vs_59/figures/ --ids ENSG00000162493.16 ENSG00000227268.4
 
 .. image:: images/profile.png
    :width: 400px
@@ -316,7 +317,7 @@ Here is an example on the dataset used for the tutorial (see, How to use EPCY).
 
 .. code:: bash
 
-  epcy pred --randomseed 42 --log -t 4 -m cpm.xls  -d design.txt --condition AML --query inv16 -o ./30_inv16_vs_70/
+  epcy pred --randomseed 42 --log -t 4 -m cpm.xls  -d design.txt --condition AML --query inv16 -o ./27_inv16_vs_61/
 
 
 Some details on the design table
@@ -329,7 +330,7 @@ can analyse *inv16* samples vs all others samples (*t15_17* and
 
 .. code:: bash
 
-   epcy pred --log -t 4 -m cpm.xls  -d design.txt --condition AML --query inv16 -o ./30_inv16_vs_70/
+   epcy pred --log -t 4 -m cpm.xls  -d design.txt --condition AML --query inv16 -o ./27_inv16_vs_61/
 
 
 Moreover, it is possible to add more columns in **design.txt**, each

@@ -201,7 +201,7 @@ def get_design(args):
     if args.CONDITION not in design.columns.values:
         sys.stderr.write("ERROR: The design file need to have a " +
                          "column '" + args.CONDITION + "' or specify a " +
-                         "column name using --subgroup.\n")
+                         "column name using --condition.\n")
         exit(-1)
 
     if args.QUERY not in design[args.CONDITION].values:
@@ -390,8 +390,15 @@ def read_design_matrix_rna(args, df_anno=None):
     num_query = len(np.where(design[args.CONDITION] == 1)[0])
     if num_query == 0:
         sys.stderr.write("ERROR: EPCY havn't found Query samples in your " +
-                         "design!\n\tCheck your design file and --subgroup, " +
+                         "design!\n\tCheck your design file and --condition, " +
                          "--query options\n")
+        return(None, None, None)
+
+    num_ref = len(np.where(design[args.CONDITION] == 0)[0])
+    if num_ref == 0:
+        sys.stderr.write("ERROR: EPCY havn't found Query samples in your " +
+                         "design!\n\tCheck your design file and --condition, " +
+                         "--ref options\n")
         return(None, None, None)
 
     if hasattr(args, 'MATRIX') and args.MATRIX is not None:

@@ -20,7 +20,7 @@ def get_argparser_explore(parser):
     parser.add_argument(
         "-s",
         dest="SUBG",
-        help="Path to EPCY subgroup_predicted output file.",
+        help="Path to EPCY condition_predicted output file.",
         type=lambda x: is_valid_file(parser, x)
     )
 
