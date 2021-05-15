@@ -18,7 +18,10 @@ Introduction:
 -------------
 
 This tool was developed to Evaluate Predictive CapabilitY of each gene (feature) to become a predictive (bio)marker candidates.
-Documentation is available via Read the Docs.
+Documentation is available via |Read_the_Docs|_.
+
+.. |Read_the_Docs| replace:: Read the docs
+.. _Read_the_Docs: https://epcy.readthedocs.io/
 
 -------------
 Requirements:
