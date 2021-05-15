@@ -60,14 +60,14 @@ General:
 --------
 
 After install:
-********************
+**************
 
 .. code:: shell
 
   epcy -h
 
 From source:
-****************
+************
 
 .. code:: shell
 
@@ -75,7 +75,7 @@ From source:
   python3 -m epcy -h
 
 Generic case:
---------------
+-------------
 
 * EPCY is design to work on any quantitative data, provided that values of each feature are comparable between each samples (normalized).
 * To run a comparative analysis, `epcy pred` need two tabulated files:
@@ -144,7 +144,7 @@ Output:
 -------
 
 predictive\_capability.xls
----------------------------
+--------------------------
 
 This file is the main output which contain the evaluation of each features (genes, proteins, ...). It's a tabulated files 9 columns:
 
@@ -174,7 +174,7 @@ This file is the main output which contain the evaluation of each features (gene
 
 
 condition\_predicted.xls
------------------------
+------------------------
 
 Using --full a secondary output file (condition\_predicted.xls) specify for each features if the sample as been correctly predicted. Build an heatmap with this output could help you to explore your data.
 More details coming soon.
