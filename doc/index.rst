@@ -60,4 +60,5 @@ PyPI install
    basic_usage
    rna_tools
    predictive_capability_columns
+   cutoff
    small_dataset

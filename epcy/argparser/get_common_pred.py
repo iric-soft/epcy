@@ -185,8 +185,17 @@ def get_argparser_common_pred_part(parser, requiredNamed):
         action='store_true'
     )
 
+    parser.add_argument(
+        "--shuffle",
+        dest="SHUFFLE",
+        help="Perform an analysis on shuffled design. Useful to create a " +
+             "null distribution and find a cutoff.",
+        action='store_true'
+    )
+
     parser.set_defaults(AUC=False)
     parser.set_defaults(NORMAL=False)
     parser.set_defaults(UTEST=False)
     parser.set_defaults(TTEST=False)
     parser.set_defaults(FULL=False)
+    parser.set_defaults(SHUFFLE=False)

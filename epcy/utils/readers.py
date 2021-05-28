@@ -225,6 +225,18 @@ def get_design(args):
             inplace=True
         )
 
+    if hasattr(args, 'SHUFFLE') and args.SHUFFLE:
+        design[args.CONDITION] = np.random.permutation(
+            design[args.CONDITION].values
+        )
+        sys.stderr.write(time.strftime('%X') + ": Save shuffled design\n")
+        if args.PATH_OUT is not None:
+            if not os.path.exists(args.PATH_OUT):
+                os.makedirs(args.PATH_OUT)
+
+            file_out = args.PATH_OUT + "/shuffled_design.tsv"
+            design.to_csv(file_out, index=False, sep="\t")
+
     design[args.CONDITION] = [1 if condition == args.QUERY else 0
                               for condition in design[args.CONDITION]]
 
