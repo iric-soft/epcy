@@ -37,6 +37,7 @@ default_args = Namespace(
     N_FOLD=None,
     PATH_OUT=None,
     CONDITION="condition",
+    SHUFFLE=False,
     PPV=False,
     NPV=False,
     TPR=False,

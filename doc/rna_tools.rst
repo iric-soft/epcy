@@ -10,7 +10,8 @@ similarly to statistical tests. However, EPCY provides specific tools,
 bulk RNA
 --------
 
-In the first steps section, we saw how to run EPCY on normalized quantitative
+In the `First steps with EPCY <https://epcy.readthedocs.io/en/latest/basic_usage.html>`_,
+we saw how to run EPCY on normalized quantitative
 data. However, EPCY can work directly on read counts, using *pred_rna* tool:
 
 .. code:: bash
@@ -108,7 +109,8 @@ Several developments are planned in order to facilitate the use of
 EPCY for single-cell data (to manage sparse matrix and run on GPU for
 instance). In the meantime, you can analyse your single-cell data with
 *epcy pred* and *epcy profile* using the RNA-seq pipeline described in
-the first steps section on normalized expression data.
+`First steps with EPCY <https://epcy.readthedocs.io/en/latest/basic_usage.html>`_
+on normalized expression data.
 
 On read counts (not normalized), you can use *epcy pred_rna* and
 *epcy profile_rna* with -\-cpmed (in place of -\-cpm) to normalized read

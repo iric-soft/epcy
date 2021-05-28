@@ -19,7 +19,7 @@ assert "." in epcy_version
 assert os.path.isfile("epcy/version.py")
 with open("epcy/VERSION", "w", encoding="utf-8") as fh:
     fh.write(f"{epcy_version}\n")
-    
+
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the README file
@@ -98,7 +98,7 @@ setup(
         'scipy>=1.4.1',
         'scikit-learn>=0.22.1',
         'matplotlib>=3.1.2',
-        'numexpr>=2.7.1',
+        'numexpr>=2.7.0',
         'seaborn>=0.9.0'
     ],
     install_requires=[
@@ -109,7 +109,7 @@ setup(
         'scipy>=1.4.1',
         'scikit-learn>=0.22.1',
         'matplotlib>=3.1.2',
-        'numexpr>=2.7.1',
+        'numexpr>=2.7.0',
         'seaborn>=0.9.0'
     ],
     python_requires='>3.6',
