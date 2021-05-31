@@ -83,7 +83,7 @@ of False Positive Rate (`FPR`_) accepted:
 .. code:: bash
 
    # Take around 80 min using a macbook pro 2 GHz Dual-Core Intel Core i5.
-   for n in `seq 1 10`; do epcy pred --log -t 4 -m cpm.xls  -d design.txt --condition AML --query t15_17 --shuffle -o ./29_t15_17_vs_59/shuffled/$n; done
+   for n in `seq 1 10`; do epcy pred_rna --log --cpm -t 4 -m readcounts.xls  -d design.txt --condition AML --query t15_17 --shuffle -o ./29_t15_17_vs_59/shuffled/$n; done
 
    # Display:
    #  - the MCC distribution computed on shuffled analyses
