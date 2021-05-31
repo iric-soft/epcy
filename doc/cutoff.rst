@@ -15,7 +15,7 @@ create a volcano plot like this:
 
 .. code:: bash
 
-   # If not done, start by DL data and scripts from epcy_tuto git repository
+   # If not done, start by DL data and scripts from epcy_tuto
    git clone git@github.com:iric-soft/epcy_tuto.git
    cd epcy_tuto/data/leucegene
 
