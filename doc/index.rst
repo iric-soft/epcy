@@ -10,6 +10,18 @@ EPCY is a method used to rank genes (features) according to their
 potential as predictive (bio)markers, using quantitative data (like
 gene expression).
 
+**Installation**
+
+Using PyPI
+
+.. code:: bash
+
+   pip install epcy
+   epcy -h
+
+
+**Overview**
+
 Similarly to Differential Expression analyses, EPCY take as input two
 tabulated files:
 
@@ -23,13 +35,17 @@ testing.
 
 To guarantee the reliability of predictive scores, EPCY uses a leave-one-out
 cross validation to train multiple Kernel Density Estimation (KDE) classifiers
-and evaluate their performances on unseen samples (see
-`method <https://epcy.readthedocs.io/en/latest/method.html>`_ for more details).
+and evaluate their performances on unseen samples (see method <https://epcy.readthedocs.io/en/latest/method.html>`_ for more
+details).
+
+**Background**
 
 EPCY is a product of the `Leucegene project <leucegene.ca>`_ and has
 been developed and tested specifically to analyse RNA-seq data of acute
 myeloid leukemia (AML) patients. However, the method implemented in
 EPCY is generic and should work on different quantitative data.
+
+**Citing**
 
 While we are finalizing work on the official paper, more details can be found
 `in a poster presented at ISMB ECCB 2019 <https://f1000research.com/posters/8-1349>`_:
@@ -37,15 +53,6 @@ While we are finalizing work on the official paper, more details can be found
 Audemard E, Sauvé L and Lemieux S. EPCY: Evaluation of Predictive
 CapabilitY for ranking biomarker gene candidates [version 1; not peer reviewed].
 *F1000Research 2019*, 8(ISCB Comm J):1349(poster)
-
-**Installation**
-
-PyPI install
-
-.. code:: bash
-
-   pip install epcy
-   epcy -h
 
 
 .. toctree::
@@ -55,6 +62,6 @@ PyPI install
    basic_usage
    rna_tools
    predictive_capability_columns
-   method
    cutoff
    small_dataset
+   method
