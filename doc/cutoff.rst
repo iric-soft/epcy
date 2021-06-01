@@ -2,9 +2,9 @@ How to explore EPCY output to select best candidates
 ====================================================
 
 EPCY output is comparable to statistical (or differential) analysis,
-except that p-values are replace by a predictive score (MCC by default, see
-`predictive score <https://epcy.readthedocs.io/en/latest/predictive_capability_columns.html#predictive-scores>`_).
-Consequently most of tools already developed to explore statistical output
+except that p-values are replaced by a predictive score (MCC by default, see
+`predictive scores <https://epcy.readthedocs.io/en/latest/predictive_capability_columns.html#predictive-scores>`_).
+Consequently most tools already developed to explore statistical output
 can be transpose to explore EPCY output, starting by the volcano plot.
 
 Volcano plot
@@ -15,7 +15,7 @@ create a volcano plot like this:
 
 .. code:: bash
 
-   # If not done, start by DL data and scripts from epcy_tuto
+   # If not done, start by downloading data and scripts from epcy_tuto
    git clone git@github.com:iric-soft/epcy_tuto.git
    cd epcy_tuto/data/leucegene
 
@@ -38,21 +38,21 @@ create a volcano plot like this:
 Identify a threshold
 --------------------
 
-Generally, the next step is to identify a threshold on MCC to select best
+Generally, the next step is to identify a MCC threshold to select best
 candidates.
 
-In case you know the expected predicted performance to reach, you can use it
-directly as threshold. For example, if you can accept a maximum of 3% of (or 2)
-miss classified samples, resumed by this three contingency tables:
+In case the expected predicted performance to reach is known, we can use it
+directly as a threshold. For example, if we can accept a maximum of 3% of 
+misclassified samples (or 2 samples in this case), summarized by these three contingency tables:
 
 .. image:: images/ct_3p.png
   :width: 800px
   :alt: contingency tables with 3% of miss classified samples
   :align: center
 
-We can identify that a threshold of MCC > 0.95 is needed. Indeed, using this
+we can identify that a MCC threshold of more than 0.95 is needed. Indeed, using this
 threshold, we can identify 4 genes which satisfy the objective previously
-fixed:
+defined:
 
 .. code:: bash
 
@@ -65,20 +65,19 @@ fixed:
   :alt: contingency tables with 3% of miss classified samples
   :align: center
 
-In case that expected performance is directly formulate using predictive scores
-(as accuracy, sensibility, specificity or other), this is even more simple.
-Add these scores to the *epcy pred* command line (see `predictive score <https://epcy.readthedocs.io/en/latest/predictive_capability_columns.html#predictive-scores>`_)
-to be allow to filter EPCY output, on each of them.
+In case the expected performance is directly formulate using predictive scores
+(as accuracy, sensibility, specificity or other), this is even simpler.
+We can add these scores to the *epcy pred* command line (see `predictive score <https://epcy.readthedocs.io/en/latest/predictive_capability_columns.html#predictive-scores>`_) to be able to filter EPCY's output on each of them.
 
 Using empirical False Positive Rate
 -----------------------------------
 
 Now, when we have no expectation and want select all genes (features) with a
-"significant" predictive score, you can use **-\-shuffle** option of
-*epcy pred* to compute predictive scores on random design similar to your
+"significant" predictive score, we can use the **-\-shuffle** option of
+*epcy pred* to compute predictive scores on random designs similar to our initial
 experiment. Using several **shuffled analyses**, we can estimate a
 null distribution and use it to identify a threshold, according to a percentage
-of False Positive Rate (`FPR`_) accepted:
+of accepted False Positive Rate (`FPR`_):
 
 .. code:: bash
 
