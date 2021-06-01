@@ -30,12 +30,12 @@ tabulated files:
 
 Using these two input files, EPCY will evaluate the predictive
 capacity of each gene individually and return predictive scores, along
-with their confidence intervals, without using null-hypothesis
-testing.
+with their confidence intervals.
 
 To guarantee the reliability of predictive scores, EPCY uses a leave-one-out
-cross validation to train multiple Kernel Density Estimation (KDE) classifiers
-and evaluate their performances on unseen samples (see method <https://epcy.readthedocs.io/en/latest/method.html>`_ for more
+cross validation to train multiple Kernel Density Estimation (`KDE`_)
+classifiers and evaluate their performances on unseen samples
+(see method <https://epcy.readthedocs.io/en/latest/method.html>`_ for more
 details).
 
 **Background**
@@ -54,6 +54,7 @@ Audemard E, Sauvé L and Lemieux S. EPCY: Evaluation of Predictive
 CapabilitY for ranking biomarker gene candidates [version 1; not peer reviewed].
 *F1000Research 2019*, 8(ISCB Comm J):1349(poster)
 
+.. _KDE: https://en.wikipedia.org/wiki/Kernel_density_estimation
 
 .. toctree::
    :maxdepth: 2
