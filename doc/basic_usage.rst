@@ -303,7 +303,7 @@ Reproducibility
 ---------------
 
 EPCY draws a random value to assign a class according to probabilities learned
-by the KDE classifier, to fill a contingency table (see algorithme section).
+by the KDE classifier, to fill a contingency table (see algorithm section).
 This means that different runs of EPCY can produce different results.
 
 However, the output of EPCY is relatively stable, since each
