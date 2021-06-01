@@ -23,13 +23,8 @@ testing.
 
 To guarantee the reliability of predictive scores, EPCY uses a leave-one-out
 cross validation to train multiple Kernel Density Estimation (KDE) classifiers
-and evaluate their performances on unseen samples.
-
-.. image:: images/method.png
-   :width: 400px
-   :alt: Overview of EPCY
-   :align: center
-
+and evaluate their performances on unseen samples (see
+`method <https://epcy.readthedocs.io/en/latest/method.html>`_ for more details).
 
 EPCY is a product of the `Leucegene project <leucegene.ca>`_ and has
 been developed and tested specifically to analyse RNA-seq data of acute
@@ -60,5 +55,6 @@ PyPI install
    basic_usage
    rna_tools
    predictive_capability_columns
+   method
    cutoff
    small_dataset

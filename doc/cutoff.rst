@@ -2,7 +2,7 @@ How to explore EPCY output to select best candidates
 ====================================================
 
 EPCY output is comparable to statistical (or differential) analysis,
-except that p-values are replaced by a predictive score (MCC by default, see
+except that p-values are replaced by a predictive score (`MCC`_ by default, see
 `predictive scores <https://epcy.readthedocs.io/en/latest/predictive_capability_columns.html#predictive-scores>`_).
 Consequently most tools already developed to explore statistical output
 can be transpose to explore EPCY output, starting by the volcano plot.
@@ -38,21 +38,22 @@ create a volcano plot like this:
 Identify a threshold
 --------------------
 
-Generally, the next step is to identify a MCC threshold to select best
+Generally, the next step is to identify a `MCC`_ threshold to select best
 candidates.
 
 In case the expected predicted performance to reach is known, we can use it
-directly as a threshold. For example, if we can accept a maximum of 3% of 
-misclassified samples (or 2 samples in this case), summarized by these three contingency tables:
+directly as a threshold. For example, if we can accept a maximum of 3% of
+misclassified samples (or 2 samples in this case), summarized by these three
+contingency tables (`CT`_):
 
 .. image:: images/ct_3p.png
   :width: 800px
   :alt: contingency tables with 3% of miss classified samples
   :align: center
 
-we can identify that a MCC threshold of more than 0.95 is needed. Indeed, using this
-threshold, we can identify 4 genes which satisfy the objective previously
-defined:
+Using these three theoretical cases, we can identify that a `MCC`_
+threshold of more than 0.95 is needed and identify the 4 genes which satisfy the
+objective previously defined:
 
 .. code:: bash
 
@@ -67,7 +68,9 @@ defined:
 
 In case the expected performance is directly formulate using predictive scores
 (as accuracy, sensibility, specificity or other), this is even simpler.
-We can add these scores to the *epcy pred* command line (see `predictive score <https://epcy.readthedocs.io/en/latest/predictive_capability_columns.html#predictive-scores>`_) to be able to filter EPCY's output on each of them.
+We can add these scores to the *epcy pred* command line (see
+`predictive scores <https://epcy.readthedocs.io/en/latest/predictive_capability_columns.html#predictive-scores>`_)
+to be able to filter EPCY's output on each of them.
 
 Using empirical False Positive Rate
 -----------------------------------
@@ -101,3 +104,5 @@ of accepted False Positive Rate (`FPR`_):
 
 
 .. _FPR: https://en.wikipedia.org/wiki/False_positive_rate
+.. _CT: https://en.wikipedia.org/wiki/Contingency_table
+.. _MCC: https://en.wikipedia.org/wiki/Matthews_correlation_coefficient
