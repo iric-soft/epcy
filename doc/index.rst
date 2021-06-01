@@ -35,7 +35,7 @@ with their confidence intervals.
 To guarantee the reliability of predictive scores, EPCY uses a leave-one-out
 cross validation to train multiple Kernel Density Estimation (`KDE`_)
 classifiers and evaluate their performances on unseen samples
-(see method <https://epcy.readthedocs.io/en/latest/method.html>`_ for more
+(see `method <https://epcy.readthedocs.io/en/latest/method.html>`_ for more
 details).
 
 **Background**
