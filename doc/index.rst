@@ -60,8 +60,8 @@ CapabilitY for ranking biomarker gene candidates [version 1; not peer reviewed].
    :caption: Documentation index
 
    basic_usage
-   rna_tools
+   method
    predictive_capability_columns
+   rna_tools
    cutoff
    small_dataset
-   method

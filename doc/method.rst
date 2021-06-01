@@ -1,10 +1,9 @@
 How EPCY works
 ==============
 
-EPCY is a general method to rank genes (or features) according to
-their potential as predictive (bio)markers, based on gene expression (or
-quantitative data).
-
+EPCY is a general method to rank genes (or features) according to their
+potential as predictive (bio)markers, using quantitative data (like
+gene expression).
 
 Visual description of the method implemented in EPCY
 ----------------------------------------------------
