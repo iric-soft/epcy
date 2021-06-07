@@ -22,7 +22,7 @@ Next, we fill a contingency table (`CT`_) by randomly drawing,
 for each sample, a predicted class according to the classifier’s probability.
 This procedure is repeated *m* times to create *m* CTs (*m* = 100 by default).
 Finally, a Matthew's correlation coefficient (`MCC`_) is computed for
-each `CT`_ and these values are summarized as a mean MCC with a confidence
+each `CT`_ and these values are summarized as a mean `MCC`_ with a confidence
 interval (CI).
 
 EPCY can also reports other `predictive scores <https://epcy.readthedocs.io/en/latest/predictive_capability_columns.html#predictive-scores>`_.

@@ -36,10 +36,17 @@ def rm_missing(feature_data, num_query):
     return(feature_data, num_query, np.where(ids_na)[0])
 
 
-def get_foldchange(feature_data, num_query):
-    mean_query = np.mean(feature_data[:num_query])
-    mean_ref = np.mean(feature_data[num_query:])
-    log2fc = mean_query - mean_ref
+def get_foldchange(feature_data, num_query, nolog=False, C=1):
+    if nolog:
+        tmp_query = np.mean(np.log2(feature_data[:num_query]+C))
+        tmp_ref = np.mean(np.log2(feature_data[num_query:]+C))
+        log2fc = tmp_query - tmp_ref
+        mean_query = np.mean(feature_data[:num_query])
+        mean_ref = np.mean(feature_data[num_query:])
+    else:
+        mean_query = np.mean(feature_data[:num_query])
+        mean_ref = np.mean(feature_data[num_query:])
+        log2fc = mean_query - mean_ref
 
     return(log2fc, mean_query, mean_ref)
 
@@ -538,7 +545,10 @@ def pred_feature(feature_data, num_query, num_ref,
             folds_reorder = np.setdiff1d(folds_reorder, ids2del)
 
     sum_row = sum(feature_data)
-    res = get_foldchange(feature_data, num_query)
+    if hasattr(args, 'NOLOG'):
+        res = get_foldchange(feature_data, num_query, args.NOLOG, args.C)
+    else:
+        res = get_foldchange(feature_data, num_query, False, args.C)
     l2fc = res[0]
     dict_res['l2fc'].append(l2fc)
     dict_res['mean_query'].append(res[1])
@@ -781,7 +791,10 @@ class Classifier:
             header = header + "\t" + score_prefix + "f1"
             header = header + "\t" + score_prefix + "f1_low"
             header = header + "\t" + score_prefix + "f1_high"
-        header = header + "\tmean_query\tmean_ref"
+        if hasattr(args, 'NOLOG') and args.NOLOG:
+            header = header + "\tmean_query\tmean_ref"
+        else:
+            header = header + "\tmean_log2_query\tmean_log2_ref"
         header = header + "\tbw_query\tbw_ref"
 
         if args.AUC:

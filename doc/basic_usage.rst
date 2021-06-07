@@ -172,8 +172,8 @@ genes (features) for its predictive value, using 9 columns:
 * **kernel\_mcc**: Matthews Correlation Coefficient (`MCC`_) compute by a predictor using `KDE`_.
 * **kernel\_mcc\_low**: lower bound of the confidence interval (90%).
 * **kernel\_mcc\_high**: upper bound of the confidence interval (90%).
-* **mean\_query**: average values of this feature for samples in the subgroup of interest defined using the --query parameter.
-* **mean\_ref**: average values of this feature for samples in the reference group.
+* **mean\_log2\_query**: average of log transformed values of this feature for samples in the subgroup of interest defined using the --query parameter.
+* **mean\_log2\_ref**: average of log transformed values of this feature for samples in the reference group.
 * **bw\_query**: estimated bandwidth used by `KDE`_, to calculate the density of query samples.
 * **bw\_ref**: estimated bandwidth used by `KDE`_, to calculate the density of ref samples.
 

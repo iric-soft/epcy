@@ -28,11 +28,13 @@ default_args = Namespace(
     BY=-1,
     BS=0,
     LOG=False,
+    NOLOG=False,
     QUERY="Query",
     REF=None,
     MIN_BW=0.1,
     CPM=False,
     CPMED=False,
+    NORM=False,
     ANNO=None,
     N_FOLD=None,
     PATH_OUT=None,
@@ -76,7 +78,7 @@ class epcyTest(unittest.TestCase):
     def test_pred(self):
 
         design = "./data/small_for_test/design.tsv"
-        mat = "./data/small_for_test/exp_matrix.tsv"
+        mat = "./data/small_for_test/matrix.tsv"
 
         args = Namespace(**vars(default_args))
         args.DESIGN = design
@@ -127,7 +129,7 @@ class epcyTest(unittest.TestCase):
 
     def test_pred_rna_cpm(self):
         design = "./data/small_for_test/design.tsv"
-        mat = "./data/small_for_test/exp_matrix.tsv"
+        mat = "./data/small_for_test/matrix.tsv"
 
         args = Namespace(**vars(default_args))
         args.DESIGN = design
@@ -294,7 +296,7 @@ class epcyTest(unittest.TestCase):
     def test_pred_pvalue(self):
 
         design = "./data/small_for_test/design.tsv"
-        mat = "./data/small_for_test/exp_matrix.tsv"
+        mat = "./data/small_for_test/matrix.tsv"
 
         args = Namespace(**vars(default_args))
         args.DESIGN = design
@@ -348,7 +350,7 @@ class epcyTest(unittest.TestCase):
     def test_pred_all_predictive_score(self):
 
         design = "./data/small_for_test/design.tsv"
-        mat = "./data/small_for_test/exp_matrix.tsv"
+        mat = "./data/small_for_test/matrix.tsv"
 
         args = Namespace(**vars(default_args))
         args.DESIGN = design
@@ -480,7 +482,7 @@ class epcyTest(unittest.TestCase):
 
     def test_pred_thread(self):
         design = "./data/small_for_test/design.tsv"
-        mat = "./data/small_for_test/exp_matrix.tsv"
+        mat = "./data/small_for_test/matrix.tsv"
 
         args = Namespace(**vars(default_args))
         args.DESIGN = design

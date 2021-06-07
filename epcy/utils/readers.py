@@ -124,6 +124,16 @@ def trans_to_gene(values, ids_genes):
     return(counts)
 
 
+def depth_norm(quant_matrix):
+    """ Apply a depth normalization on quantification matrix.
+    """
+    total_mass = np.nansum(quant_matrix, axis=0)
+    max_count = np.max(total_mass)
+    quant_matrix = (quant_matrix / total_mass) * max_count
+
+    return(quant_matrix)
+
+
 def counts2cpmed(counts):
     """ Transform counts matrix into cpmed.
     """
@@ -301,6 +311,9 @@ def read_design_matrix(args):
     #data = data[(data.T != 0).any()]
     #list_ids = np.array(data.index)
     #data = data.values
+
+    if args.NORM:
+        data = depth_norm(data)
 
     if args.LOG:
         data = np.log2(data + args.C)

@@ -83,14 +83,25 @@ Generic case:
   * A `matrix`_ of quantitative normalized data for each samples (column) with an "ID" column to identify each feature.
   * A `design`_ table which describe the comparison.
 
-.. _matrix: https://github.com/iric-soft/epcy/blob/master/data/small_for_test/exp_matrix.tsv
+.. _matrix: https://github.com/iric-soft/epcy/blob/master/data/small_for_test/normalized_matrix.tsv
 .. _design: https://github.com/iric-soft/epcy/blob/master/data/small_for_test/design.tsv
 
 .. code:: shell
 
   # Run epcy on any normalized quantification data
-  epcy pred -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/EPCY_output
-  # If your data require a log2 transforamtion, add --log
-  epcy pred --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/EPCY_output
+  epcy pred -d ./data/small_for_test/design.tsv -m ./data/small_for_test/log_normalized_matrix.tsv -o ./data/small_for_test/EPCY_output
+
+  # If your data are normalized, but require a log2 transforamtion, add --log
+  epcy pred --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/normalized_matrix.tsv -o ./data/small_for_test/EPCY_output
+
+  # If your data are not normalized and require a log2 transforamtion, add --norm --log
+  epcy pred --norm --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/matrix.tsv -o ./data/small_for_test/EPCY_output
+
+  # Different runs might show small variations.
+  # To ensure reproducibility set a random seed, using --randomseed
+  epcy pred -d ./data/small_for_test/design.tsv -m ./data/small_for_test/normalized_matrix.tsv -o ./data/small_for_test/EPCY_output --randomseed 42
+  epcy pred -d ./data/small_for_test/design.tsv -m ./data/small_for_test/normalized_matrix.tsv -o ./data/small_for_test/EPCY_output2 --randomseed 42
+  diff ./data/small_for_test/EPCY_output/predictive_capability.xls ./data/small_for_test/EPCY_output2/predictive_capability.xls
+
 
 More documentation is available `via Read the Docs <https://epcy.readthedocs.io/>`_.

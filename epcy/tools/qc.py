@@ -81,9 +81,15 @@ def main_qc(args, argparser):
                     (df_pred['abs_l2fc'] < quantiles[5]), 'color_legend'] = legend_quantile[5]
         df_pred.loc[(df_pred['abs_l2fc'] >= quantiles[5]), 'color_legend'] = legend_quantile[6]
     else:
-        df_pred['max(query, ref)'] = df_pred[
-            ['mean_query', 'mean_ref']
-        ].max(axis=1)
+        if 'mean_log2_query' in df_pred:
+            df_pred['max(query, ref)'] = df_pred[
+                ['mean_log2_query', 'mean_log2_ref']
+            ].max(axis=1)
+        else:
+            df_pred['max(query, ref)'] = df_pred[
+                ['mean_query', 'mean_ref']
+            ].max(axis=1)
+
         quantiles = [math.trunc(np.quantile(df_pred['max(query, ref)'], x) * 10000) / 10000
                      for x in [0.01, 0.05, 0.25, 0.50, 0.75, 0.95, 0.99]]
         legend_quantile = [

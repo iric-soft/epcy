@@ -136,8 +136,8 @@ you can test these procedures using:
 
  .. code:: bash
 
-    epcy pred --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/default_subgroup
-    epcy pred --replacena 0 --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/exp_matrix.tsv -o ./data/small_for_test/replacena
+    epcy pred --norm --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/matrix.tsv -o ./data/small_for_test/using_na
+    epcy pred --replacena 0 --norm --log -d ./data/small_for_test/design.tsv -m ./data/small_for_test/matrix.tsv -o ./data/small_for_test/replace_na
 
 .. _KDE: https://en.wikipedia.org/wiki/Kernel_density_estimation
 .. _MCC: https://en.wikipedia.org/wiki/Matthews_correlation_coefficient

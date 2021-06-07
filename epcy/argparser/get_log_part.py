@@ -12,7 +12,7 @@ def get_argparser_log_part(parser):
         "-c",
         dest="C",
         help="Constant value used during log " +
-             "transformation, log2(x+C) (Default: C=1).",
+             "transformation and to compute l2fc (log2(x+C), Default: C=1).",
         type=float,
         default=1.0
     )
