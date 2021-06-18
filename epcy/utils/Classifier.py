@@ -918,15 +918,10 @@ class Classifier:
 
     @staticmethod
     def print_condition_predicted(results, list_ids, w_csv, pred):
-        key = 'kernel_pred'
-        if pred == "normal":
-            key = 'normal_pred'
-
         cpt_id = 0
         for res in results:
             line = str(list_ids[cpt_id]) + "\t"
-            if key in res:
-                line = line + '\t'.join([str(x) for x in res[key][0]])
+            line = line + '\t'.join([str(x) for x in res["pred_by_sample"]])
             line = line + "\n"
 
             w_csv.write(line)
