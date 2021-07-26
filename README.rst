@@ -11,6 +11,7 @@ EPCY :  Evaluation of Predictive CapabilitY for ranking biomarker candidates
 -------
 Citing:
 -------
+* Manuscript in preparation
 * EPCY: Evaluation of Predictive CapabilitY for ranking biomarker gene candidates. Poster at ISMB ECCB 2019: https://f1000research.com/posters/8-1349
 
 -------------
