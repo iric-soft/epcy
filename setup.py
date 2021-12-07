@@ -99,7 +99,7 @@ setup(
         'scikit-learn>=0.22.1',
         'matplotlib>=3.1.2',
         'numexpr>=2.7.0',
-        'seaborn>=0.9.0'
+        'seaborn==0.10.0'
     ],
     install_requires=[
         'cython>=0.29.14',
@@ -110,7 +110,7 @@ setup(
         'scikit-learn>=0.22.1',
         'matplotlib>=3.1.2',
         'numexpr>=2.7.0',
-        'seaborn>=0.9.0'
+        'seaborn==0.10.0'
     ],
     python_requires='>3.6',
 
