@@ -21,13 +21,13 @@ create a volcano plot like this:
 
    # Run EPCY analysis with --ttest to add a pvalue column
    # (see Details in predictive capability columns section)
-   epcy pred_rna --log --cpm -t 4 -m readcounts.xls --ttest -d design.txt --condition AML --query t15_17 -o ./29_t15_17_vs_59/ --randomseed 42
+   epcy pred_rna --log --cpm -t 4 -m readcounts.tsv --ttest -d design.txt --condition AML --query t15_17 -o ./29_t15_17_vs_59/ --randomseed 42
 
    # Display volcano plot using MCC
-   python ../../script/volcano.py -i ./29_t15_17_vs_59/predictive_capability.xls -o ./29_t15_17_vs_59/
+   python ../../script/volcano.py -i ./29_t15_17_vs_59/predictive_capability.tsv -o ./29_t15_17_vs_59/
 
    # Display volcano plot using pvalue
-   python ../../script/volcano.py -i ./29_t15_17_vs_59/predictive_capability.xls -o ./29_t15_17_vs_59/ --pvalue
+   python ../../script/volcano.py -i ./29_t15_17_vs_59/predictive_capability.tsv -o ./29_t15_17_vs_59/ --pvalue
 
 
 .. image:: images/volcano.png
@@ -58,8 +58,8 @@ objective previously defined:
 .. code:: bash
 
    # Display volcano plot using MCC
-   python ../../script/volcano.py -t 0.95 -i ./29_t15_17_vs_59/predictive_capability.xls -o ./29_t15_17_vs_59/ --anno ./ensembl_anno_GRCh38_94.tsv
-   epcy profile_rna --log --cpm -m readcounts.xls -d design.txt --condition AML --query t15_17 -o ./29_t15_17_vs_59/profile_cutoff/ --ids ENSG00000173531.15 ENSG00000168004.9 ENSG00000089820.15 ENSG00000183570.16
+   python ../../script/volcano.py -t 0.95 -i ./29_t15_17_vs_59/predictive_capability.tsv -o ./29_t15_17_vs_59/ --anno ./ensembl_anno_GRCh38_94.tsv
+   epcy profile_rna --log --cpm -m readcounts.tsv -d design.txt --condition AML --query t15_17 -o ./29_t15_17_vs_59/profile_cutoff/ --ids ENSG00000173531.15 ENSG00000168004.9 ENSG00000089820.15 ENSG00000183570.16
 
 .. image:: images/volcano_threshold.png
   :width: 800px
@@ -85,7 +85,7 @@ of accepted False Positive Rate (`FPR`_):
 .. code:: bash
 
    # Take around 80 min using a macbook pro 2 GHz Dual-Core Intel Core i5.
-   for n in `seq 1 10`; do epcy pred_rna --log --cpm -t 4 -m readcounts.xls  -d design.txt --condition AML --query t15_17 --shuffle -o ./29_t15_17_vs_59/shuffled/$n; done
+   for n in `seq 1 10`; do epcy pred_rna --log --cpm -t 4 -m readcounts.tsv  -d design.txt --condition AML --query t15_17 --shuffle -o ./29_t15_17_vs_59/shuffled/$n; done
 
    # Display:
    #  - the MCC distribution computed on shuffled analyses
@@ -93,7 +93,7 @@ of accepted False Positive Rate (`FPR`_):
    python ../../script/eFPR.py -d ./29_t15_17_vs_59/shuffled/ -o ./29_t15_17_vs_59/ -p 0.0001
 
    # Display volcano plot with a threshold = 0.25
-   python ../../script/volcano.py -t 0.25 -i ./29_t15_17_vs_59/predictive_capability.xls -o ./29_t15_17_vs_59/ --anno ./ensembl_anno_GRCh38_94.tsv
+   python ../../script/volcano.py -t 0.25 -i ./29_t15_17_vs_59/predictive_capability.tsv -o ./29_t15_17_vs_59/ --anno ./ensembl_anno_GRCh38_94.tsv
 
 
 .. image:: images/eFPR.png

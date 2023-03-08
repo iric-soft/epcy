@@ -33,16 +33,16 @@ def main_kal2mat(args, argparser):
     if not os.path.exists(args.PATH_OUT):
         os.makedirs(args.PATH_OUT)
 
-    file_out = os.path.join(args.PATH_OUT, "readcounts.xls")
+    file_out = os.path.join(args.PATH_OUT, "readcounts.tsv")
     if args.CPM:
         if args.LOG:
-            file_out = os.path.join(args.PATH_OUT, "readcounts_cpm_log.xls")
+            file_out = os.path.join(args.PATH_OUT, "readcounts_cpm_log.tsv")
         else:
-            file_out = os.path.join(args.PATH_OUT, "readcounts_cpm.xls")
+            file_out = os.path.join(args.PATH_OUT, "readcounts_cpm.tsv")
     elif args.TPM:
         if args.LOG:
-            file_out = os.path.join(args.PATH_OUT, "readcounts_tpm_log.xls")
+            file_out = os.path.join(args.PATH_OUT, "readcounts_tpm_log.tsv")
         else:
-            file_out = os.path.join(args.PATH_OUT, "readcounts_tpm_.xls")
+            file_out = os.path.join(args.PATH_OUT, "readcounts_tpm_.tsv")
 
     df_data.to_csv(file_out, index=False, sep="\t")

@@ -102,7 +102,7 @@ Generic case:
   # To ensure reproducibility set a random seed, using --randomseed
   epcy pred -d ./data/small_for_test/design.tsv -m ./data/small_for_test/normalized_matrix.tsv -o ./data/small_for_test/EPCY_output --randomseed 42
   epcy pred -d ./data/small_for_test/design.tsv -m ./data/small_for_test/normalized_matrix.tsv -o ./data/small_for_test/EPCY_output2 --randomseed 42
-  diff ./data/small_for_test/EPCY_output/predictive_capability.xls ./data/small_for_test/EPCY_output2/predictive_capability.xls
+  diff ./data/small_for_test/EPCY_output/predictive_capability.tsv ./data/small_for_test/EPCY_output2/predictive_capability.tsv
 
 
 More documentation is available `via Read the Docs <https://epcy.readthedocs.io/>`_.

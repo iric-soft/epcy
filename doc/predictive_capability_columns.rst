@@ -2,7 +2,7 @@ Details of predictive capability columns
 ========================================
 
 By default, *epcy pred* and *epcy pred_rna* will return an output file
-*predictive_capability.xls* of 9 columns:
+*predictive_capability.tsv* of 9 columns:
 
 * Default columns:
 
@@ -127,7 +127,7 @@ these missing values within EPCY:
 * For each gene (or feature), remove samples with missing values.
 
 If you choose to remove samples with missing values, EPCY will return
-a *predictive_capability.xls* with two new columns,
+a *predictive_capability.tsv* with two new columns,
 **sample_query** and **sample_ref**, to report for each gene (feature),
 the number of query and reference samples used (without missing values).
 

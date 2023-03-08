@@ -81,7 +81,7 @@ def main():
     # create the argparser for the "explore" command
     explore = subparsers.add_parser(
         'explore',
-        help='Create figures to explore subgroup_predicted.xls.'
+        help='Create figures to explore subgroup_predicted.tsv.'
     )
     explore.set_defaults(func=main_explore)
     get_argparser_explore(explore)
@@ -90,7 +90,7 @@ def main():
     ct = subparsers.add_parser(
         'ct',
         help="Return a contingency table by feature, " +
-             "using subgroup_predicted.xls."
+             "using subgroup_predicted.tsv."
     )
     ct.set_defaults(func=main_ct)
     get_argparser_ct(ct)

@@ -108,13 +108,13 @@ def get_class_using_fx_kernel(feature_data, num_query, min_bw,
     n_sample = feature_data.shape[0]
     n_draw = draws.shape[0]
     # [sample, bagging, draw]
-    sample_class = np.ndarray((n_sample, n_bagging, n_draw), dtype=np.bool)
+    sample_class = np.ndarray((n_sample, n_bagging, n_draw), dtype=bool)
 
     cpt_sample = 0
     for i, x_ids in enumerate(n_folds):
         for j, id in enumerate(x_ids):
             sample_class[cpt_sample, :, :] = np.asarray(
-                lst_sample_class[i][j], dtype=np.bool)
+                lst_sample_class[i][j], dtype=bool)
             cpt_sample += 1
 
     if folds_reorder is not None:
@@ -136,13 +136,13 @@ def get_class_using_fx_normal(feature_data, num_query, n_folds, folds_reorder, d
     n_sample = feature_data.shape[0]
     n_draw = draws.shape[0]
     # [sample, bagging, draw]
-    sample_class = np.ndarray((n_sample, n_bagging, n_draw), dtype=np.bool)
+    sample_class = np.ndarray((n_sample, n_bagging, n_draw), dtype=bool)
 
     cpt_sample = 0
     for i, x_ids in enumerate(n_folds):
         for j, id in enumerate(x_ids):
             sample_class[cpt_sample, :, :] = np.asarray(
-                lst_sample_class[i][j], dtype=np.bool)
+                lst_sample_class[i][j], dtype=bool)
             cpt_sample += 1
 
     if folds_reorder is not None:
@@ -706,9 +706,9 @@ class Classifier:
             if not os.path.exists(self.args.PATH_OUT):
                 os.makedirs(self.args.PATH_OUT)
 
-            file_out = self.args.PATH_OUT + "/predictive_capability.xls"
-            file_pred_out = self.args.PATH_OUT + "/condition_predicted.xls"
-            file_pred_normal_out = self.args.PATH_OUT + "/condition_predicted_normal.xls"
+            file_out = self.args.PATH_OUT + "/predictive_capability.tsv"
+            file_pred_out = self.args.PATH_OUT + "/condition_predicted.tsv"
+            file_pred_normal_out = self.args.PATH_OUT + "/condition_predicted_normal.tsv"
 
             with open(file_out, 'w') as w_csv:
                 self.print_feature_header(w_csv, self.args, self.with_na > 0)

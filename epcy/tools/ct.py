@@ -28,6 +28,6 @@ def main_ct(args, argparser):
     if not os.path.exists(args.PATH_OUT):
         os.makedirs(args.PATH_OUT)
 
-    ct_out = os.path.join(args.PATH_OUT, "contingency_table.xls")
+    ct_out = os.path.join(args.PATH_OUT, "contingency_table.tsv")
     df_ct.to_csv(ct_out, index=False, sep="\t")
     sys.stderr.write(time.strftime('%X') + ": End\n")

@@ -27,6 +27,36 @@ def main_pred_rna(args, argparser):
                      "features\n")
     (design, data, list_ids) = ur.read_design_matrix_rna(args, df_anno)
 
+    if args.PATH_OUT is not None:
+        if not os.path.exists(args.PATH_OUT):
+            os.makedirs(args.PATH_OUT)
+
+        file_basename = os.path.basename(args.MATRIX)
+        file_out = os.path.join(args.PATH_OUT, file_basename)
+        if args.CPM:
+            if args.LOG:
+                file_out = os.path.join(args.PATH_OUT, "log_cpm.tsv")
+            else:
+                file_out = os.path.join(args.PATH_OUT, "cpm.tsv")
+        elif args.CPMED:
+            if args.LOG:
+                file_out = os.path.join(args.PATH_OUT, "log_cpmed.tsv")
+            else:
+                file_out = os.path.join(args.PATH_OUT, "cpmed.tsv")
+        elif args.TPM:
+            if args.LOG:
+                file_out = os.path.join(args.PATH_OUT, "log_tpm.tsv")
+            else:
+                file_out = os.path.join(args.PATH_OUT, "tpm.tsv")
+        elif args.LOG:
+            file_out = os.path.join(args.PATH_OUT, "log_" + file_basename)
+
+        df_data = pd.DataFrame(data=data, columns=design['sample'])
+        df_data.insert(loc=0, column='ID', value=list_ids)
+
+        df_data.to_csv(file_out, index=False, sep="\t")
+
+
     if design is None:
         exit()
 

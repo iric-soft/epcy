@@ -134,15 +134,15 @@ comparative predictive analysis.  In our current case, we would write:
 
 .. code:: bash
 
-   epcy pred --log -t 4 -m cpm.xls  -d design.txt --condition AML --query t15_17 -o ./29_t15_17_vs_59/
+   epcy pred --log -t 4 -m cpm.tsv  -d design.txt --condition AML --query t15_17 -o ./29_t15_17_vs_59/
    # Or if you only want compare versus inv16 subgroup
-   epcy pred --log -t 4 -m cpm.xls  -d design.txt --condition AML --query t15_17 --ref inv16 -o ./29_t15_17_vs_27_inv16/
+   epcy pred --log -t 4 -m cpm.tsv  -d design.txt --condition AML --query t15_17 --ref inv16 -o ./29_t15_17_vs_27_inv16/
 
 where:
   * **-\-log**: specifies that quantitative data needs to to be log transformed
     before being analyzed.
   * **-t 4**: allows to use 4 threads for the analysis.
-  * **-m cpm.xls**: specifies the quantitative matrix file.
+  * **-m cpm.tsv**: specifies the quantitative matrix file.
   * **-d design.txt**: specifies the design table.
   * **-\-condition AML**: determines the condition column we want use.
   * **-\-query t15_17**: specifies which subgroup of AML samples we want to compare to all the other.
@@ -163,7 +163,7 @@ If everything is correct, the analysis will complete by displaying the following
 Results
 -------
 
-**predictive_capability.xls** is the main output of an EPCY
+**predictive_capability.tsv** is the main output of an EPCY
 analysis. It is a tabulated file which contains the evaluation of each
 genes (features) for its predictive value, using 9 columns:
 
@@ -182,7 +182,7 @@ Genes (features) with the highest *kernel_mcc* values correspond to
 the most prodictive ones. The file may then be sorted on that column
 to obtain the following:
 
-.. list-table:: ./29_t15_17_vs_59/predictive_capability.xls ordered on kernel_mcc
+.. list-table:: ./29_t15_17_vs_59/predictive_capability.tsv ordered on kernel_mcc
    :widths: 30 10 15 20 20 15 15 15 15
    :header-rows: 1
 
@@ -255,7 +255,7 @@ Using *epcy qc*, we can plot two quality control figures, as follow:
 
 .. code:: bash
 
-   epcy qc -p ./29_t15_17_vs_59/predictive_capability.xls -o ./29_t15_17_vs_59/qc
+   epcy qc -p ./29_t15_17_vs_59/predictive_capability.tsv -o ./29_t15_17_vs_59/qc
 
 .. image:: images/qc.png
   :width: 800px
@@ -272,8 +272,8 @@ An example of bad quality control results can be made by simulating a dataset th
 
 .. code:: bash
 
-   epcy pred --log -t 4 -m cpm.xls  -d design_10_samples.txt --condition AML --query t15_17 -o ./5_t15_17_vs_5/
-   epcy qc -p ./5_t15_17_vs_5/predictive_capability.xls -o ./5_t15_17_vs_5/qc
+   epcy pred --log -t 4 -m cpm.tsv  -d design_10_samples.txt --condition AML --query t15_17 -o ./5_t15_17_vs_5/
+   epcy qc -p ./5_t15_17_vs_5/predictive_capability.tsv -o ./5_t15_17_vs_5/qc
 
 .. image:: images/qc_overfit.png
   :width: 800px
@@ -292,7 +292,7 @@ that represents each condition.
 .. code:: bash
 
    # ENSG00000162493.16 (PDPN, MCC=0.87), ENSG00000227268.4 (KLLN, MCC=0.33)
-   epcy profile --log -m cpm.xls -d design.txt --condition AML --query t15_17 -o ./29_t15_17_vs_59/figures/ --ids ENSG00000162493.16 ENSG00000227268.4
+   epcy profile --log -m cpm.tsv -d design.txt --condition AML --query t15_17 -o ./29_t15_17_vs_59/figures/ --ids ENSG00000162493.16 ENSG00000227268.4
 
 .. image:: images/profile.png
    :width: 400px
@@ -317,7 +317,7 @@ Here is an example on the dataset used for the tutorial (see, How to use EPCY).
 
 .. code:: bash
 
-  epcy pred --randomseed 42 --log -t 4 -m cpm.xls  -d design.txt --condition AML --query inv16 -o ./27_inv16_vs_61/
+  epcy pred --randomseed 42 --log -t 4 -m cpm.tsv  -d design.txt --condition AML --query inv16 -o ./27_inv16_vs_61/
 
 
 Some details on the design table
@@ -330,7 +330,7 @@ can analyse *inv16* samples vs all others samples (*t15_17* and
 
 .. code:: bash
 
-   epcy pred --log -t 4 -m cpm.xls  -d design.txt --condition AML --query inv16 -o ./27_inv16_vs_61/
+   epcy pred --log -t 4 -m cpm.tsv  -d design.txt --condition AML --query inv16 -o ./27_inv16_vs_61/
 
 
 Moreover, it is possible to add more columns in **design.txt**, each
