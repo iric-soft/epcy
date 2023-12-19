@@ -201,7 +201,7 @@ def read_kall_project(file_h5, num_features, transcripts_len, args,
 def get_design(args):
     """ Read and format design.
     """
-    design = pd.read_csv(args.DESIGN, sep="\t")
+    design = pd.read_csv(args.DESIGN, sep="\t", dtype=str)
 
     if "sample" not in design.columns.values:
         sys.stderr.write("ERROR: The design file need to have a " +
