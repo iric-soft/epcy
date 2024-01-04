@@ -2,10 +2,10 @@
 EPCY :  Evaluation of Predictive CapabilitY for ranking biomarker candidates
 =============================================================================
 
-+------------------------------------------------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------------------+
-| .. image:: https://img.shields.io/badge/python-3.6-blue.svg      | .. image:: https://travis-ci.org/iric-soft/epcy.svg?branch=master | .. image:: https://codecov.io/gh/iric-soft/epcy/branch/master/graph/badge.svg |
-|    :target: https://www.python.org/downloads/release/python-362/ |    :target: https://travis-ci.org/iric-soft/epcy                  |    :target: https://codecov.io/gh/iric-soft/epcy/                             |
-+------------------------------------------------------------------+-------------------------------------------------------------------+-------------------------------------------------------------------------------+
++------------------------------------------------------------+------------------------------------------------------------------+
+| .. image:: https://zenodo.org/badge/197271057.svg          | .. image:: https://img.shields.io/badge/python-3.6-blue.svg      |
+|    :target: https://zenodo.org/doi/10.5281/zenodo.10407905 |    :target: https://www.python.org/downloads/release/python-362/ |
++------------------------------------------------------------+------------------------------------------------------------------+
 
 
 -------
