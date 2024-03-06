@@ -221,10 +221,10 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
     ax_swarm.yaxis.grid(False)
 
     if not args.NO_DENSITY:
-        sns_plot = sns.kdeplot(query_exp, shade=True, bw=bw_query,
+        sns_plot = sns.kdeplot(query_exp, fill=True, bw_method=bw_query,
                                color=col_pal[0], label=args.QUERY,
                                ax=ax_kde)
-        sns_plot = sns.kdeplot(ref_exp, shade=True, bw=bw_ref,
+        sns_plot = sns.kdeplot(ref_exp, fill=True, bw_method=bw_ref,
                                color=col_pal[1], label="Other",
                                ax=ax_kde)
         sns_plot.set_title(str(id) + " " + args.QUERY + "\nbw_query=" +
@@ -241,13 +241,15 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
     elif args.VIOLIN:
         bw = (bw_query + bw_ref) / 2
         sns_plot = sns.violinplot(
-            x="x", y="condition", data=df_swarn, ax=ax_swarm,
-            inner=None, linewidth=None, bw=bw,
+            x="x", y="condition", hue="condition",
+            data=df_swarn, ax=ax_swarm,
+            inner=None, linewidth=None, bw_method=bw,
             palette=sns.color_palette([col_pal[0], col_pal[1]])
         )
     else:
         sns_plot = sns.swarmplot(
-            x="x", y="condition", data=df_swarn, ax=ax_swarm, size=args.SIZE,
+            x="x", y="condition", hue="condition",
+            data=df_swarn, ax=ax_swarm, size=args.SIZE,
             palette=sns.color_palette([col_pal[0], col_pal[1]])
         )
         ax_swarm.set_ylabel('')

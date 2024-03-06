@@ -31,7 +31,10 @@ def main_pred_rna(args, argparser):
         if not os.path.exists(args.PATH_OUT):
             os.makedirs(args.PATH_OUT)
 
-        file_basename = os.path.basename(args.MATRIX)
+        file_basename = ""
+        if args.MATRIX is not None:
+            file_basename = os.path.basename(args.MATRIX)
+        
         file_out = os.path.join(args.PATH_OUT, file_basename)
         if args.CPM:
             if args.LOG:
