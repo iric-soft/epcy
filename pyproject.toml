@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["epcy"]
+
+[project]
+name = "epcy"
+version = "0.2.6"
+description = "Evaluation of Predictive CapabilitY"
+authors = [
+    {name = "Eric Audemard", email = "eric.audemard@umontreal.ca"},
+]
+requires-python = ">= 3.11"
+dependencies = [
+    "cython>=3.0.9",
+    "numpy>=1.26.4",
+    "pandas>=2.2.1",
+    "h5py>=3.10.0",
+    "scipy>=1.12.0",
+    "scikit-learn>=1.4.1",
+    "matplotlib>=3.8.3",
+    "numexpr>=2.9.0",
+    "seaborn>=0.13.2"
+]
+readme = "README.rst"
+license = {file = "LICENSE"}
+keywords = ["density", "predictive", "gene", "feature", "KDE"]
+
+classifiers = [
+    # How mature is this project? Common values are
+    #   3 - Alpha
+    #   4 - Beta
+    #   5 - Production/Stable
+    'Development Status :: 4 - Beta',
+
+    # Indicate who your project is intended for
+    'Intended Audience :: Science/Research',
+    'Intended Audience :: Healthcare Industry',
+    'Topic :: Scientific/Engineering :: Bio-Informatics',
+    'Topic :: Software Development',
+    'Topic :: Software Development :: Build Tools',
+
+    # Pick your license as you wish (should match "license" above)
+    'License :: OSI Approved :: MIT License',
+
+    # Specify the Python versions you support here. 
+    'Programming Language :: Python :: 3.11',
+
+    # Others
+    'Natural Language :: English',
+]
+
+[project.urls]
+Documentation = "https://epcy.readthedocs.io/en/latest/"
+Repository = "https://github.com/iric-soft/epcy.git"
+Issues = "https://github.com/iric-soft/epcy/issues"
+
+[project.scripts]
+epcy = "epcy.epcy:main"

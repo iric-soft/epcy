@@ -17,9 +17,9 @@ data. However, EPCY can work directly on read counts, using *pred_rna* tool:
 .. code:: bash
 
    # The commande seen in first steps sections
-   epcy pred --log -t 4 -m cpm.tsv  -d design.txt --subgroup AML --query t15_17 -o ./30_t15_17_vs_70/ --randomseed 42
+   epcy pred --log -t 4 -m cpm.tsv  -d design.txt --condition AML --query t15_17 -o ./30_t15_17_vs_70/ --randomseed 42
    # Equivalent analysis using read counts quantification and pred_rna
-   epcy pred_rna --cpm --log -t 4 -m readcounts.tsv  -d design.txt --subgroup AML --query t15_17 -o ./30_t15_17_vs_70_readcounts/ --randomseed 42
+   epcy pred_rna --cpm --log -t 4 -m readcounts.tsv  -d design.txt --condition AML --query t15_17 -o ./30_t15_17_vs_70_readcounts/ --randomseed 42
 
 Similarly, you can use *profile_rna* to plot a trained KDE with its
 gene expression distribution, directly from read counts:
@@ -27,10 +27,10 @@ gene expression distribution, directly from read counts:
 .. code:: bash
 
   # The commande seen in first steps sections
-  epcy profile --log -m cpm.tsv -d design.txt --subgroup AML --query t15_17 -o ./30_t15_17_vs_70/figures/ --ids ENSG00000162493.16 ENSG00000227268.4
+  epcy profile --log -m cpm.tsv -d design.txt --condition AML --query t15_17 -o ./30_t15_17_vs_70/figures/ --ids ENSG00000162493.16 ENSG00000227268.4
 
   # Equivalent commande using read counts and profile_rna
-  epcy profile_rna --cpm --log -m readcounts.tsv -d design.txt --subgroup AML --query t15_17 -o ./30_t15_17_vs_70_readcounts/figures/ --ids ENSG00000162493.16 ENSG00000227268.4
+  epcy profile_rna --cpm --log -m readcounts.tsv -d design.txt --condition AML --query t15_17 -o ./30_t15_17_vs_70_readcounts/figures/ --ids ENSG00000162493.16 ENSG00000227268.4
 
 
 .. image:: images/profile_readcounts.png
