@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=64.0", setuptools_scm>=8]
+requires = ["setuptools>=64.0", "setuptools_scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
@@ -62,5 +62,4 @@ Issues = "https://github.com/iric-soft/epcy/issues"
 epcy = "epcy.epcy:main"
 
 [tool.setuptools_scm]
-version_file = "pkg/_version.py"
 
