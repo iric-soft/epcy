@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=64.0", setuptools_scm>=8]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
@@ -7,7 +7,6 @@ py-modules = ["epcy"]
 
 [project]
 name = "epcy"
-version = "0.2.6"
 description = "Evaluation of Predictive CapabilitY"
 authors = [
     {name = "Eric Audemard", email = "eric.audemard@umontreal.ca"},
@@ -24,6 +23,8 @@ dependencies = [
     "numexpr>=2.9.0",
     "seaborn>=0.13.2"
 ]
+dynamic=["version"]
+
 readme = "README.rst"
 license = {file = "LICENSE"}
 keywords = ["density", "predictive", "gene", "feature", "KDE"]
@@ -59,3 +60,7 @@ Issues = "https://github.com/iric-soft/epcy/issues"
 
 [project.scripts]
 epcy = "epcy.epcy:main"
+
+[tool.setuptools_scm]
+version_file = "pkg/_version.py"
+
