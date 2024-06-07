@@ -32,5 +32,6 @@ jobs:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_PWD }}
       run: |
+        pip install .
         python3 -m build
         twine upload dist/*
