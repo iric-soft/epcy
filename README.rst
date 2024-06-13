@@ -3,7 +3,7 @@ EPCY :  Evaluation of Predictive CapabilitY
 ===========================================
 
 +------------------------------------------------------------+------------------------------------------------------------------+
-| .. image:: https://zenodo.org/badge/197271057.svg          | .. image:: https://img.shields.io/badge/python-3.11.5-blue.svg      |
+| .. image:: https://zenodo.org/badge/197271057.svg          | .. image:: https://img.shields.io/badge/python-3.11.5-blue.svg   |
 |    :target: https://zenodo.org/doi/10.5281/zenodo.10407905 |    :target: https://www.python.org/downloads/release/python-3115/|
 +------------------------------------------------------------+------------------------------------------------------------------+
 
