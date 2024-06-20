@@ -176,6 +176,9 @@ def plot_qc_histo(df_pred, quantiles, legend_quantile, mcc_bins, args):
 
 
 def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
+    query_exp = query_exp + np.random.normal(0, 0.01, len(query_exp))
+    ref_exp = ref_exp + np.random.normal(0, 0.01, len(ref_exp))
+    
     df_swarn = pd.DataFrame(
         data={
             'x': np.append(query_exp, ref_exp),
@@ -186,7 +189,6 @@ def plot_profile(id, query_exp, ref_exp, bw_query, bw_ref, args):
         }
     )
 
-    df_swarn.x = df_swarn.x + np.random.normal(0, 0.01, df_swarn.shape[0])
     # dummy plots, just to get the Path objects
     fig, ax = plt.subplots(1, 1)
     a = ax.scatter([1, 2], [3, 4], marker='s')
